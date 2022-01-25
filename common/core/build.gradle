@@ -1,0 +1,31 @@
+apply from: "$rootDir/android-library-build.gradle"
+
+android {
+    defaultConfig {
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += [
+                        "room.schemaLocation":"$projectDir/schemas".toString(),
+                        "room.incremental":"true",
+                        "room.expandProjection":"true"
+                ]
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation Retrofit.retrofit
+    implementation Retrofit.moshiConverter
+    implementation OkHttp.okHttp
+    implementation OkHttp.loggingInterceptor
+    implementation Moshi.moshiKotlin
+    kapt Moshi.moshiCodeGenerator
+
+    testImplementation Testing.mockWebServer
+    androidTestImplementation Testing.mockWebServer
+
+    implementation Room.runtime
+    implementation Room.roomKtx
+    kapt Room.roomCompiler
+}

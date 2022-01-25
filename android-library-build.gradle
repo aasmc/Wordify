@@ -1,0 +1,72 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
+
+android {
+    compileSdkVersion Android.compileSdk
+
+    defaultConfig {
+        minSdkVersion Android.minSdk
+        targetSdkVersion Android.targetSdk
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion Compose.composeVersion
+        kotlinCompilerVersion Kotlin.version
+    }
+    sourceSets {
+        androidTest {
+            assets.srcDirs = ["src/debug/assets"]
+        }
+    }
+    packagingOptions {
+        exclude("META-INF/AL2.0")
+        exclude("META-INF/LGPL2.1")
+    }
+}
+
+dependencies{
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(Modules.logging)
+    implementation project(Modules.theme)
+    implementation project(Modules.resources)
+
+    implementation AndroidX.coreKtx
+    implementation AndroidX.appCompat
+    implementation AndroidX.lifecycleVmKtx
+    implementation AndroidX.composeViewModel
+    implementation AndroidX.lifeCycleRuntime
+
+    implementation Compose.activity
+    implementation Compose.ui
+    implementation Compose.material
+    debugImplementation Compose.tooling
+    implementation Compose.navigation
+
+    implementation Coil.coil
+
+    implementation Google.material
+
+    implementation Hilt.android
+    kapt Hilt.compiler
+
+    testImplementation Junit.junit4
+    testImplementation Mockito.mockitoKotlin
+    testImplementation Testing.robolectric
+
+    androidTestImplementation Testing.androidxTestExt
+    androidTestImplementation Testing.archCoreTesting
+    androidTestImplementation Testing.coroutinesTest
+}
