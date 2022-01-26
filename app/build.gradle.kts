@@ -68,6 +68,12 @@ dependencies {
     implementation(Hilt.android)
     kapt(Hilt.compiler)
 
+    // need this for DI to work properly
+    implementation(Retrofit.retrofit)
+    implementation(OkHttp.loggingInterceptor)
+    implementation(Room.runtime)
+
+
     implementation(AndroidX.lifecycleVmKtx)
     implementation(AndroidX.lifeCycleRuntime)
     implementation(AndroidX.composeViewModel)
