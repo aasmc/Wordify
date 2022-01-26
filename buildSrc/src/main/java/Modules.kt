@@ -4,7 +4,7 @@ object Modules {
 
     const val common =     ":common"
     const val core =       ":common:core"
-    const val components = ":common:ui-components"
+    const val components = ":common:uicomponents"
     const val constants =  ":common:constants"
     const val theme =      ":common:theme"
     const val resources =  ":common:resources"
