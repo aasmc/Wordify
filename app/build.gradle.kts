@@ -52,6 +52,9 @@ dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     api(project(Modules.core))
     api(project(Modules.logging))
+    implementation(project(Modules.wordFavouritesList))
+    implementation(project(Modules.wordList))
+    implementation(project(Modules.settings))
 
     implementation(Accompanist.animations)
     implementation(AndroidX.coreKtx)

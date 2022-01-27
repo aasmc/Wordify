@@ -13,7 +13,7 @@ object Modules {
 
     const val features = ":features"
 
-    const val wordList =           ":features:word-list"
+    const val wordList =           ":features:wordlist"
     const val wordFavouritesList = ":features:word-favourites-list"
     const val settings =           ":features:settings"
 }

@@ -9,5 +9,5 @@ data class WordDto(
     @field:Json(name = "results") val wordProperties: List<WordPropertiesDto>?,
     @field:Json(name = "syllables") val syllables: SyllableDto,
     @field:Json(name = "pronunciation") val pronunciationDto: PronunciationDto?,
-    @field:Json(name = "frequency") val frequency: Float
+    @field:Json(name = "frequency") val frequency: Float?
 )
