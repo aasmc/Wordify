@@ -1,6 +1,7 @@
 package ru.aasmc.wordify.common.core.data.cache.model
 
 import androidx.room.*
+import ru.aasmc.wordify.common.core.domain.model.WordProperties
 
 @Entity(tableName = "cachedWordProperties")
 data class CachedWordProperties(
@@ -70,7 +71,35 @@ data class CachedWordPropertiesAggregate(
         associateBy = Junction(PropertiesExampleCrossRef::class)
     )
     val examples: List<CachedExample>
-)
+) {
+    companion object {
+        fun toDomain(cachedProperties: CachedWordPropertiesAggregate): WordProperties {
+            return WordProperties(
+                definition = cachedProperties.cachedWordProperties.definition,
+                partOfSpeech = cachedProperties.cachedWordProperties.partOfSpeech,
+                synonyms = cachedProperties.synonyms.map { it.synonym },
+                derivation = cachedProperties.derivations.map { it.derivation },
+                examples = cachedProperties.examples.map { it.example }
+            )
+        }
+
+        fun fromDomain(
+            wordProperties: WordProperties,
+            word: String
+        ): CachedWordPropertiesAggregate {
+            return CachedWordPropertiesAggregate(
+                cachedWordProperties = CachedWordProperties(
+                    wordId = word,
+                    definition = wordProperties.definition,
+                    partOfSpeech = wordProperties.partOfSpeech
+                ),
+                synonyms = wordProperties.synonyms.map { CachedSynonym(synonym = it) },
+                derivations = wordProperties.derivation.map { CachedDerivation(derivation = it) },
+                examples = wordProperties.examples.map { CachedExample(example = it) }
+            )
+        }
+    }
+}
 
 
 

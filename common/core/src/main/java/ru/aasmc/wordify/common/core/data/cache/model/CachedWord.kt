@@ -1,6 +1,8 @@
 package ru.aasmc.wordify.common.core.data.cache.model
 
 import androidx.room.*
+import ru.aasmc.wordify.common.core.domain.model.Syllable
+import ru.aasmc.wordify.common.core.domain.model.Word
 
 @Entity(tableName = "words")
 data class CachedWord(
@@ -23,4 +25,56 @@ data class CachedWordAggregate(
         entityColumn = "wordId"
     )
     val wordProperties: List<CachedWordPropertiesAggregate>
-)
+) {
+    companion object {
+        fun toDomain(cachedWordAggregate: CachedWordAggregate): Word {
+            val cachedWord = cachedWordAggregate.cachedWord
+            val cachedProps = cachedWordAggregate.wordProperties
+            return Word(
+                name = cachedWord.wordId,
+                wordProperties = cachedProps.map { CachedWordPropertiesAggregate.toDomain(it) },
+                syllable = Syllable(
+                    count = cachedWord.syllable.count,
+                    syllableList = cachedWord.syllable.syllables
+                ),
+                pronunciation = cachedWord.pronunciation
+            )
+        }
+
+        fun fromDomain(word: Word): CachedWordAggregate {
+            return CachedWordAggregate(
+                cachedWord = CachedWord(
+                    wordId = word.name,
+                    pronunciation = word.pronunciation,
+                    syllable = CachedSyllable(
+                        count = word.syllable.count,
+                        syllables = word.syllable.syllableList
+                    )
+                ),
+                wordProperties = word.wordProperties.map { props ->
+                    CachedWordPropertiesAggregate.fromDomain(
+                        wordProperties = props,
+                        word = word.name
+                    )
+                }
+            )
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

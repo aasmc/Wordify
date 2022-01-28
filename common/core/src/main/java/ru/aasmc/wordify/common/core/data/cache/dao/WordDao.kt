@@ -42,6 +42,6 @@ abstract class WordDao {
 
     @Transaction
     @Query("SELECT * FROM words WHERE wordId LIKE '%' || :name || '%'")
-    abstract fun searchWordsByName(name: String): Flow<CachedWord>
+    abstract fun searchWordsByName(name: String): Flow<List<CachedWordAggregate>>
 
 }
