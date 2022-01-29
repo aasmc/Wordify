@@ -9,5 +9,6 @@ object ApiParameters {
 }
 
 object ApiConstants {
-    const val WORD_ENDPOINT = "https://wordsapiv1.p.rapidapi.com/words/"
+    const val WORD_ENDPOINT = "words"
+    const val BASE_URL = "https://wordsapiv1.p.rapidapi.com/"
 }

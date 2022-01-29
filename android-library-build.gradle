@@ -9,7 +9,7 @@ android {
     defaultConfig {
         minSdkVersion Android.minSdk
         targetSdkVersion Android.targetSdk
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "ru.aasmc.wordify.common.core.HiltTestRunner"
     }
 
     compileOptions {
@@ -66,8 +66,10 @@ dependencies{
     testImplementation Mockito.mockitoKotlin
     testImplementation Testing.robolectric
 
-    androidTestImplementation Testing.androidxTestExt
-    androidTestImplementation Testing.archCoreTesting
-    androidTestImplementation Testing.coroutinesTest
+    debugImplementation Testing.androidxTestExt
+    debugImplementation Testing.archCoreTesting
+    debugImplementation Testing.coroutinesTest
     androidTestImplementation Testing.androidXRunner
+    androidTestImplementation Testing.hiltAndroidTesting
+    kaptAndroidTest Testing.hiltTestCompiler
 }
