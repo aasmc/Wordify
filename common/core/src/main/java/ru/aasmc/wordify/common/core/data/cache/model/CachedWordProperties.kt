@@ -5,9 +5,9 @@ import ru.aasmc.wordify.common.core.domain.model.WordProperties
 
 @Entity(tableName = "cachedWordProperties")
 data class CachedWordProperties(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     @ColumnInfo(name = "propertiesId")
-    val propertiesId: Long = 0,
+    val propertiesId: String,
     @ColumnInfo(name = "wordId")
     val wordId: String,
     @ColumnInfo(name = "definition")
@@ -16,65 +16,30 @@ data class CachedWordProperties(
     val partOfSpeech: String
 )
 
-@Entity(
-    tableName = "propertiesSynonymCrossRef",
-    primaryKeys = ["propertiesId", "synonymId"]
-)
-data class PropertiesSyllableCrossRef(
-    @ColumnInfo(name = "propertiesId")
-    val propertiesId: Long,
-    @ColumnInfo(name = "synonymId")
-    val synonymId: Long,
-)
-
-@Entity(
-    tableName = "propertiesDerivationCrossRef",
-    primaryKeys = ["propertiesId", "derivationId"]
-)
-data class PropertiesDerivationCrossRef(
-    @ColumnInfo(name = "propertiesId")
-    val propertiesId: Long,
-    @ColumnInfo(name = "derivationId")
-    val derivationId: Long,
-)
-
-@Entity(
-    tableName = "propertiesExampleCrossRef",
-    primaryKeys = ["propertiesId", "exampleId"]
-)
-data class PropertiesExampleCrossRef(
-    @ColumnInfo(name = "propertiesId")
-    val propertiesId: Long,
-    @ColumnInfo(name = "exampleId")
-    val exampleId: Long,
-)
-
 
 data class CachedWordPropertiesAggregate(
     @Embedded
     val cachedWordProperties: CachedWordProperties,
     @Relation(
         parentColumn = "propertiesId",
-        entityColumn = "synonymId",
-        associateBy = Junction(PropertiesSyllableCrossRef::class)
+        entityColumn = "propertiesId",
     )
     val synonyms: List<CachedSynonym>,
     @Relation(
         parentColumn = "propertiesId",
-        entityColumn = "derivationId",
-        associateBy = Junction(PropertiesDerivationCrossRef::class)
+        entityColumn = "propertiesId",
     )
     val derivations: List<CachedDerivation>,
     @Relation(
         parentColumn = "propertiesId",
-        entityColumn = "exampleId",
-        associateBy = Junction(PropertiesExampleCrossRef::class)
+        entityColumn = "propertiesId",
     )
     val examples: List<CachedExample>
 ) {
     companion object {
         fun toDomain(cachedProperties: CachedWordPropertiesAggregate): WordProperties {
             return WordProperties(
+                id = cachedProperties.cachedWordProperties.propertiesId,
                 definition = cachedProperties.cachedWordProperties.definition,
                 partOfSpeech = cachedProperties.cachedWordProperties.partOfSpeech,
                 synonyms = cachedProperties.synonyms.map { it.synonym },
@@ -89,13 +54,26 @@ data class CachedWordPropertiesAggregate(
         ): CachedWordPropertiesAggregate {
             return CachedWordPropertiesAggregate(
                 cachedWordProperties = CachedWordProperties(
+                    propertiesId = word,
                     wordId = word,
                     definition = wordProperties.definition,
                     partOfSpeech = wordProperties.partOfSpeech
                 ),
-                synonyms = wordProperties.synonyms.map { CachedSynonym(synonym = it) },
-                derivations = wordProperties.derivation.map { CachedDerivation(derivation = it) },
-                examples = wordProperties.examples.map { CachedExample(example = it) }
+                synonyms = wordProperties.synonyms.map {
+                    CachedSynonym(synonym = it, propertiesId = wordProperties.id)
+                },
+                derivations = wordProperties.derivation.map {
+                    CachedDerivation(
+                        derivation = it,
+                        propertiesId = wordProperties.id
+                    )
+                },
+                examples = wordProperties.examples.map {
+                    CachedExample(
+                        example = it,
+                        propertiesId = wordProperties.id
+                    )
+                }
             )
         }
     }

@@ -7,8 +7,13 @@ import ru.aasmc.wordify.common.core.data.cache.model.*
 @Dao
 abstract class WordDao {
 
+    @Transaction
     @Query("SELECT * FROM words ORDER BY wordId ASC")
     abstract fun getAllWords(): Flow<List<CachedWordAggregate>>
+
+    @Transaction
+    @Query("SELECT * FROM words WHERE wordId = :wordId")
+    abstract suspend fun getWordById(wordId: String): CachedWordAggregate?
 
     /**
      * Can't insert CachedWordPropertiesAggregate, since it is not an Entity,
@@ -41,7 +46,7 @@ abstract class WordDao {
     }
 
     @Transaction
-    @Query("SELECT * FROM words WHERE wordId LIKE '%' || :name || '%'")
+    @Query("SELECT * FROM words WHERE wordId LIKE '%' || :name || '%' ORDER BY wordId ASC")
     abstract fun searchWordsByName(name: String): Flow<List<CachedWordAggregate>>
 
 }

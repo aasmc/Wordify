@@ -9,6 +9,8 @@ interface Cache {
 
     fun getAllWords(): Flow<List<CachedWordAggregate>>
 
-    fun searchWord(name: String): Flow<List<CachedWordAggregate>>
+    fun searchWords(name: String): Flow<List<CachedWordAggregate>>
+
+    suspend fun getWordById(name: String): CachedWordAggregate?
 
 }

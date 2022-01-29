@@ -17,7 +17,7 @@ object Testing {
     private const val androidx_core_testing_version = "2.1.0"
     const val archCoreTesting = "androidx.arch.core:core-testing:$androidx_core_testing_version"
 
-    private const val coroutines_test_version = "1.5.0"
+    private const val coroutines_test_version = "1.6.0"
     const val coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_test_version"
 }
 

@@ -34,44 +34,48 @@ class WordDtoMapper @Inject constructor() : ApiMapper<WordDto?, CachedWordAggreg
         return CachedWordPropertiesAggregate(
 
             cachedWordProperties = CachedWordProperties(
+                propertiesId = wordId,
                 wordId = wordId,
                 definition = dtoProperty?.definition.orEmpty(),
                 partOfSpeech = dtoProperty?.partOfSpeech.orEmpty(),
             ),
-            synonyms = parseSynonyms(dtoProperty?.synonyms),
-            derivations = parseDerivations(dtoProperty?.derivations),
-            examples = parseExamples(dtoProperty?.examples)
+            synonyms = parseSynonyms(dtoProperty?.synonyms, wordId),
+            derivations = parseDerivations(dtoProperty?.derivations, wordId),
+            examples = parseExamples(dtoProperty?.examples, wordId)
         )
 
     }
 
-    private fun parseSynonyms(synonyms: List<String?>?): List<CachedSynonym> {
-        return synonyms?.map { parseSingleSynonym(it) }.orEmpty()
+    private fun parseSynonyms(synonyms: List<String?>?, propsId: String): List<CachedSynonym> {
+        return synonyms?.map { parseSingleSynonym(it, propsId) }.orEmpty()
     }
 
-    private fun parseSingleSynonym(synonym: String?): CachedSynonym {
+    private fun parseSingleSynonym(synonym: String?, propsId: String): CachedSynonym {
         return CachedSynonym(
-            synonym = synonym.orEmpty()
+            synonym = synonym.orEmpty(),
+            propertiesId = propsId
         )
     }
 
-    private fun parseDerivations(derivations: List<String?>?): List<CachedDerivation> {
-        return derivations?.map { parseSingleDerivation(it) }.orEmpty()
+    private fun parseDerivations(derivations: List<String?>?, propsId: String): List<CachedDerivation> {
+        return derivations?.map { parseSingleDerivation(it, propsId) }.orEmpty()
     }
 
-    private fun parseSingleDerivation(derivation: String?): CachedDerivation {
+    private fun parseSingleDerivation(derivation: String?, propsId: String): CachedDerivation {
         return CachedDerivation(
-            derivation = derivation.orEmpty()
+            derivation = derivation.orEmpty(),
+            propertiesId = propsId
         )
     }
 
-    private fun parseExamples(examples: List<String?>?): List<CachedExample> {
-        return examples?.map { parseSingleExample(it) }.orEmpty()
+    private fun parseExamples(examples: List<String?>?, propsId: String): List<CachedExample> {
+        return examples?.map { parseSingleExample(it, propsId) }.orEmpty()
     }
 
-    private fun parseSingleExample(example: String?): CachedExample {
+    private fun parseSingleExample(example: String?, propsId: String): CachedExample {
         return CachedExample(
-            example = example.orEmpty()
+            example = example.orEmpty(),
+            propertiesId = propsId
         )
     }
 

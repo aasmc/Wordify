@@ -69,4 +69,5 @@ dependencies{
     androidTestImplementation Testing.androidxTestExt
     androidTestImplementation Testing.archCoreTesting
     androidTestImplementation Testing.coroutinesTest
+    androidTestImplementation Testing.androidXRunner
 }

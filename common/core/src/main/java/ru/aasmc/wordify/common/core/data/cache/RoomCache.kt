@@ -16,7 +16,11 @@ class RoomCache @Inject constructor(
         return wordDao.getAllWords()
     }
 
-    override fun searchWord(name: String): Flow<List<CachedWordAggregate>> {
+    override fun searchWords(name: String): Flow<List<CachedWordAggregate>> {
         return wordDao.searchWordsByName(name)
+    }
+
+    override suspend fun getWordById(name: String): CachedWordAggregate? {
+        return wordDao.getWordById(name)
     }
 }
