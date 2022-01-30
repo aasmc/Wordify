@@ -17,7 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import ru.aasmc.wordify.common.core.data.cache.WordifyDatabase
 import ru.aasmc.wordify.common.core.data.cache.dao.WordDao
-import ru.aasmc.wordify.common.core.fakes.AndroidFakeCachedWordFactory
+import ru.aasmc.wordify.common.core.fakes.FakeCachedWordFactory
 
 @RunWith(AndroidJUnit4::class)
 @ExperimentalCoroutinesApi
@@ -51,7 +51,7 @@ class WordDaoTest {
     @Test
     fun insertCachedWordAggregate_getByWordId_correct() = runTest {
         // given
-        val cachedWord = AndroidFakeCachedWordFactory.createCachedWord(1)
+        val cachedWord = FakeCachedWordFactory.createCachedWord(1)
         // when
         wordDao.insertCachedWordAggregate(cachedWord)
         val retrieved = wordDao.getWordById(cachedWord.cachedWord.wordId)
@@ -111,7 +111,7 @@ class WordDaoTest {
     fun getAllWords_correctly_returns_flowWithListOf_10_Words_after_inserting_10_Words() = runTest {
         // given
         (1..10).forEach { wordId ->
-            wordDao.insertCachedWordAggregate(AndroidFakeCachedWordFactory.createCachedWord(wordId))
+            wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(wordId))
         }
         // when
         val words = wordDao.getAllWords().take(1).single()
@@ -123,9 +123,9 @@ class WordDaoTest {
     @Test
     fun searchWordByName_returns_3_words_sorted_by_name_with_similar_names() = runTest {
         // given
-        wordDao.insertCachedWordAggregate(AndroidFakeCachedWordFactory.createCachedWord(1))
-        wordDao.insertCachedWordAggregate(AndroidFakeCachedWordFactory.createCachedWord(11))
-        wordDao.insertCachedWordAggregate(AndroidFakeCachedWordFactory.createCachedWord(111))
+        wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(1))
+        wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(11))
+        wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(111))
 
         // when
         val words = wordDao.searchWordsByName("1").take(1).single() ?: emptyList()
@@ -141,7 +141,7 @@ class WordDaoTest {
     fun getAllWords_returns_alphabetically_sorted_list() = runTest {
         // given
         (1..10).forEach {
-            wordDao.insertCachedWordAggregate(AndroidFakeCachedWordFactory.createCachedWord(it))
+            wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(it))
         }
         // when
         val words = wordDao.getAllWords().take(1).single()
@@ -154,7 +154,7 @@ class WordDaoTest {
     fun getWordById_returns_null_if_no_word_with_name_inDb() = runTest {
         // given
         val wordToSearch = "word"
-        wordDao.insertCachedWordAggregate(AndroidFakeCachedWordFactory.createCachedWord(1))
+        wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(1))
         // when
         val word = wordDao.getWordById(wordToSearch)
         // then
@@ -164,7 +164,7 @@ class WordDaoTest {
     @Test
     fun searchWordsByName_returns_emptyList_if_DB_has_no_words_with_that_name() = runTest {
         // given
-        wordDao.insertCachedWordAggregate(AndroidFakeCachedWordFactory.createCachedWord(1))
+        wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(1))
         // when
         val words = wordDao.searchWordsByName("2").take(1).single()
         // then

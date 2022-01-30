@@ -1,4 +1,4 @@
-package ru.aasmc.wordify.common.core.data.fakes
+package ru.aasmc.wordify.common.core.fakes
 
 import ru.aasmc.wordify.common.core.domain.model.Syllable
 import ru.aasmc.wordify.common.core.domain.model.Word

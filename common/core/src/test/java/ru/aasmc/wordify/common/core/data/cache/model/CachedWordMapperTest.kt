@@ -3,9 +3,9 @@ package ru.aasmc.wordify.common.core.data.cache.model
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import ru.aasmc.wordify.common.core.data.fakes.FakeCachedWordFactory
-import ru.aasmc.wordify.common.core.data.fakes.FakeDomainWordFactory
 import ru.aasmc.wordify.common.core.domain.model.Word
+import ru.aasmc.wordify.common.core.fakes.FakeCachedWordFactory
+import ru.aasmc.wordify.common.core.fakes.FakeDomainWordFactory
 import kotlin.random.Random
 
 const val WORD_TO_CREATE = 1

@@ -22,7 +22,7 @@ class FakeServer {
         mockWebServer.start(8080)
     }
 
-    fun setHappyPathDispatcher() {
+    fun setHappyPathDispatcher(wordId: String = "track") {
         mockWebServer.dispatcher = object : Dispatcher() {
             override fun dispatch(request: RecordedRequest): MockResponse {
                 val path = request.path ?: return notFoundResponse
@@ -30,7 +30,7 @@ class FakeServer {
                 return with(path) {
                     when {
                         startsWith(wordEndPointPath) -> {
-                            MockResponse().setResponseCode(200).setBody(getJson("track.json"))
+                            MockResponse().setResponseCode(200).setBody(getJson("$wordId.json"))
                         }
                         else -> notFoundResponse
                     }

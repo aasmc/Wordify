@@ -11,4 +11,18 @@ object ApiParameters {
 object ApiConstants {
     const val WORD_ENDPOINT = "words"
     const val BASE_URL = "https://wordsapiv1.p.rapidapi.com/"
+
+    const val NETWORK_TIMEOUT = 5000L
+}
+
+object CacheConstants {
+    const val CACHE_TIMEOUT = 2000L
+}
+
+object ExceptionMessage {
+    const val FAILURE_TO_GET_WORD_FROM_NETWORK = "Failed to get word from network!"
+    const val FAILURE_TO_GET_WORD_FROM_CACHE = "Failed to get word from cache!"
+    const val CACHE_TIMEOUT_ERROR = "Cache timeout error!"
+    const val NETWORK_TIMEOUT_ERROR = "Network timeout error!"
+    const val UNKNOWN_ERROR = "Sorry! Something went wrong!"
 }

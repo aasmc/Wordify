@@ -3,7 +3,7 @@ package ru.aasmc.wordify.common.core.data.api.model.mappers
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import ru.aasmc.wordify.common.core.data.fakes.FakeWordDtoFactory
+import ru.aasmc.wordify.common.core.fakes.FakeWordDtoFactory
 import kotlin.random.Random
 
 const val WORD_TO_CREATE = 1

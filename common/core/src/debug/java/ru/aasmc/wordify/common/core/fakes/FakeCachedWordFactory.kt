@@ -2,7 +2,7 @@ package ru.aasmc.wordify.common.core.fakes
 
 import ru.aasmc.wordify.common.core.data.cache.model.*
 
-object AndroidFakeCachedWordFactory {
+object FakeCachedWordFactory {
 
     fun createCachedWord(id: Int): CachedWordAggregate {
         return CachedWordAggregate(
