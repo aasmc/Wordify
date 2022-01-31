@@ -1,8 +1,26 @@
 package ru.aasmc.wordify.common.core.fakes
 
 import ru.aasmc.wordify.common.core.data.cache.model.*
+import java.time.Instant
 
 object FakeCachedWordFactory {
+
+    fun createFavCacheWord(id: Int): CachedWordAggregate {
+        return CachedWordAggregate(
+            cachedWord = CachedWord(
+                wordId = "$id",
+                pronunciation = "$id",
+                syllable = CachedSyllable(
+                    count = id,
+                    syllables = List(id) { "$it" }
+                ),
+                frequency = id.toFloat(),
+                isFavourite = true,
+                timeAdded = Instant.now().toEpochMilli()
+            ),
+            wordProperties = createWordProperties(id)
+        )
+    }
 
     fun createCachedWord(id: Int): CachedWordAggregate {
         return CachedWordAggregate(
@@ -13,7 +31,8 @@ object FakeCachedWordFactory {
                     count = id,
                     syllables = List(id) { "$it" }
                 ),
-                frequency = id.toFloat()
+                frequency = id.toFloat(),
+                timeAdded = Instant.now().toEpochMilli()
             ),
             wordProperties = createWordProperties(id)
         )
@@ -32,7 +51,12 @@ object FakeCachedWordFactory {
                 partOfSpeech = "$index"
             ),
             synonyms = List(index) { CachedSynonym(synonym = "$it", propertiesId = "$index") },
-            derivations = List(index) { CachedDerivation(derivation = "$it", propertiesId = "$index") },
+            derivations = List(index) {
+                CachedDerivation(
+                    derivation = "$it",
+                    propertiesId = "$index"
+                )
+            },
             examples = List(index) { CachedExample(example = "$it", propertiesId = "$index") }
         )
     }

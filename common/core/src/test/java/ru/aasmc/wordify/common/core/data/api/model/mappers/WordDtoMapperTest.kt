@@ -1,7 +1,6 @@
 package ru.aasmc.wordify.common.core.data.api.model.mappers
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Test
 import ru.aasmc.wordify.common.core.fakes.FakeWordDtoFactory
 import kotlin.random.Random
@@ -19,6 +18,7 @@ class WordDtoMapperTest {
         assertEquals(WORD_TO_CREATE, word.wordProperties.size)
         assertEquals(WORD_TO_CREATE, word.cachedWord.syllable.count)
         assertEquals("$WORD_TO_CREATE", word.cachedWord.pronunciation)
+        assertFalse(word.cachedWord.isFavourite)
 
         // check properties correct
         val prop = word.wordProperties[0]

@@ -9,6 +9,7 @@ import ru.aasmc.wordify.common.core.data.cache.Cache
 import ru.aasmc.wordify.common.core.data.cache.model.CachedWordAggregate
 import ru.aasmc.wordify.common.core.domain.Result
 import ru.aasmc.wordify.common.core.domain.model.Word
+import ru.aasmc.wordify.common.core.domain.repositories.Sort
 import ru.aasmc.wordify.common.core.domain.repositories.WordRepository
 import ru.aasmc.wordify.common.core.utils.DispatchersProvider
 import ru.aasmc.wordify.common.core.utils.safeApiCall
@@ -21,8 +22,14 @@ class WordifyWordRepository @Inject constructor(
     private val apiMapper: WordDtoMapper,
     private val dispatchersProvider: DispatchersProvider
 ) : WordRepository {
-    override fun getAllWords(): Flow<List<Word>> {
-        return cache.getAllWords()
+    override fun getAllWords(sort: Sort): Flow<List<Word>> {
+        val searchFlow = when (sort) {
+            Sort.ASC_NAME -> cache.getAllWordsByNameAsc()
+            Sort.DESC_NAME -> cache.getAllWordsByNameDesc()
+            Sort.ASC_TIME -> cache.getAllWordsByTimeAddedAsc()
+            Sort.DESC_TIME -> cache.getAllWordsByTimeAddedDesc()
+        }
+        return searchFlow
             .distinctUntilChanged()
             .map { cachedWords ->
                 cachedWords.map { cachedWord ->
@@ -69,8 +76,34 @@ class WordifyWordRepository @Inject constructor(
         }
     }
 
-    override fun searchWord(word: String): Flow<List<Word>> {
-        return cache.searchWords(word)
+    override fun searchWord(word: String, sort: Sort): Flow<List<Word>> {
+        val searchFlow = when (sort) {
+            Sort.ASC_NAME -> cache.searchWordsByNameAsc(word)
+            Sort.DESC_NAME -> cache.searchWordsByNameDesc(word)
+            Sort.ASC_TIME -> cache.searchWordsByTimeAddedAsc(word)
+            Sort.DESC_TIME -> cache.searchWordsByTimeAddedDesc(word)
+        }
+        return searchFlow
+            .distinctUntilChanged()
+            .map { cachedWords ->
+                cachedWords.map { cachedWord ->
+                    CachedWordAggregate.toDomain(cachedWord)
+                }
+            }
+    }
+
+    override suspend fun setFavourite(wordId: String, isFavourite: Boolean) {
+        cache.setFavourite(wordId, isFavourite)
+    }
+
+    override fun getAllFavWords(sort: Sort): Flow<List<Word>> {
+        val wordsFlow = when (sort) {
+            Sort.ASC_NAME -> cache.getAllFavWordsByNameAsc()
+            Sort.DESC_NAME -> cache.getAllFavWordsByNameDesc()
+            Sort.ASC_TIME -> cache.getAllFavWordsByTimeAddedAsc()
+            Sort.DESC_TIME -> cache.getAllFavWordsByTimeAddedDesc()
+        }
+        return wordsFlow
             .distinctUntilChanged()
             .map { cachedWords ->
                 cachedWords.map { cachedWord ->

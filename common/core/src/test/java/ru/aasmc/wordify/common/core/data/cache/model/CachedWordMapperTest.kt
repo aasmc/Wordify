@@ -1,7 +1,6 @@
 package ru.aasmc.wordify.common.core.data.cache.model
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Test
 import ru.aasmc.wordify.common.core.domain.model.Word
 import ru.aasmc.wordify.common.core.fakes.FakeCachedWordFactory
@@ -22,6 +21,8 @@ class CachedWordMapperTest {
         assertTrue(word.wordProperties.size == WORD_TO_CREATE)
         assertTrue(word.syllable.count == WORD_TO_CREATE)
         assertTrue(word.pronunciation == "$WORD_TO_CREATE")
+        assertTrue(word.timeAdded == cachedWord.cachedWord.timeAdded)
+        assertFalse(word.isFavourite)
 
         // check properties correct
         val prop = word.wordProperties[0]
@@ -49,6 +50,8 @@ class CachedWordMapperTest {
         assertEquals(WORD_TO_CREATE, word.wordProperties.size)
         assertEquals(WORD_TO_CREATE, word.cachedWord.syllable.count)
         assertEquals("$WORD_TO_CREATE", word.cachedWord.pronunciation)
+        assertEquals(domainWord.timeAdded, word.cachedWord.timeAdded)
+        assertFalse(word.cachedWord.isFavourite)
 
         // check properties correct
         val prop = word.wordProperties[0]

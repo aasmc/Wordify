@@ -9,11 +9,45 @@ abstract class WordDao {
 
     @Transaction
     @Query("SELECT * FROM words ORDER BY wordId ASC")
-    abstract fun getAllWords(): Flow<List<CachedWordAggregate>>
+    abstract fun getAllWordsByNameAsc(): Flow<List<CachedWordAggregate>>
+
+    @Transaction
+    @Query("SELECT * FROM words ORDER BY wordId DESC")
+    abstract fun getAllWordsByNameDesc(): Flow<List<CachedWordAggregate>>
+
+    @Transaction
+    @Query("SELECT * FROM words ORDER BY timeAdded ASC")
+    abstract fun getAllWordsByTimeAddedAsc(): Flow<List<CachedWordAggregate>>
+
+    @Transaction
+    @Query("SELECT * FROM words ORDER BY timeAdded DESC")
+    abstract fun getAllWordsByTimeAddedDesc(): Flow<List<CachedWordAggregate>>
+
+    @Transaction
+    @Query("SELECT * FROM words WHERE isFavourite = 1 ORDER BY wordId ASC")
+    abstract fun getAllFavWordsByNameAsc(): Flow<List<CachedWordAggregate>>
+
+    @Transaction
+    @Query("SELECT * FROM words WHERE isFavourite = 1 ORDER BY wordId DESC")
+    abstract fun getAllFavWordsByNameDesc(): Flow<List<CachedWordAggregate>>
+
+    @Transaction
+    @Query("SELECT * FROM words WHERE isFavourite = 1 ORDER BY timeAdded ASC")
+    abstract fun getAllFavWordsByTimeAddedAsc(): Flow<List<CachedWordAggregate>>
+
+    @Transaction
+    @Query("SELECT * FROM words WHERE isFavourite = 1 ORDER BY timeAdded DESC")
+    abstract fun getAllFavWordsByTimeAddedDesc(): Flow<List<CachedWordAggregate>>
 
     @Transaction
     @Query("SELECT * FROM words WHERE wordId = :wordId")
     abstract suspend fun getWordById(wordId: String): CachedWordAggregate?
+
+    @Query("UPDATE words SET isFavourite = 1 WHERE wordId =:word")
+    abstract suspend fun setFavourite(word: String)
+
+    @Query("UPDATE words SET isFavourite = 0 WHERE wordId =:word")
+    abstract suspend fun setNotFavourite(word: String)
 
     /**
      * Can't insert CachedWordPropertiesAggregate, since it is not an Entity,
@@ -47,6 +81,18 @@ abstract class WordDao {
 
     @Transaction
     @Query("SELECT * FROM words WHERE wordId LIKE '%' || :name || '%' ORDER BY wordId ASC")
-    abstract fun searchWordsByName(name: String): Flow<List<CachedWordAggregate>>
+    abstract fun searchWordsByNameAsc(name: String): Flow<List<CachedWordAggregate>>
+
+    @Transaction
+    @Query("SELECT * FROM words WHERE wordId LIKE '%' || :name || '%' ORDER BY wordId DESC")
+    abstract fun searchWordsByNameDesc(name: String): Flow<List<CachedWordAggregate>>
+
+    @Transaction
+    @Query("SELECT * FROM words WHERE wordId LIKE '%' || :name || '%' ORDER BY timeAdded DESC")
+    abstract fun searchWordsByTimeAddedDesc(name: String): Flow<List<CachedWordAggregate>>
+
+    @Transaction
+    @Query("SELECT * FROM words WHERE wordId LIKE '%' || :name || '%' ORDER BY timeAdded ASC")
+    abstract fun searchWordsByTimeAddedAsc(name: String): Flow<List<CachedWordAggregate>>
 
 }

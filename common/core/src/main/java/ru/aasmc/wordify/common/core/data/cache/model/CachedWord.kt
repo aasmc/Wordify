@@ -12,7 +12,9 @@ data class CachedWord(
     val pronunciation: String,
     @Embedded
     val syllable: CachedSyllable,
-    val frequency: Float = 0f
+    val frequency: Float = 0f,
+    val isFavourite: Boolean = false,
+    val timeAdded: Long
 )
 
 
@@ -37,7 +39,9 @@ data class CachedWordAggregate(
                     count = cachedWord.syllable.count,
                     syllableList = cachedWord.syllable.syllables
                 ),
-                pronunciation = cachedWord.pronunciation
+                pronunciation = cachedWord.pronunciation,
+                isFavourite = cachedWord.isFavourite,
+                timeAdded = cachedWord.timeAdded
             )
         }
 
@@ -49,7 +53,9 @@ data class CachedWordAggregate(
                     syllable = CachedSyllable(
                         count = word.syllable.count,
                         syllables = word.syllable.syllableList
-                    )
+                    ),
+                    isFavourite = word.isFavourite,
+                    timeAdded = word.timeAdded
                 ),
                 wordProperties = word.wordProperties.map { props ->
                     CachedWordPropertiesAggregate.fromDomain(

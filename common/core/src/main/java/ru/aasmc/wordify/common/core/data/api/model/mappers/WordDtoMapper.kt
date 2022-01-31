@@ -3,6 +3,8 @@ package ru.aasmc.wordify.common.core.data.api.model.mappers
 import ru.aasmc.wordify.common.core.data.api.model.WordDto
 import ru.aasmc.wordify.common.core.data.api.model.WordPropertiesDto
 import ru.aasmc.wordify.common.core.data.cache.model.*
+import java.time.Instant
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 class WordDtoMapper @Inject constructor() : ApiMapper<WordDto?, CachedWordAggregate> {
@@ -16,7 +18,9 @@ class WordDtoMapper @Inject constructor() : ApiMapper<WordDto?, CachedWordAggreg
                     count = dto.syllables.count ?: 0,
                     syllables = dto.syllables.syllableList.orEmpty().map { it.orEmpty() }
                 ),
-                frequency = dto.frequency ?: 0f
+                frequency = dto.frequency ?: 0f,
+                isFavourite = false,
+                timeAdded = Instant.now().toEpochMilli()
             ),
             wordProperties = parseWordProperties(dto)
         )

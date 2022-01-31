@@ -64,6 +64,7 @@ class WordDaoTest {
         assertEquals(cachedWord.cachedWord.pronunciation, retrieved?.cachedWord?.pronunciation)
         assertEquals(cachedWord.cachedWord.frequency, retrieved?.cachedWord?.frequency)
         assertEquals(cachedWord.cachedWord.syllable, retrieved?.cachedWord?.syllable)
+        assertFalse(cachedWord.cachedWord.isFavourite)
         val expectedProps = cachedWord.wordProperties[0]
         val retrievedProps = retrieved?.wordProperties?.get(0)
             ?: throw Exception("Retrieved props in test " +
@@ -108,27 +109,175 @@ class WordDaoTest {
     }
 
     @Test
-    fun getAllWords_correctly_returns_flowWithListOf_10_Words_after_inserting_10_Words() = runTest {
+    fun getWordById_success_favourite_word() = runTest {
+        // given
+        val cachedWord = FakeCachedWordFactory.createFavCacheWord(1)
+        wordDao.insertCachedWordAggregate(cachedWord)
+        // when
+        val retrieved = wordDao.getWordById(cachedWord.cachedWord.wordId)
+        // then
+        assertTrue(retrieved?.cachedWord?.isFavourite ?: throw Exception("Word in the test cannot be null"))
+    }
+
+    @Test
+    fun getAllWordsByNameAsc_correctly_returns_flowWithListOf_10_Words_after_inserting_10_Words() = runTest {
         // given
         (1..10).forEach { wordId ->
             wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(wordId))
         }
         // when
-        val words = wordDao.getAllWords().take(1).single()
+        val words = wordDao.getAllWordsByNameAsc().take(1).single()
 
         // then
         assertEquals(10, words.size)
+        for (i in 0 until words.lastIndex) {
+            assert(words[i].cachedWord.wordId <= words[i + 1].cachedWord.wordId)
+        }
     }
 
     @Test
-    fun searchWordByName_returns_3_words_sorted_by_name_with_similar_names() = runTest {
+    fun getAllWordsByNameDesc_success() = runTest {
+        // given
+        (1..10).forEach { wordId ->
+            wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(wordId))
+        }
+        // when
+        val words = wordDao.getAllWordsByNameDesc().take(1).single()
+
+        // then
+        assertEquals(10, words.size)
+        // then
+        assertEquals(10, words.size)
+        for (i in 0 until words.lastIndex) {
+            assert(words[i].cachedWord.wordId >= words[i + 1].cachedWord.wordId)
+        }
+    }
+
+    @Test
+    fun getAllWordsByTimeAddedDesc_success() = runTest {
+        // given
+        (1..10).forEach { wordId ->
+            wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(wordId))
+        }
+        // when
+        val words = wordDao.getAllWordsByTimeAddedDesc().take(1).single()
+
+        // then
+        assertEquals(10, words.size)
+        // then
+        assertEquals(10, words.size)
+        for (i in 0 until words.lastIndex) {
+            assert(words[i].cachedWord.timeAdded >= words[i + 1].cachedWord.timeAdded)
+        }
+    }
+
+    @Test
+    fun getAllWordsByTimeAddedAsc_success() = runTest {
+        // given
+        (1..10).forEach { wordId ->
+            wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(wordId))
+        }
+        // when
+        val words = wordDao.getAllWordsByTimeAddedAsc().take(1).single()
+
+        // then
+        assertEquals(10, words.size)
+        // then
+        assertEquals(10, words.size)
+        for (i in 0 until words.lastIndex) {
+            assert(words[i].cachedWord.timeAdded <= words[i + 1].cachedWord.timeAdded)
+        }
+    }
+
+    @Test
+    fun getAllFavWordsByTimeAddedAsc_success() = runTest {
+        // given
+        (1..10).forEach { wordId ->
+            wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createFavCacheWord(wordId))
+        }
+        // when
+        val words = wordDao.getAllFavWordsByTimeAddedAsc().take(1).single()
+
+        // then
+        assertEquals(10, words.size)
+        // then
+        assertEquals(10, words.size)
+        for (i in 0 until words.lastIndex) {
+            assertTrue(words[i].cachedWord.isFavourite)
+            assert(words[i].cachedWord.timeAdded <= words[i + 1].cachedWord.timeAdded)
+        }
+        assertTrue(words[words.lastIndex].cachedWord.isFavourite)
+    }
+
+    @Test
+    fun getAllFavWordsByTimeAddedDesc_success() = runTest {
+        // given
+        (1..10).forEach { wordId ->
+            wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createFavCacheWord(wordId))
+        }
+        // when
+        val words = wordDao.getAllFavWordsByTimeAddedDesc().take(1).single()
+
+        // then
+        assertEquals(10, words.size)
+        // then
+        assertEquals(10, words.size)
+        for (i in 0 until words.lastIndex) {
+            assertTrue(words[i].cachedWord.isFavourite)
+            assert(words[i].cachedWord.timeAdded >= words[i + 1].cachedWord.timeAdded)
+        }
+        assertTrue(words[words.lastIndex].cachedWord.isFavourite)
+    }
+
+    @Test
+    fun getAllFavWordsByNameDesc_success() = runTest {
+        // given
+        (1..10).forEach { wordId ->
+            wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createFavCacheWord(wordId))
+        }
+        // when
+        val words = wordDao.getAllFavWordsByNameDesc().take(1).single()
+
+        // then
+        assertEquals(10, words.size)
+        // then
+        assertEquals(10, words.size)
+        for (i in 0 until words.lastIndex) {
+            assertTrue(words[i].cachedWord.isFavourite)
+            assert(words[i].cachedWord.wordId >= words[i + 1].cachedWord.wordId)
+        }
+        assertTrue(words[words.lastIndex].cachedWord.isFavourite)
+    }
+
+    @Test
+    fun getAllFavWordsByNameAsc_success() = runTest {
+        // given
+        (1..10).forEach { wordId ->
+            wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createFavCacheWord(wordId))
+        }
+        // when
+        val words = wordDao.getAllFavWordsByNameAsc().take(1).single()
+
+        // then
+        assertEquals(10, words.size)
+        // then
+        assertEquals(10, words.size)
+        for (i in 0 until words.lastIndex) {
+            assertTrue(words[i].cachedWord.isFavourite)
+            assert(words[i].cachedWord.wordId <= words[i + 1].cachedWord.wordId)
+        }
+        assertTrue(words[words.lastIndex].cachedWord.isFavourite)
+    }
+
+    @Test
+    fun searchWordByNameAsc_returns_3_words_sorted_by_name_with_similar_names() = runTest {
         // given
         wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(1))
         wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(11))
         wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(111))
 
         // when
-        val words = wordDao.searchWordsByName("1").take(1).single() ?: emptyList()
+        val words = wordDao.searchWordsByNameAsc("1").take(1).single() ?: emptyList()
 
         // then
         assertEquals(3, words.size)
@@ -138,17 +287,56 @@ class WordDaoTest {
     }
 
     @Test
-    fun getAllWords_returns_alphabetically_sorted_list() = runTest {
+    fun searchWordByNameDesc_success() = runTest {
         // given
-        (1..10).forEach {
-            wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(it))
-        }
+        wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(1))
+        wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(11))
+        wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(111))
+
         // when
-        val words = wordDao.getAllWords().take(1).single()
+        val words = wordDao.searchWordsByNameDesc("1").take(1).single() ?: emptyList()
+
+        // then
+        assertEquals(3, words.size)
         for (i in 0 until words.lastIndex) {
-            assertTrue(words[i].cachedWord.wordId <= words[i + 1].cachedWord.wordId)
+            assertTrue(words[i].cachedWord.wordId >= words[i + 1].cachedWord.wordId)
         }
     }
+
+    @Test
+    fun searchWordByTimeAddedDesc_success() = runTest {
+        // given
+        wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(1))
+        wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(11))
+        wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(111))
+
+        // when
+        val words = wordDao.searchWordsByTimeAddedDesc("1").take(1).single() ?: emptyList()
+
+        // then
+        assertEquals(3, words.size)
+        for (i in 0 until words.lastIndex) {
+            assertTrue(words[i].cachedWord.timeAdded >= words[i + 1].cachedWord.timeAdded)
+        }
+    }
+
+    @Test
+    fun searchWordByTimeAddedAsc_success() = runTest {
+        // given
+        wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(1))
+        wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(11))
+        wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(111))
+
+        // when
+        val words = wordDao.searchWordsByTimeAddedAsc("1").take(1).single() ?: emptyList()
+
+        // then
+        assertEquals(3, words.size)
+        for (i in 0 until words.lastIndex) {
+            assertTrue(words[i].cachedWord.timeAdded <= words[i + 1].cachedWord.timeAdded)
+        }
+    }
+
 
     @Test
     fun getWordById_returns_null_if_no_word_with_name_inDb() = runTest {
@@ -162,13 +350,67 @@ class WordDaoTest {
     }
 
     @Test
-    fun searchWordsByName_returns_emptyList_if_DB_has_no_words_with_that_name() = runTest {
+    fun searchWordsByNameAsc_returns_emptyList() = runTest {
         // given
         wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(1))
         // when
-        val words = wordDao.searchWordsByName("2").take(1).single()
+        val words = wordDao.searchWordsByNameAsc("2").take(1).single()
         // then
         assertTrue(words.isEmpty())
+    }
+
+    @Test
+    fun searchWordsByNameDesc_returns_emptyList() = runTest {
+        // given
+        wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(1))
+        // when
+        val words = wordDao.searchWordsByNameDesc("2").take(1).single()
+        // then
+        assertTrue(words.isEmpty())
+    }
+
+    @Test
+    fun searchWordsByTimeAddedAsc_returns_emptyList() = runTest {
+        // given
+        wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(1))
+        // when
+        val words = wordDao.searchWordsByTimeAddedAsc("2").take(1).single()
+        // then
+        assertTrue(words.isEmpty())
+    }
+
+    @Test
+    fun searchWordsByTimeAddedDesc_returns_emptyList() = runTest {
+        // given
+        wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(1))
+        // when
+        val words = wordDao.searchWordsByTimeAddedDesc("2").take(1).single()
+        // then
+        assertTrue(words.isEmpty())
+    }
+
+    @Test
+    fun setFavourite_success() = runTest {
+        // given
+        val word = FakeCachedWordFactory.createCachedWord(1)
+        wordDao.insertCachedWordAggregate(word)
+        // when
+        wordDao.setFavourite(word.cachedWord.wordId)
+        // then
+        val retrieved = wordDao.getWordById(word.cachedWord.wordId)
+        assertTrue(retrieved?.cachedWord?.isFavourite ?: throw Exception("Word in test cannot be null"))
+    }
+
+    @Test
+    fun setNotFavourite_success() = runTest {
+        // given
+        val word = FakeCachedWordFactory.createCachedWord(1)
+        wordDao.insertCachedWordAggregate(word)
+        // when
+        wordDao.setNotFavourite(word.cachedWord.wordId)
+        // then
+        val retrieved = wordDao.getWordById(word.cachedWord.wordId)
+        assertFalse(retrieved?.cachedWord?.isFavourite ?: throw Exception("Word in test cannot be null"))
     }
 }
 

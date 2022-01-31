@@ -5,4 +5,6 @@ data class Word(
     val wordProperties: List<WordProperties>,
     val syllable: Syllable,
     val pronunciation: String,
+    val isFavourite: Boolean = false,
+    val timeAdded: Long
 )
