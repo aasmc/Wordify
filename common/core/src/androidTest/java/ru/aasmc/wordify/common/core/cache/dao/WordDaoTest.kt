@@ -190,6 +190,30 @@ class WordDaoTest {
     }
 
     @Test
+    fun getAllWordsByNameAsc_emptyList() = runTest {
+        val words = wordDao.getAllWordsByNameAsc().take(1).single()
+        assertTrue(words.isEmpty())
+    }
+
+    @Test
+    fun getAllWordsByNameDesc_emptyList() = runTest {
+        val words = wordDao.getAllWordsByNameDesc().take(1).single()
+        assertTrue(words.isEmpty())
+    }
+
+    @Test
+    fun getAllWordsByTimeAddedAsc_emptyList() = runTest {
+        val words = wordDao.getAllWordsByTimeAddedAsc().take(1).single()
+        assertTrue(words.isEmpty())
+    }
+
+    @Test
+    fun getAllWordsByTimeAddedDesc_emptyList() = runTest {
+        val words = wordDao.getAllWordsByTimeAddedDesc().take(1).single()
+        assertTrue(words.isEmpty())
+    }
+
+    @Test
     fun getAllFavWordsByTimeAddedAsc_success() = runTest {
         // given
         (1..10).forEach { wordId ->
@@ -267,6 +291,46 @@ class WordDaoTest {
             assert(words[i].cachedWord.wordId <= words[i + 1].cachedWord.wordId)
         }
         assertTrue(words[words.lastIndex].cachedWord.isFavourite)
+    }
+
+    @Test
+    fun getAllFavWordsByNameAsc_emptyList() = runTest {
+        (1..10).forEach { wordId ->
+            wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(wordId))
+        }
+
+        val words = wordDao.getAllFavWordsByNameAsc().take(1).single()
+        assertTrue(words.isEmpty())
+    }
+
+    @Test
+    fun getAllFavWordsByNameDesc_emptyList() = runTest {
+        (1..10).forEach { wordId ->
+            wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(wordId))
+        }
+
+        val words = wordDao.getAllFavWordsByNameDesc().take(1).single()
+        assertTrue(words.isEmpty())
+    }
+
+    @Test
+    fun getAllFavWordsByTimeAddedAsc_emptyList() = runTest {
+        (1..10).forEach { wordId ->
+            wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(wordId))
+        }
+
+        val words = wordDao.getAllFavWordsByTimeAddedAsc().take(1).single()
+        assertTrue(words.isEmpty())
+    }
+
+    @Test
+    fun getAllFavWordsByTimeAdedDesc_emptyList() = runTest {
+        (1..10).forEach { wordId ->
+            wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(wordId))
+        }
+
+        val words = wordDao.getAllFavWordsByTimeAddedDesc().take(1).single()
+        assertTrue(words.isEmpty())
     }
 
     @Test

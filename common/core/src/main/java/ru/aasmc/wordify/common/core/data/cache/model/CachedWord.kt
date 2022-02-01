@@ -33,7 +33,7 @@ data class CachedWordAggregate(
             val cachedWord = cachedWordAggregate.cachedWord
             val cachedProps = cachedWordAggregate.wordProperties
             return Word(
-                name = cachedWord.wordId,
+                wordId = cachedWord.wordId,
                 wordProperties = cachedProps.map { CachedWordPropertiesAggregate.toDomain(it) },
                 syllable = Syllable(
                     count = cachedWord.syllable.count,
@@ -48,7 +48,7 @@ data class CachedWordAggregate(
         fun fromDomain(word: Word): CachedWordAggregate {
             return CachedWordAggregate(
                 cachedWord = CachedWord(
-                    wordId = word.name,
+                    wordId = word.wordId,
                     pronunciation = word.pronunciation,
                     syllable = CachedSyllable(
                         count = word.syllable.count,
@@ -60,7 +60,7 @@ data class CachedWordAggregate(
                 wordProperties = word.wordProperties.map { props ->
                     CachedWordPropertiesAggregate.fromDomain(
                         wordProperties = props,
-                        word = word.name
+                        word = word.wordId
                     )
                 }
             )

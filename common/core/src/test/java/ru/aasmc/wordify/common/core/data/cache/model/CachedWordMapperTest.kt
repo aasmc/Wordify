@@ -17,7 +17,7 @@ class CachedWordMapperTest {
     fun mapToDomain_correct() {
         val word: Word = CachedWordAggregate.toDomain(cachedWord)
         // check size and word
-        assertEquals("$WORD_TO_CREATE", word.name)
+        assertEquals("$WORD_TO_CREATE", word.wordId)
         assertTrue(word.wordProperties.size == WORD_TO_CREATE)
         assertTrue(word.syllable.count == WORD_TO_CREATE)
         assertTrue(word.pronunciation == "$WORD_TO_CREATE")

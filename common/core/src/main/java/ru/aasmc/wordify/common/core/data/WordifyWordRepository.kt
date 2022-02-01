@@ -22,6 +22,7 @@ class WordifyWordRepository @Inject constructor(
     private val apiMapper: WordDtoMapper,
     private val dispatchersProvider: DispatchersProvider
 ) : WordRepository {
+
     override fun getAllWords(sort: Sort): Flow<List<Word>> {
         val searchFlow = when (sort) {
             Sort.ASC_NAME -> cache.getAllWordsByNameAsc()
@@ -44,7 +45,6 @@ class WordifyWordRepository @Inject constructor(
      * and returns this word from cache. In other exceptional cases, returns Result.Failure.
      */
     override suspend fun getWordById(wordId: String): Result<Word> {
-
         val cacheResult = safeCacheCall(dispatchersProvider.io()) {
             cache.getWordById(wordId)
         }

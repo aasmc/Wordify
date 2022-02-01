@@ -8,7 +8,7 @@ import java.time.Instant
 object FakeDomainWordFactory {
     fun createDomainWord(id: Int): Word {
         return Word(
-            name = "$id",
+            wordId = "$id",
             wordProperties = createWordProperties(id),
             syllable = Syllable(
                 count = id,

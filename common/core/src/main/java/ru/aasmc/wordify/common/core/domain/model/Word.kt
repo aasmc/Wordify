@@ -1,7 +1,7 @@
 package ru.aasmc.wordify.common.core.domain.model
 
 data class Word(
-    val name: String,
+    val wordId: String,
     val wordProperties: List<WordProperties>,
     val syllable: Syllable,
     val pronunciation: String,

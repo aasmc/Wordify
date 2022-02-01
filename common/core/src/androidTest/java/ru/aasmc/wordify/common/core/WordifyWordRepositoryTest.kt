@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import junit.framework.Assert.assertEquals
+import junit.framework.Assert.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.flow.take
@@ -24,11 +24,15 @@ import ru.aasmc.wordify.common.core.data.cache.Cache
 import ru.aasmc.wordify.common.core.data.cache.RoomCache
 import ru.aasmc.wordify.common.core.data.cache.WordifyDatabase
 import ru.aasmc.wordify.common.core.domain.Result
+import ru.aasmc.wordify.common.core.domain.repositories.Sort
 import ru.aasmc.wordify.common.core.domain.repositories.WordRepository
 import ru.aasmc.wordify.common.core.fakes.FakeCachedWordFactory
 import ru.aasmc.wordify.common.core.utils.CoroutineDispatchersProvider
 import javax.inject.Inject
 
+/**
+ * I don't test sorting order here, since all that logic is tested in dao tests.
+ */
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
 class WordifyWordRepositoryTest {
@@ -48,10 +52,8 @@ class WordifyWordRepositoryTest {
     @Inject
     lateinit var retrofitBuilder: Retrofit.Builder
 
-
     @Inject
     lateinit var apiMapper: WordDtoMapper
-
 
     @Before
     fun setup() {
@@ -99,9 +101,9 @@ class WordifyWordRepositoryTest {
         // then
         assert(result is Result.Success)
         val word = (result as Result.Success).data
-        val cachedWord = cache.getWordById(word.name)
+        val cachedWord = cache.getWordById(word.wordId)
         assert(cachedWord != null)
-        assertEquals(word.name, cachedWord?.cachedWord?.wordId)
+        assertEquals(word.wordId, cachedWord?.cachedWord?.wordId)
         assertEquals(word.pronunciation, cachedWord?.cachedWord?.pronunciation)
     }
 
@@ -126,7 +128,7 @@ class WordifyWordRepositoryTest {
     }
 
     @Test
-    fun searchWord_emptyList_onEmptyCache() = runTest {
+    fun searchWord_defaultSortByNameAsc_emptyList_onEmptyCache() = runTest {
         // given empty cache
         // when
         val result = repository.searchWord("track").take(1).single()
@@ -134,7 +136,7 @@ class WordifyWordRepositoryTest {
     }
 
     @Test
-    fun searchWord_success() = runTest {
+    fun searchWord_defaultSortByNameAsc_success() = runTest {
         // given
         fakeServer.setHappyPathDispatcher("track")
         repository.getWordById("track")
@@ -146,12 +148,12 @@ class WordifyWordRepositoryTest {
         // then
         assertEquals(2, result.size)
         for (i in 0 until result.lastIndex) {
-            assert(result[i].name < result[i + 1].name)
+            assert(result[i].wordId < result[i + 1].wordId)
         }
     }
 
     @Test
-    fun getAllWords_emptyList_onEmptyCache() = runTest {
+    fun getAllWords_defaultSortByNameAsc_emptyList_onEmptyCache() = runTest {
         // given empty cache
         // when
         val result = repository.getAllWords().take(1).single()
@@ -160,7 +162,7 @@ class WordifyWordRepositoryTest {
     }
 
     @Test
-    fun getAllWords_success() = runTest {
+    fun getAllWords_defaultSortByNameAsc_success() = runTest {
         // given
         fakeServer.setHappyPathDispatcher("track")
         repository.getWordById("track")
@@ -172,10 +174,76 @@ class WordifyWordRepositoryTest {
         // then
         assert(result.size == 2)
         for(i in 0 until result.lastIndex) {
-            assert(result[i].name < result[i + 1].name)
+            assert(result[i].wordId < result[i + 1].wordId)
         }
-        assertEquals("kingdom", result[0].name)
-        assertEquals("track", result[1].name)
+        assertEquals("kingdom", result[0].wordId)
+        assertEquals("track", result[1].wordId)
+    }
+
+    @Test
+    fun getAllWords_sortByNameDesc_success() = runTest {
+        // given
+        fakeServer.setHappyPathDispatcher("track")
+        repository.getWordById("track")
+        fakeServer.setHappyPathDispatcher("kingdom")
+        repository.getWordById("kingdom")
+
+        // when
+        val result = repository.getAllWords(Sort.DESC_NAME).take(1).single()
+        // then
+        assert(result.size == 2)
+        for(i in 0 until result.lastIndex) {
+            assert(result[i].wordId > result[i + 1].wordId)
+        }
+        assertEquals("kingdom", result[1].wordId)
+        assertEquals("track", result[0].wordId)
+    }
+
+    @Test
+    fun setFavourite_success() = runTest {
+        fakeServer.setHappyPathDispatcher("track")
+        val result = repository.getWordById("track")
+        assert(result is Result.Success)
+        val word = (result as Result.Success).data
+        assertFalse(word.isFavourite)
+
+        repository.setFavourite(word.wordId, true)
+
+        val retrievedResult = repository.getWordById(word.wordId)
+        assert(retrievedResult is Result.Success)
+        val retrievedWord = (retrievedResult as Result.Success).data
+        assertTrue(retrievedWord.isFavourite)
+    }
+
+    @Test
+    fun setNotFavourite_success() = runTest {
+        fakeServer.setHappyPathDispatcher("track")
+        val result = repository.getWordById("track")
+        val word = (result as Result.Success).data
+        repository.setFavourite(word.wordId, true)
+        val retrievedResult = repository.getWordById(word.wordId)
+        val retrievedWord = (retrievedResult as Result.Success).data
+        assertTrue(retrievedWord.isFavourite)
+
+        repository.setFavourite(retrievedWord.wordId, false)
+        val retrievedNotFavResult = repository.getWordById(retrievedWord.wordId)
+        assertTrue(retrievedNotFavResult is Result.Success)
+        val notFavWord = (retrievedNotFavResult as Result.Success).data
+        assertFalse(notFavWord.isFavourite)
+    }
+
+    @Test
+    fun getAllFavWords_defaultSortByNameAsc_success() = runTest {
+        // given
+        fakeServer.setHappyPathDispatcher("track")
+        repository.getWordById("track")
+        fakeServer.setHappyPathDispatcher("kingdom")
+        repository.getWordById("kingdom")
+        repository.setFavourite("track", true)
+
+        val favWords = repository.getAllFavWords().take(1).single()
+        assertTrue(favWords.size == 1)
+        assertTrue(favWords[0].wordId == "track")
     }
 
 }
