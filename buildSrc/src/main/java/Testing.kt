@@ -19,6 +19,8 @@ object Testing {
 
     private const val coroutines_test_version = "1.6.0"
     const val coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_test_version"
+
+    const val paging_test = "androidx.paging:paging-common:${Paging.paging_version}"
 }
 
 object ComposeTest {

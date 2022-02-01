@@ -1,5 +1,8 @@
 package ru.aasmc.wordify.common.core.data.cache
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import ru.aasmc.wordify.common.core.data.cache.dao.WordDao
 import ru.aasmc.wordify.common.core.data.cache.model.CachedWordAggregate
@@ -12,36 +15,100 @@ class RoomCache @Inject constructor(
         wordDao.insertCachedWordAggregate(cachedWord)
     }
 
-    override fun getAllWordsByNameAsc(): Flow<List<CachedWordAggregate>> {
-        return wordDao.getAllWordsByNameAsc()
+    override fun getAllWordsByNameAsc(): Flow<PagingData<CachedWordAggregate>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 30,
+                enablePlaceholders = true,
+                maxSize = 200
+            )
+        ) {
+            wordDao.getAllWordsByNameAsc()
+        }.flow
     }
 
-    override fun getAllWordsByNameDesc(): Flow<List<CachedWordAggregate>> {
-        return wordDao.getAllWordsByNameDesc()
+    override fun getAllWordsByNameDesc(): Flow<PagingData<CachedWordAggregate>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 30,
+                enablePlaceholders = true,
+                maxSize = 200
+            )
+        ) {
+            wordDao.getAllWordsByNameDesc()
+        }.flow
     }
 
-    override fun getAllWordsByTimeAddedAsc(): Flow<List<CachedWordAggregate>> {
-        return wordDao.getAllWordsByTimeAddedAsc()
+    override fun getAllWordsByTimeAddedAsc(): Flow<PagingData<CachedWordAggregate>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 30,
+                enablePlaceholders = true,
+                maxSize = 200
+            )
+        ) {
+            wordDao.getAllWordsByTimeAddedAsc()
+        }.flow
     }
 
-    override fun getAllWordsByTimeAddedDesc(): Flow<List<CachedWordAggregate>> {
-        return wordDao.getAllWordsByTimeAddedDesc()
+    override fun getAllWordsByTimeAddedDesc(): Flow<PagingData<CachedWordAggregate>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 30,
+                enablePlaceholders = true,
+                maxSize = 200
+            )
+        ) {
+            wordDao.getAllWordsByTimeAddedDesc()
+        }.flow
     }
 
-    override fun searchWordsByNameAsc(name: String): Flow<List<CachedWordAggregate>> {
-        return wordDao.searchWordsByNameAsc(name)
+    override fun searchWordsByNameAsc(name: String): Flow<PagingData<CachedWordAggregate>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 30,
+                enablePlaceholders = true,
+                maxSize = 200
+            )
+        ) {
+            wordDao.searchWordsByNameAsc(name)
+        }.flow
     }
 
-    override fun searchWordsByNameDesc(name: String): Flow<List<CachedWordAggregate>> {
-        return wordDao.searchWordsByNameDesc(name)
+    override fun searchWordsByNameDesc(name: String): Flow<PagingData<CachedWordAggregate>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 30,
+                enablePlaceholders = true,
+                maxSize = 200
+            )
+        ) {
+            wordDao.searchWordsByNameDesc(name)
+        }.flow
     }
 
-    override fun searchWordsByTimeAddedAsc(name: String): Flow<List<CachedWordAggregate>> {
-        return wordDao.searchWordsByTimeAddedAsc(name)
+    override fun searchWordsByTimeAddedAsc(name: String): Flow<PagingData<CachedWordAggregate>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 30,
+                enablePlaceholders = true,
+                maxSize = 200
+            )
+        ) {
+            wordDao.searchWordsByTimeAddedAsc(name)
+        }.flow
     }
 
-    override fun searchWordsByTimeAddedDesc(name: String): Flow<List<CachedWordAggregate>> {
-        return wordDao.searchWordsByTimeAddedDesc(name)
+    override fun searchWordsByTimeAddedDesc(name: String): Flow<PagingData<CachedWordAggregate>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 30,
+                enablePlaceholders = true,
+                maxSize = 200
+            )
+        ) {
+            wordDao.searchWordsByTimeAddedDesc(name)
+        }.flow
     }
 
     override suspend fun getWordById(name: String): CachedWordAggregate? {
@@ -56,19 +123,51 @@ class RoomCache @Inject constructor(
         }
     }
 
-    override fun getAllFavWordsByTimeAddedDesc(): Flow<List<CachedWordAggregate>> {
-        return wordDao.getAllFavWordsByTimeAddedDesc()
+    override fun getAllFavWordsByTimeAddedDesc(): Flow<PagingData<CachedWordAggregate>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 30,
+                enablePlaceholders = true,
+                maxSize = 200
+            )
+        ) {
+            wordDao.getAllFavWordsByTimeAddedDesc()
+        }.flow
     }
 
-    override fun getAllFavWordsByNameAsc(): Flow<List<CachedWordAggregate>> {
-        return wordDao.getAllFavWordsByNameAsc()
+    override fun getAllFavWordsByNameAsc(): Flow<PagingData<CachedWordAggregate>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 30,
+                enablePlaceholders = true,
+                maxSize = 200
+            )
+        ) {
+            wordDao.getAllFavWordsByNameAsc()
+        }.flow
     }
 
-    override fun getAllFavWordsByNameDesc(): Flow<List<CachedWordAggregate>> {
-        return wordDao.getAllFavWordsByNameDesc()
+    override fun getAllFavWordsByNameDesc(): Flow<PagingData<CachedWordAggregate>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 30,
+                enablePlaceholders = true,
+                maxSize = 200
+            )
+        ) {
+            wordDao.getAllFavWordsByNameDesc()
+        }.flow
     }
 
-    override fun getAllFavWordsByTimeAddedAsc(): Flow<List<CachedWordAggregate>> {
-        return wordDao.getAllFavWordsByTimeAddedAsc()
+    override fun getAllFavWordsByTimeAddedAsc(): Flow<PagingData<CachedWordAggregate>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 30,
+                enablePlaceholders = true,
+                maxSize = 200
+            )
+        ) {
+            wordDao.getAllFavWordsByTimeAddedAsc()
+        }.flow
     }
 }

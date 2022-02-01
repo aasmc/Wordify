@@ -1,5 +1,6 @@
 package ru.aasmc.wordify.common.core.data.cache.dao
 
+import androidx.paging.PagingSource
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import ru.aasmc.wordify.common.core.data.cache.model.*
@@ -9,35 +10,35 @@ abstract class WordDao {
 
     @Transaction
     @Query("SELECT * FROM words ORDER BY wordId ASC")
-    abstract fun getAllWordsByNameAsc(): Flow<List<CachedWordAggregate>>
+    abstract fun getAllWordsByNameAsc(): PagingSource<Int, CachedWordAggregate>
 
     @Transaction
     @Query("SELECT * FROM words ORDER BY wordId DESC")
-    abstract fun getAllWordsByNameDesc(): Flow<List<CachedWordAggregate>>
+    abstract fun getAllWordsByNameDesc(): PagingSource<Int, CachedWordAggregate>
 
     @Transaction
     @Query("SELECT * FROM words ORDER BY timeAdded ASC")
-    abstract fun getAllWordsByTimeAddedAsc(): Flow<List<CachedWordAggregate>>
+    abstract fun getAllWordsByTimeAddedAsc(): PagingSource<Int, CachedWordAggregate>
 
     @Transaction
     @Query("SELECT * FROM words ORDER BY timeAdded DESC")
-    abstract fun getAllWordsByTimeAddedDesc(): Flow<List<CachedWordAggregate>>
+    abstract fun getAllWordsByTimeAddedDesc(): PagingSource<Int, CachedWordAggregate>
 
     @Transaction
     @Query("SELECT * FROM words WHERE isFavourite = 1 ORDER BY wordId ASC")
-    abstract fun getAllFavWordsByNameAsc(): Flow<List<CachedWordAggregate>>
+    abstract fun getAllFavWordsByNameAsc(): PagingSource<Int, CachedWordAggregate>
 
     @Transaction
     @Query("SELECT * FROM words WHERE isFavourite = 1 ORDER BY wordId DESC")
-    abstract fun getAllFavWordsByNameDesc(): Flow<List<CachedWordAggregate>>
+    abstract fun getAllFavWordsByNameDesc(): PagingSource<Int, CachedWordAggregate>
 
     @Transaction
     @Query("SELECT * FROM words WHERE isFavourite = 1 ORDER BY timeAdded ASC")
-    abstract fun getAllFavWordsByTimeAddedAsc(): Flow<List<CachedWordAggregate>>
+    abstract fun getAllFavWordsByTimeAddedAsc(): PagingSource<Int, CachedWordAggregate>
 
     @Transaction
     @Query("SELECT * FROM words WHERE isFavourite = 1 ORDER BY timeAdded DESC")
-    abstract fun getAllFavWordsByTimeAddedDesc(): Flow<List<CachedWordAggregate>>
+    abstract fun getAllFavWordsByTimeAddedDesc(): PagingSource<Int, CachedWordAggregate>
 
     @Transaction
     @Query("SELECT * FROM words WHERE wordId = :wordId")
@@ -81,18 +82,18 @@ abstract class WordDao {
 
     @Transaction
     @Query("SELECT * FROM words WHERE wordId LIKE '%' || :name || '%' ORDER BY wordId ASC")
-    abstract fun searchWordsByNameAsc(name: String): Flow<List<CachedWordAggregate>>
+    abstract fun searchWordsByNameAsc(name: String): PagingSource<Int, CachedWordAggregate>
 
     @Transaction
     @Query("SELECT * FROM words WHERE wordId LIKE '%' || :name || '%' ORDER BY wordId DESC")
-    abstract fun searchWordsByNameDesc(name: String): Flow<List<CachedWordAggregate>>
+    abstract fun searchWordsByNameDesc(name: String): PagingSource<Int, CachedWordAggregate>
 
     @Transaction
     @Query("SELECT * FROM words WHERE wordId LIKE '%' || :name || '%' ORDER BY timeAdded DESC")
-    abstract fun searchWordsByTimeAddedDesc(name: String): Flow<List<CachedWordAggregate>>
+    abstract fun searchWordsByTimeAddedDesc(name: String): PagingSource<Int, CachedWordAggregate>
 
     @Transaction
     @Query("SELECT * FROM words WHERE wordId LIKE '%' || :name || '%' ORDER BY timeAdded ASC")
-    abstract fun searchWordsByTimeAddedAsc(name: String): Flow<List<CachedWordAggregate>>
+    abstract fun searchWordsByTimeAddedAsc(name: String): PagingSource<Int, CachedWordAggregate>
 
 }

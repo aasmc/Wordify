@@ -1,5 +1,7 @@
 package ru.aasmc.wordify.common.core.data
 
+import androidx.paging.PagingData
+import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -23,7 +25,7 @@ class WordifyWordRepository @Inject constructor(
     private val dispatchersProvider: DispatchersProvider
 ) : WordRepository {
 
-    override fun getAllWords(sort: Sort): Flow<List<Word>> {
+    override fun getAllWords(sort: Sort): Flow<PagingData<Word>> {
         val searchFlow = when (sort) {
             Sort.ASC_NAME -> cache.getAllWordsByNameAsc()
             Sort.DESC_NAME -> cache.getAllWordsByNameDesc()
@@ -31,10 +33,9 @@ class WordifyWordRepository @Inject constructor(
             Sort.DESC_TIME -> cache.getAllWordsByTimeAddedDesc()
         }
         return searchFlow
-            .distinctUntilChanged()
             .map { cachedWords ->
-                cachedWords.map { cachedWord ->
-                    CachedWordAggregate.toDomain(cachedWord)
+                cachedWords.map {
+                    CachedWordAggregate.toDomain(it)
                 }
             }
     }
@@ -76,7 +77,7 @@ class WordifyWordRepository @Inject constructor(
         }
     }
 
-    override fun searchWord(word: String, sort: Sort): Flow<List<Word>> {
+    override fun searchWord(word: String, sort: Sort): Flow<PagingData<Word>> {
         val searchFlow = when (sort) {
             Sort.ASC_NAME -> cache.searchWordsByNameAsc(word)
             Sort.DESC_NAME -> cache.searchWordsByNameDesc(word)
@@ -84,7 +85,6 @@ class WordifyWordRepository @Inject constructor(
             Sort.DESC_TIME -> cache.searchWordsByTimeAddedDesc(word)
         }
         return searchFlow
-            .distinctUntilChanged()
             .map { cachedWords ->
                 cachedWords.map { cachedWord ->
                     CachedWordAggregate.toDomain(cachedWord)
@@ -96,7 +96,7 @@ class WordifyWordRepository @Inject constructor(
         cache.setFavourite(wordId, isFavourite)
     }
 
-    override fun getAllFavWords(sort: Sort): Flow<List<Word>> {
+    override fun getAllFavWords(sort: Sort): Flow<PagingData<Word>> {
         val wordsFlow = when (sort) {
             Sort.ASC_NAME -> cache.getAllFavWordsByNameAsc()
             Sort.DESC_NAME -> cache.getAllFavWordsByNameDesc()
@@ -104,7 +104,6 @@ class WordifyWordRepository @Inject constructor(
             Sort.DESC_TIME -> cache.getAllFavWordsByTimeAddedDesc()
         }
         return wordsFlow
-            .distinctUntilChanged()
             .map { cachedWords ->
                 cachedWords.map { cachedWord ->
                     CachedWordAggregate.toDomain(cachedWord)

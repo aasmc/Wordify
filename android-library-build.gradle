@@ -55,6 +55,8 @@ dependencies{
     debugImplementation Compose.tooling
     implementation Compose.navigation
 
+    implementation Paging.paging
+
     implementation Coil.coil
 
     implementation Google.material
@@ -65,6 +67,7 @@ dependencies{
     testImplementation Junit.junit4
     testImplementation Mockito.mockitoKotlin
     testImplementation Testing.robolectric
+    testImplementation Testing.paging_test
 
     debugImplementation Testing.androidxTestExt
     debugImplementation Testing.archCoreTesting
