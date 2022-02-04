@@ -1,11 +1,6 @@
 package ru.aasmc.wordify.common.core.data.preferences
 
-import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.preferencesDataStore
-import dagger.hilt.android.qualifiers.ApplicationContext
-import ru.aasmc.constants.PreferencesConstants
-import javax.inject.Inject
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
@@ -18,28 +13,26 @@ import ru.aasmc.wordify.common.core.domain.repositories.PreferencesRepository
 import ru.aasmc.wordify.common.core.domain.repositories.Sort
 import ru.aasmc.wordify.common.core.domain.repositories.ThemePreference
 import java.io.IOException
-
-private val Context.dataStore: DataStore<Preferences>
-        by preferencesDataStore(name = PreferencesConstants.DATASTORE_NAME)
+import javax.inject.Inject
 
 class WordifyPreferences @Inject constructor(
-    @ApplicationContext private val context: Context
+    private val dataStore: DataStore<Preferences>
 ) : PreferencesRepository {
 
     override suspend fun saveSortOrder(sortOrder: Sort) {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             preferences[WORD_SORT_ORDER] = sortOrder.name
         }
     }
 
     override suspend fun saveAppThemePreference(themePreference: ThemePreference) {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             preferences[THEME_PREFERENCE] = themePreference.name
         }
     }
 
     override fun getUserPreferences(): Flow<UserPreferences> {
-        return context.dataStore.data
+        return dataStore.data
             .catch { exception ->
                 if (exception is IOException) {
                     emit(emptyPreferences())
