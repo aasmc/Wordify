@@ -25,6 +25,11 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion Compose.composeVersion
     }
+    buildTypes {
+        debug {
+            buildConfigField 'String', "ApiKey", words_key
+        }
+    }
     sourceSets {
         androidTest {
             assets.srcDirs = ["src/debug/assets"]
