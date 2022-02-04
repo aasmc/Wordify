@@ -2,9 +2,8 @@ package ru.aasmc.wordify.common.core.data
 
 import androidx.paging.PagingData
 import androidx.paging.map
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.*
 import ru.aasmc.wordify.common.core.data.api.WordifyApi
 import ru.aasmc.wordify.common.core.data.api.model.mappers.WordDtoMapper
 import ru.aasmc.wordify.common.core.data.cache.Cache
@@ -84,7 +83,7 @@ class WordifyWordRepository @Inject constructor(
             Sort.ASC_TIME -> cache.searchWordsByTimeAddedAsc(word)
             Sort.DESC_TIME -> cache.searchWordsByTimeAddedDesc(word)
         }
-        return searchFlow
+        return  searchFlow
             .map { cachedWords ->
                 cachedWords.map { cachedWord ->
                     CachedWordAggregate.toDomain(cachedWord)
