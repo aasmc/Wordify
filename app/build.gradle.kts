@@ -55,6 +55,7 @@ dependencies {
     implementation(project(Modules.wordFavouritesList))
     implementation(project(Modules.wordList))
     implementation(project(Modules.settings))
+    implementation(project(Modules.resources))
 
     implementation(Accompanist.animations)
     implementation(AndroidX.coreKtx)

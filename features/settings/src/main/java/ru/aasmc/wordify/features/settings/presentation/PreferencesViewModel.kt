@@ -21,8 +21,8 @@ class PreferencesViewModel @Inject constructor(
 
     private val _uiState: MutableStateFlow<PreferencesUiState> =
         MutableStateFlow(PreferencesUiState.Empty)
-    val uiState: StateFlow<PreferencesUiState>
-        get() = _uiState.asStateFlow()
+    val uiState: StateFlow<PreferencesUiState> = _uiState.asStateFlow()
+
 
     val userPreferencesFlow = getUserPreferences()
 

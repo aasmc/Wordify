@@ -32,4 +32,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation AndroidX.coreKtx
+    implementation Compose.ui
+    implementation Compose.material
+    implementation Google.material
 }

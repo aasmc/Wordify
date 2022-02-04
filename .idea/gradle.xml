@@ -16,7 +16,6 @@
             <option value="$PROJECT_DIR$/common/constants" />
             <option value="$PROJECT_DIR$/common/core" />
             <option value="$PROJECT_DIR$/common/resources" />
-            <option value="$PROJECT_DIR$/common/theme" />
             <option value="$PROJECT_DIR$/common/uicomponents" />
             <option value="$PROJECT_DIR$/features" />
             <option value="$PROJECT_DIR$/features/settings" />

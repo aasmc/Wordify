@@ -47,7 +47,6 @@ android {
 dependencies{
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(Modules.logging)
-    implementation project(Modules.theme)
     implementation project(Modules.resources)
     implementation project(Modules.constants)
 

@@ -1,4 +1,4 @@
-package ru.aasmc.wordify.theme
+package ru.aasmc.wordify.resources.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
