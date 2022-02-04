@@ -26,10 +26,15 @@ class WordifyPreferences @Inject constructor(
     @ApplicationContext private val context: Context
 ) : PreferencesRepository {
 
-    override suspend fun saveUserPreference(userPreferences: UserPreferences) {
+    override suspend fun saveSortOrder(sortOrder: Sort) {
         context.dataStore.edit { preferences ->
-            preferences[WORD_SORT_ORDER] = userPreferences.sortOrder.name
-            preferences[THEME_PREFERENCE] = userPreferences.appTheme.name
+            preferences[WORD_SORT_ORDER] = sortOrder.name
+        }
+    }
+
+    override suspend fun saveAppThemePreference(themePreference: ThemePreference) {
+        context.dataStore.edit { preferences ->
+            preferences[THEME_PREFERENCE] = themePreference.name
         }
     }
 

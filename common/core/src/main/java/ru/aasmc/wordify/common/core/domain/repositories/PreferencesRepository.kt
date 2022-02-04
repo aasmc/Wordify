@@ -5,7 +5,9 @@ import ru.aasmc.wordify.common.core.domain.model.UserPreferences
 
 interface PreferencesRepository {
 
-    suspend fun saveUserPreference(userPreferences: UserPreferences)
+    suspend fun saveSortOrder(sortOrder: Sort)
+
+    suspend fun saveAppThemePreference(themePreference: ThemePreference)
 
     fun getUserPreferences(): Flow<UserPreferences>
 
