@@ -56,6 +56,8 @@ dependencies{
     implementation Compose.navigation
 
     implementation Paging.paging
+    implementation Paging.paging_room
+    implementation Paging.paging_compose
 
     implementation Coil.coil
 
@@ -72,6 +74,7 @@ dependencies{
     debugImplementation Testing.androidxTestExt
     debugImplementation Testing.archCoreTesting
     debugImplementation Testing.coroutinesTest
+    debugImplementation Testing.truth
     androidTestImplementation Testing.androidXRunner
     androidTestImplementation Testing.hiltAndroidTesting
     kaptAndroidTest Testing.hiltTestCompiler

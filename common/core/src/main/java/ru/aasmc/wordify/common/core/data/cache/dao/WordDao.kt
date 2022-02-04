@@ -55,6 +55,7 @@ abstract class WordDao {
      * but can decompose it into its @Entity annotated components and pass
      * them into this method. Room will know how to insert them.
      */
+    @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun insertWordPropertiesAggregate(
         cachedWordProperties: CachedWordProperties,

@@ -3,24 +3,30 @@ package ru.aasmc.wordify.common.core.data.cache
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.room.withTransaction
 import kotlinx.coroutines.flow.Flow
+import ru.aasmc.constants.CacheConstants.MAX_SIZE
+import ru.aasmc.constants.CacheConstants.PAGE_SIZE
 import ru.aasmc.wordify.common.core.data.cache.dao.WordDao
 import ru.aasmc.wordify.common.core.data.cache.model.CachedWordAggregate
 import javax.inject.Inject
 
 class RoomCache @Inject constructor(
-    private val wordDao: WordDao
+    private val db: WordifyDatabase
 ) : Cache {
+    private val wordDao = db.wordDao()
     override suspend fun saveWord(cachedWord: CachedWordAggregate) {
-        wordDao.insertCachedWordAggregate(cachedWord)
+        db.withTransaction {
+            wordDao.insertCachedWordAggregate(cachedWord)
+        }
     }
 
     override fun getAllWordsByNameAsc(): Flow<PagingData<CachedWordAggregate>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 30,
+                pageSize = PAGE_SIZE,
                 enablePlaceholders = true,
-                maxSize = 200
+                maxSize = MAX_SIZE
             )
         ) {
             wordDao.getAllWordsByNameAsc()
@@ -30,9 +36,9 @@ class RoomCache @Inject constructor(
     override fun getAllWordsByNameDesc(): Flow<PagingData<CachedWordAggregate>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 30,
+                pageSize = PAGE_SIZE,
                 enablePlaceholders = true,
-                maxSize = 200
+                maxSize = MAX_SIZE
             )
         ) {
             wordDao.getAllWordsByNameDesc()
@@ -42,9 +48,9 @@ class RoomCache @Inject constructor(
     override fun getAllWordsByTimeAddedAsc(): Flow<PagingData<CachedWordAggregate>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 30,
+                pageSize = PAGE_SIZE,
                 enablePlaceholders = true,
-                maxSize = 200
+                maxSize = MAX_SIZE
             )
         ) {
             wordDao.getAllWordsByTimeAddedAsc()
@@ -54,9 +60,9 @@ class RoomCache @Inject constructor(
     override fun getAllWordsByTimeAddedDesc(): Flow<PagingData<CachedWordAggregate>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 30,
+                pageSize = PAGE_SIZE,
                 enablePlaceholders = true,
-                maxSize = 200
+                maxSize = MAX_SIZE
             )
         ) {
             wordDao.getAllWordsByTimeAddedDesc()
@@ -66,9 +72,9 @@ class RoomCache @Inject constructor(
     override fun searchWordsByNameAsc(name: String): Flow<PagingData<CachedWordAggregate>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 30,
+                pageSize = PAGE_SIZE,
                 enablePlaceholders = true,
-                maxSize = 200
+                maxSize = MAX_SIZE
             )
         ) {
             wordDao.searchWordsByNameAsc(name)
@@ -78,9 +84,9 @@ class RoomCache @Inject constructor(
     override fun searchWordsByNameDesc(name: String): Flow<PagingData<CachedWordAggregate>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 30,
+                pageSize = PAGE_SIZE,
                 enablePlaceholders = true,
-                maxSize = 200
+                maxSize = MAX_SIZE
             )
         ) {
             wordDao.searchWordsByNameDesc(name)
@@ -90,9 +96,9 @@ class RoomCache @Inject constructor(
     override fun searchWordsByTimeAddedAsc(name: String): Flow<PagingData<CachedWordAggregate>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 30,
+                pageSize = PAGE_SIZE,
                 enablePlaceholders = true,
-                maxSize = 200
+                maxSize = MAX_SIZE
             )
         ) {
             wordDao.searchWordsByTimeAddedAsc(name)
@@ -102,9 +108,9 @@ class RoomCache @Inject constructor(
     override fun searchWordsByTimeAddedDesc(name: String): Flow<PagingData<CachedWordAggregate>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 30,
+                pageSize = PAGE_SIZE,
                 enablePlaceholders = true,
-                maxSize = 200
+                maxSize = MAX_SIZE
             )
         ) {
             wordDao.searchWordsByTimeAddedDesc(name)
@@ -126,9 +132,9 @@ class RoomCache @Inject constructor(
     override fun getAllFavWordsByTimeAddedDesc(): Flow<PagingData<CachedWordAggregate>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 30,
+                pageSize = PAGE_SIZE,
                 enablePlaceholders = true,
-                maxSize = 200
+                maxSize = MAX_SIZE
             )
         ) {
             wordDao.getAllFavWordsByTimeAddedDesc()
@@ -138,9 +144,9 @@ class RoomCache @Inject constructor(
     override fun getAllFavWordsByNameAsc(): Flow<PagingData<CachedWordAggregate>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 30,
+                pageSize = PAGE_SIZE,
                 enablePlaceholders = true,
-                maxSize = 200
+                maxSize = MAX_SIZE
             )
         ) {
             wordDao.getAllFavWordsByNameAsc()
@@ -150,9 +156,9 @@ class RoomCache @Inject constructor(
     override fun getAllFavWordsByNameDesc(): Flow<PagingData<CachedWordAggregate>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 30,
+                pageSize = PAGE_SIZE,
                 enablePlaceholders = true,
-                maxSize = 200
+                maxSize = MAX_SIZE
             )
         ) {
             wordDao.getAllFavWordsByNameDesc()
@@ -162,9 +168,9 @@ class RoomCache @Inject constructor(
     override fun getAllFavWordsByTimeAddedAsc(): Flow<PagingData<CachedWordAggregate>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 30,
+                pageSize = PAGE_SIZE,
                 enablePlaceholders = true,
-                maxSize = 200
+                maxSize = MAX_SIZE
             )
         ) {
             wordDao.getAllFavWordsByTimeAddedAsc()

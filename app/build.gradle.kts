@@ -76,6 +76,10 @@ dependencies {
     implementation(OkHttp.loggingInterceptor)
     implementation(Room.runtime)
 
+    implementation(Paging.paging)
+    implementation(Paging.paging_room)
+    implementation(Paging.paging_compose)
+
 
     implementation(AndroidX.lifecycleVmKtx)
     implementation(AndroidX.lifeCycleRuntime)

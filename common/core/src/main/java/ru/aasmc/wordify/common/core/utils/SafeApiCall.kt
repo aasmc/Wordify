@@ -14,10 +14,10 @@ suspend inline fun <T : Any> safeApiCall(
 ): Result<T> {
     return withContext(dispatcher) {
         try {
-            val data = withTimeout(ApiConstants.NETWORK_TIMEOUT) {
-                body()
-            }
-            Result.Success(data)
+//            val data = withTimeout(ApiConstants.NETWORK_TIMEOUT) {
+//                body()
+//            }
+            Result.Success(body())
         } catch (e: Exception) {
             when (e) {
                 is TimeoutCancellationException -> {

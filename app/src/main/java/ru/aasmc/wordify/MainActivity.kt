@@ -9,11 +9,15 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.map
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.aasmc.wordify.theme.WordifyTheme
 import ru.aasmc.wordify.common.core.data.api.WordifyApi
+import ru.aasmc.wordify.common.core.data.cache.dao.WordDao
+import ru.aasmc.wordify.common.core.domain.repositories.WordRepository
 import javax.inject.Inject
 
 @AndroidEntryPoint

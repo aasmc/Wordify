@@ -2,8 +2,9 @@ package ru.aasmc.wordify.common.core.utils
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import javax.inject.Inject
 
-class CoroutineDispatchersProvider : DispatchersProvider {
+class CoroutineDispatchersProvider @Inject constructor() : DispatchersProvider {
     override fun io(): CoroutineDispatcher =
         Dispatchers.IO
 

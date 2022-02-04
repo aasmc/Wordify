@@ -12,7 +12,7 @@ import ru.aasmc.wordify.common.core.data.cache.model.*
         CachedExample::class,
         CachedSynonym::class,
         CachedWord::class,
-        CachedWordProperties::class
+        CachedWordProperties::class,
     ],
     version = 1
 )

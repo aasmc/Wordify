@@ -21,6 +21,9 @@ object Testing {
     const val coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_test_version"
 
     const val paging_test = "androidx.paging:paging-common:${Paging.paging_version}"
+
+    private const val truth_version = "1.1.3"
+    const val truth = "com.google.truth:truth:$truth_version"
 }
 
 object ComposeTest {

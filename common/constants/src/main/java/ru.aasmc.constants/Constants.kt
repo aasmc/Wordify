@@ -17,6 +17,8 @@ object ApiConstants {
 
 object CacheConstants {
     const val CACHE_TIMEOUT = 2000L
+    const val PAGE_SIZE = 30
+    const val MAX_SIZE = 200
 }
 
 object ExceptionMessage {
