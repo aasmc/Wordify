@@ -9,6 +9,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
@@ -63,18 +64,19 @@ fun DefaultPreview() {
 fun TestComp(
     repo: WordRepository,
 ) {
-    val scope = rememberCoroutineScope()
-    runBlocking {
-        repo.getWordById("track")
-        repo.getWordById("make")
-        repo.getWordById("house")
-        repo.getWordById("luck")
-        repo.getWordById("step")
+    LaunchedEffect(Unit) {
+        launch {
+            repo.getWordById("track")
+            repo.getWordById("make")
+            repo.getWordById("house")
+            repo.getWordById("luck")
+            repo.getWordById("step")
+        }
     }
 
     val lazyPages = repo.getAllWords(Sort.ASC_NAME)
         .collectAsLazyPagingItems()
-    
+
     LazyColumn {
         items(lazyPages) { word ->
             Text(text = word?.wordId ?: "No word")

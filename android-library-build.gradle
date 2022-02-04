@@ -67,6 +67,8 @@ dependencies{
     implementation Paging.paging_room
     implementation Paging.paging_compose
 
+    implementation DataStore.datastore
+
     implementation Coil.coil
 
     implementation Google.material

@@ -27,3 +27,7 @@ object ExceptionMessage {
     const val NETWORK_TIMEOUT_ERROR = "Network timeout error!"
     const val UNKNOWN_ERROR = "Sorry! Something went wrong!"
 }
+
+object PreferencesConstants {
+    const val DATASTORE_NAME = "wordify_datastore"
+}
