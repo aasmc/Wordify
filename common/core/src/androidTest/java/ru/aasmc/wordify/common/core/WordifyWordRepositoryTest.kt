@@ -54,6 +54,7 @@ class WordifyWordRepositoryTest {
     private lateinit var repository: WordifyWordRepository
     private lateinit var db: WordifyDatabase
     private val dispatchersProvider = CoroutineDispatchersProvider()
+    private val testDispatcher = StandardTestDispatcher()
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -136,67 +137,79 @@ class WordifyWordRepositoryTest {
         assert(result is Result.Success)
     }
 
-//    @Test
-//    fun searchWord_defaultSortByNameAsc_emptyList_onEmptyCache() = runTest {
-//        // given empty cache
-//        // when
-//        val result = repository.searchWord("track")
-//
-//        val differ = AsyncPagingDataDiffer(
-//            diffCallback = MyDiffCallback(),
-//            updateCallback = NoopListCallback(),
-//            workerDispatcher = testDispatcher,
-//            mainDispatcher = testDispatcher
-//        )
-//        launch(testDispatcher) {
-//            result.collectLatest {
-//                differ.submitData(it)
-//            }
-//        }
-//        advanceUntilIdle()
-//        assertTrue(differ.snapshot().isEmpty())
-//    }
-//
-//    private fun insertSearchData(): List<Word> = runBlocking {
-//        fakeServer.setHappyPathDispatcher("track")
-//        val w = repository.getWordById("track")
-//        assert(w is Result.Success)
-//        fakeServer.setHappyPathDispatcher("kingdom")
-//        val ww = repository.getWordById("kingdom")
-//        assert(ww is Result.Success)
-//        fakeServer.setHappyPathDispatcher("make")
-//        val www = repository.getWordById("kingdom")
-//        assert(www is Result.Success)
-//        return@runBlocking listOf(
-//            (w as Result.Success).data,
-//            (ww as Result.Success).data,
-//            (www as Result.Success).data
-//        )
-//    }
-//
-//    @Test
-//    fun searchWord_defaultSortByNameAsc_success() = runTest {
-//        // given
-//        val words = insertSearchData()
-//
-//        val result = repository.searchWord("k")
-//        val retrieved = mutableListOf<Word>()
-//        val job = launch {
-//            result.collectLatest {
-//                it.map { w ->
-//                    retrieved.add(w)
-//                }
-//            }
-//        }
-//
-//        advanceUntilIdle()
-//        Truth.assertThat(retrieved).containsExactly(
-//            words[0],
-//            words[1],
-//            words[2],
-//        )
-//        job.cancel()
-//    }
+    @Test
+    fun searchWord_defaultSortByNameAsc_emptyList_onEmptyCache() = runTest {
+        // given empty cache
+        // when
+        val result = repository.searchWord("track")
+
+        val differ = AsyncPagingDataDiffer(
+            diffCallback = MyDiffCallback(),
+            updateCallback = NoopListCallback(),
+            workerDispatcher = testDispatcher,
+            mainDispatcher = testDispatcher
+        )
+        launch(testDispatcher) {
+            result.collectLatest {
+                differ.submitData(it)
+            }
+        }
+        advanceUntilIdle()
+        assertTrue(differ.snapshot().isEmpty())
+    }
+
+    private fun insertSearchData(): List<Word> = runBlocking {
+        fakeServer.setHappyPathDispatcher("track")
+        val w = repository.getWordById("track")
+        assert(w is Result.Success)
+        fakeServer.setHappyPathDispatcher("kingdom")
+        val ww = repository.getWordById("kingdom")
+        assert(ww is Result.Success)
+        fakeServer.setHappyPathDispatcher("make")
+        val www = repository.getWordById("kingdom")
+        assert(www is Result.Success)
+        return@runBlocking listOf(
+            (w as Result.Success).data,
+            (ww as Result.Success).data,
+            (www as Result.Success).data
+        )
+    }
+
+    @Test
+    fun searchWord_defaultSortByNameAsc_success() = runTest {
+        // given
+        val words = insertSearchData()
+
+        val result = repository.searchWord("k")
+        val differ = AsyncPagingDataDiffer(
+            diffCallback = MyDiffCallback(),
+            updateCallback = NoopListCallback(),
+            mainDispatcher = testDispatcher,
+            workerDispatcher = testDispatcher
+        )
+        val retrieved = mutableListOf<Word>()
+        val job = launch {
+            result.collectLatest {
+                it.map { w ->
+                    retrieved.add(w)
+                }
+                differ.submitData(it)
+            }
+        }
+
+        advanceUntilIdle()
+        Truth.assertThat(retrieved).containsExactly(
+            words[0],
+            words[1],
+            words[2],
+        )
+        Truth.assertThat(differ.snapshot()).containsExactly(
+            words[0],
+            words[1],
+            words[2],
+        )
+        job.cancel()
+    }
 //
 //    @Test
 //    fun getAllWords_defaultSortByNameAsc_emptyList_onEmptyCache() = runTest {

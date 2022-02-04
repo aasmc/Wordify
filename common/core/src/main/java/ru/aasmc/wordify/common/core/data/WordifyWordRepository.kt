@@ -2,7 +2,6 @@ package ru.aasmc.wordify.common.core.data
 
 import androidx.paging.PagingData
 import androidx.paging.map
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import ru.aasmc.wordify.common.core.data.api.WordifyApi
 import ru.aasmc.wordify.common.core.data.api.model.mappers.WordDtoMapper
