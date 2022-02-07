@@ -1,7 +1,6 @@
 package ru.aasmc.wordify.common.core.domain.repositories
 
 import kotlinx.coroutines.flow.Flow
-import ru.aasmc.wordify.common.core.domain.model.UserPreferences
 
 interface PreferencesRepository {
 
@@ -9,6 +8,8 @@ interface PreferencesRepository {
 
     suspend fun saveAppThemePreference(themePreference: ThemePreference)
 
-    fun getUserPreferences(): Flow<UserPreferences>
+    fun observeAppTheme(): Flow<ThemePreference>
+
+    fun observeSortOrder(): Flow<Sort>
 
 }

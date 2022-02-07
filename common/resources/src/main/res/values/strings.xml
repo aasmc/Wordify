@@ -1,2 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="settings_screen_title">Settings</string>
+    <string name="sort_name_asc">a -> z</string>
+    <string name="sort_name_desc">z -> a</string>
+    <string name="sort_time_added_asc">Recently added first</string>
+    <string name="sort_time_added_desc">Recently added last</string>
+    <string name="theme_auto">System theme</string>
+    <string name="theme_dark">Dark theme</string>
+    <string name="theme_light">Light theme</string>
+
+    <string name="sort_order_title">Sort order</string>
+    <string name="theme_selection_title">App theme</string>
+</resources>
