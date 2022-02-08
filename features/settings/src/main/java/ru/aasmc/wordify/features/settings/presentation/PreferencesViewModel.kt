@@ -15,53 +15,16 @@ import javax.inject.Inject
 class PreferencesViewModel @Inject constructor(
     private val changeAppTheme: ChangeAppTheme,
     private val changeWordSortOrder: ChangeWordSortOrder,
-    getSortOrderFlow: GetSortOrderFlow
 ) : ViewModel() {
-
-    val sortOrder: StateFlow<Sort> = getSortOrderFlow()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = Sort.ASC_NAME
-        )
-
-    private val _uiState: MutableStateFlow<PreferencesUiState> =
-        MutableStateFlow(PreferencesUiState.Empty)
-    val uiState: StateFlow<PreferencesUiState> = _uiState.asStateFlow()
-
 
     fun handleEvent(event: UserPrefsEvent) {
         when (event) {
             is UserPrefsEvent.ChangeSortOrder -> {
-                safeHandleEvent {
-                    changeWordSortOrder(event.sortOrder)
-                }
+                changeWordSortOrder(event.sortOrder)
             }
             is UserPrefsEvent.ChangeTheme -> {
-                safeHandleEvent {
-                    changeAppTheme(event.themePreference)
-                }
+                changeAppTheme(event.themePreference)
             }
         }
     }
-
-    private fun safeHandleEvent(block: suspend () -> Unit) {
-        viewModelScope.launch {
-            try {
-                block()
-                handleSuccess()
-            } catch (t: Throwable) {
-                handleError()
-            }
-        }
-    }
-
-    private fun handleSuccess() {
-        _uiState.value = PreferencesUiState.Empty
-    }
-
-    private fun handleError() {
-        _uiState.value = PreferencesUiState.Failure
-    }
-
 }

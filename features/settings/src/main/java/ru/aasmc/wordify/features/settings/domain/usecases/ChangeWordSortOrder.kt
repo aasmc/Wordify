@@ -8,8 +8,8 @@ class ChangeWordSortOrder @Inject constructor(
     private val preferencesRepository: PreferencesRepository
 ) {
 
-    suspend operator fun invoke(sortOrder: Sort) {
-        preferencesRepository.saveSortOrder(sortOrder)
+    operator fun invoke(sortOrder: Sort) {
+        preferencesRepository.sortOrder = sortOrder
     }
 
 }

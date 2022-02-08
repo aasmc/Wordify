@@ -1,15 +1,13 @@
 package ru.aasmc.wordify.common.core.domain.repositories
 
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 interface PreferencesRepository {
 
-    suspend fun saveSortOrder(sortOrder: Sort)
+    val appThemeFlow: StateFlow<ThemePreference>
+    var appTheme: ThemePreference
 
-    suspend fun saveAppThemePreference(themePreference: ThemePreference)
-
-    fun observeAppTheme(): Flow<ThemePreference>
-
-    fun observeSortOrder(): Flow<Sort>
+    val sortOrderFlow: StateFlow<Sort>
+    var sortOrder: Sort
 
 }

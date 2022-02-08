@@ -8,8 +8,8 @@ class ChangeAppTheme @Inject constructor(
     private val preferencesRepository: PreferencesRepository
 ) {
 
-    suspend operator fun invoke(themePreference: ThemePreference) {
-        preferencesRepository.saveAppThemePreference(themePreference)
+    operator fun invoke(themePreference: ThemePreference) {
+        preferencesRepository.appTheme = themePreference
     }
 
 }

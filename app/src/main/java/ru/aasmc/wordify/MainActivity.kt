@@ -12,14 +12,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
-import ru.aasmc.wordify.common.core.domain.model.UserPreferences
 import ru.aasmc.wordify.common.core.domain.repositories.Sort
 import ru.aasmc.wordify.common.core.domain.repositories.ThemePreference
 import ru.aasmc.wordify.common.core.domain.repositories.WordRepository
-import ru.aasmc.wordify.common.uicomponents.rememberFlowWithLifecycle
 import ru.aasmc.wordify.features.settings.domain.usecases.GetAppThemeFlow
+import ru.aasmc.wordify.features.settings.domain.usecases.GetSortOrderFlow
 import ru.aasmc.wordify.features.settings.presentation.PreferencesViewModel
 import ru.aasmc.wordify.features.settings.presentation.SettingsScreen
 import ru.aasmc.wordify.resources.theme.WordifyTheme
@@ -33,13 +31,18 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var getAppThemeFlow: GetAppThemeFlow
 
+    @Inject
+    lateinit var getSortOrderFlow: GetSortOrderFlow
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
 
         setContent {
             val appTheme by getAppThemeFlow()
-                .collectAsState(ThemePreference.AUTO_THEME)
+                .collectAsState()
+            val sortOrder by getSortOrderFlow()
+                .collectAsState()
 
             WordifyTheme(darkTheme = appTheme.shouldUseDarkTheme(isSystemInDarkTheme())) {
 //                // A surface container using the 'background' color from the theme
@@ -50,7 +53,8 @@ class MainActivity : ComponentActivity() {
                 SettingsScreen(
                     title = "Settings",
                     viewModel = vm,
-                    appTheme = appTheme
+                    appTheme = appTheme,
+                    sortOrder = sortOrder
                 )
             }
         }

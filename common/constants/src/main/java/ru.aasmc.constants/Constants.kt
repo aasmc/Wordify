@@ -30,4 +30,5 @@ object ExceptionMessage {
 
 object PreferencesConstants {
     const val DATASTORE_NAME = "wordify_datastore"
+    const val SHARED_PREFS_NAME = "wordify_datastore"
 }

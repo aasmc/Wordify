@@ -1,14 +1,14 @@
 package ru.aasmc.wordify.features.settings.domain.usecases
 
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import ru.aasmc.wordify.common.core.domain.repositories.PreferencesRepository
 import ru.aasmc.wordify.common.core.domain.repositories.Sort
 import javax.inject.Inject
 
 class GetSortOrderFlow @Inject constructor(
-    private val preferencesRepository: PreferencesRepository
+    private val repository: PreferencesRepository
 ) {
-    operator fun invoke(): Flow<Sort> {
-        return preferencesRepository.observeSortOrder()
+    operator fun invoke(): StateFlow<Sort> {
+        return repository.sortOrderFlow
     }
 }

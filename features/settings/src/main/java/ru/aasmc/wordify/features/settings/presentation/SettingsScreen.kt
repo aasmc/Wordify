@@ -1,20 +1,18 @@
 package ru.aasmc.wordify.features.settings.presentation
 
-import android.content.Context
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import ru.aasmc.wordify.common.core.domain.model.UserPreferences
 import ru.aasmc.wordify.common.core.domain.repositories.Sort
 import ru.aasmc.wordify.common.core.domain.repositories.ThemePreference
 import ru.aasmc.wordify.features.settings.R
@@ -24,29 +22,20 @@ import ru.aasmc.wordify.resources.theme.WordifyTheme
 fun SettingsScreen(
     title: String,
     appTheme: ThemePreference,
+    sortOrder: Sort,
     viewModel: PreferencesViewModel
 ) {
     val sortFilters = listOf(
-        stringResource(id = R.string.sort_name_asc),
-        stringResource(id = R.string.sort_name_desc),
-        stringResource(id = R.string.sort_time_added_asc),
-        stringResource(id = R.string.sort_time_added_desc),
+        RadioButtonItem(id = Sort.ASC_NAME.ordinal, title = stringResource(id = R.string.sort_name_asc)) ,
+        RadioButtonItem(id = Sort.DESC_NAME.ordinal, title = stringResource(id = R.string.sort_name_desc)) ,
+        RadioButtonItem(id = Sort.ASC_TIME.ordinal, title = stringResource(id = R.string.sort_time_added_asc)) ,
+        RadioButtonItem(id = Sort.DESC_TIME.ordinal, title = stringResource(id = R.string.sort_time_added_desc))
     )
     val themeFilters = listOf(
-        stringResource(id = R.string.theme_auto),
-        stringResource(id = R.string.theme_dark),
-        stringResource(id = R.string.theme_light),
+        RadioButtonItem(id = ThemePreference.AUTO_THEME.ordinal, title = stringResource(id = R.string.theme_auto)),
+        RadioButtonItem(id = ThemePreference.DARK_THEME.ordinal, title = stringResource(id = R.string.theme_dark)),
+        RadioButtonItem(id = ThemePreference.LIGHT_THEME.ordinal, title = stringResource(id = R.string.theme_light))
     )
-
-    val ctx = LocalContext.current
-
-    val sortOrder by viewModel.sortOrder.collectAsState()
-
-    val selectedSort =
-        getSelectedSort(sort = sortOrder, context = ctx)
-
-    val selectedTheme =
-        getSelectedTheme(themePreference = appTheme, context = ctx)
 
     Surface(
         modifier = Modifier
@@ -71,11 +60,11 @@ fun SettingsScreen(
             SettingsCard(
                 label = stringResource(id = R.string.sort_order_title),
                 settingsValues = sortFilters,
-                selectedValue = selectedSort,
-                onSelectedValueChange = { sortStr ->
+                selectedValue = sortOrder.ordinal,
+                onSelectedValueChange = { sortOrdinal ->
                     viewModel.handleEvent(
                         UserPrefsEvent.ChangeSortOrder(
-                            sortOrder = getSortOrderFromString(sortStr, ctx)
+                            sortOrder = Sort.fromOrdinal(sortOrdinal)
                         )
                     )
                 },
@@ -84,11 +73,11 @@ fun SettingsScreen(
             SettingsCard(
                 label = stringResource(id = R.string.theme_selection_title),
                 settingsValues = themeFilters,
-                selectedValue = selectedTheme,
-                onSelectedValueChange = { themeStr ->
+                selectedValue = appTheme.ordinal,
+                onSelectedValueChange = { themeOrdinal ->
                     viewModel.handleEvent(
                         UserPrefsEvent.ChangeTheme(
-                            themePreference = getThemePrefFromString(themeStr, ctx)
+                            themePreference = ThemePreference.fromOrdinal(themeOrdinal)
                         )
                     )
                 },
@@ -106,52 +95,17 @@ private fun SettingsScreenPreviewDark() {
             title = "Settings",
             appTheme = ThemePreference.AUTO_THEME,
             viewModel = vm,
+            sortOrder = Sort.ASC_TIME
         )
-    }
-}
-
-private fun getSortOrderFromString(sortStr: String, context: Context): Sort {
-    return when (sortStr) {
-        context.getString(R.string.sort_name_asc) -> Sort.ASC_NAME
-        context.getString(R.string.sort_name_desc) -> Sort.DESC_NAME
-        context.getString(R.string.sort_time_added_asc) -> Sort.ASC_TIME
-        context.getString(R.string.sort_time_added_desc) -> Sort.DESC_TIME
-        else -> throw IllegalArgumentException("This type of sort order is not supported: $sortStr")
-    }
-}
-
-private fun getThemePrefFromString(themeStr: String, context: Context): ThemePreference {
-    return when (themeStr) {
-        context.getString(R.string.theme_auto) -> ThemePreference.AUTO_THEME
-        context.getString(R.string.theme_dark) -> ThemePreference.DARK_THEME
-        context.getString(R.string.theme_light) -> ThemePreference.LIGHT_THEME
-        else -> throw IllegalArgumentException("This type of theme selection is not supported: $themeStr")
-    }
-}
-
-private fun getSelectedSort(sort: Sort, context: Context): String {
-    return when (sort) {
-        Sort.ASC_NAME -> context.getString(R.string.sort_name_asc)
-        Sort.DESC_NAME -> context.getString(R.string.sort_name_desc)
-        Sort.ASC_TIME -> context.getString(R.string.sort_time_added_asc)
-        Sort.DESC_TIME -> context.getString(R.string.sort_time_added_desc)
-    }
-}
-
-private fun getSelectedTheme(themePreference: ThemePreference, context: Context): String {
-    return when (themePreference) {
-        ThemePreference.DARK_THEME -> context.getString(R.string.theme_dark)
-        ThemePreference.LIGHT_THEME -> context.getString(R.string.theme_light)
-        ThemePreference.AUTO_THEME -> context.getString(R.string.theme_auto)
     }
 }
 
 @Composable
 private fun SettingsCard(
     label: String,
-    settingsValues: List<String>,
-    selectedValue: String,
-    onSelectedValueChange: (String) -> Unit
+    settingsValues: Iterable<RadioButtonItem>,
+    selectedValue: Int,
+    onSelectedValueChange: (Int) -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -187,8 +141,13 @@ private fun SettingsCardPreviewDarkTheme() {
     WordifyTheme(darkTheme = true) {
         SettingsCard(
             label = "Sort Order",
-            settingsValues = listOf("a -> z", "z -> a", "Time added asc", "Time added desc"),
-            selectedValue = "a -> z",
+            settingsValues = listOf(
+                RadioButtonItem(1, "a -> z"),
+                RadioButtonItem(2, "z -> a"),
+                RadioButtonItem(3, "Time added asc"),
+                RadioButtonItem(4, "Time added desc"),
+            ),
+            selectedValue = 1,
             onSelectedValueChange = {}
         )
     }
@@ -200,8 +159,13 @@ private fun SettingsCardPreviewLightTheme() {
     WordifyTheme(darkTheme = false) {
         SettingsCard(
             label = "Sort Order",
-            settingsValues = listOf("a -> z", "z -> a", "Time added asc", "Time added desc"),
-            selectedValue = "a -> z",
+            settingsValues = listOf(
+                RadioButtonItem(1, "a -> z"),
+                RadioButtonItem(2, "z -> a"),
+                RadioButtonItem(3, "Time added asc"),
+                RadioButtonItem(4, "Time added desc"),
+            ),
+            selectedValue = 1,
             onSelectedValueChange = {}
         )
     }
@@ -209,21 +173,21 @@ private fun SettingsCardPreviewLightTheme() {
 
 @Composable
 private fun SettingsColumn(
-    settingsValues: List<String>,
-    selectedValue: String,
-    onSelectedValueChange: (String) -> Unit
+    settingsValues: Iterable<RadioButtonItem>,
+    selectedValue: Int,
+    onSelectedValueChange: (Int) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp, bottom = 8.dp),
+        modifier = modifier
+            .selectableGroup(),
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        settingsValues.forEach { setting ->
+        settingsValues.forEach { radioItem ->
             SettingsRow(
-                isSelected = setting == selectedValue,
-                settingsValue = setting,
-                onSelectValue = onSelectedValueChange
+                item = radioItem,
+                isSelected = selectedValue == radioItem.id,
+                onSelectValue = { onSelectedValueChange(radioItem.id) }
             )
         }
     }
@@ -234,8 +198,11 @@ private fun SettingsColumn(
 private fun SettingsColumnPreviewDarkTheme() {
     WordifyTheme(darkTheme = true) {
         SettingsColumn(
-            settingsValues = listOf("a -> z", "z -> a"),
-            selectedValue = "a -> z",
+            settingsValues = listOf(
+                RadioButtonItem(1, "a -> z"),
+                RadioButtonItem(2, "z -> a")
+            ),
+            selectedValue = 1,
             onSelectedValueChange = {}
         )
     }
@@ -246,42 +213,50 @@ private fun SettingsColumnPreviewDarkTheme() {
 private fun SettingsColumnPreviewLightTheme() {
     WordifyTheme(darkTheme = false) {
         SettingsColumn(
-            settingsValues = listOf("a -> z", "z -> a"),
-            selectedValue = "a -> z",
+            settingsValues = listOf(
+                RadioButtonItem(1, "a -> z"),
+                RadioButtonItem(2, "z -> a")
+            ),
+            selectedValue = 1,
             onSelectedValueChange = {}
         )
     }
 }
 
+data class RadioButtonItem(
+    val id: Int,
+    val title: String
+)
+
 @Composable
 private fun SettingsRow(
+    item: RadioButtonItem,
     isSelected: Boolean,
-    settingsValue: String,
-    onSelectValue: (String) -> Unit
+    onSelectValue: (Int) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(4.dp),
-        horizontalArrangement = Arrangement.Start,
+        modifier = modifier
+            .selectable(
+                selected = isSelected,
+                onClick = { onSelectValue(item.id) },
+                role = Role.RadioButton
+            )
+            .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(
             selected = isSelected,
-            onClick = { onSelectValue(settingsValue) },
+            onClick = null,
             colors = RadioButtonDefaults.colors(
                 selectedColor = MaterialTheme.colors.primary,
                 unselectedColor = MaterialTheme.colors.secondary
-            ),
-            modifier = Modifier
-                .padding(end = 8.dp, start = 8.dp)
+            )
         )
+        Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = settingsValue,
-            style = MaterialTheme.typography.body1,
-            textAlign = TextAlign.Start,
-            modifier = Modifier
-                .padding(end = 8.dp, start = 8.dp)
+            text = item.title,
+            style = MaterialTheme.typography.body2,
         )
     }
 }
@@ -290,7 +265,10 @@ private fun SettingsRow(
 @Composable
 private fun SelectedSettingsRowDarkThemePreview() {
     WordifyTheme(darkTheme = true) {
-        SettingsRow(isSelected = true, settingsValue = "a -> z", onSelectValue = {})
+        SettingsRow(
+            isSelected = true,
+            item = RadioButtonItem(id = 1, title = "a -> z"),
+            onSelectValue = {})
     }
 }
 
@@ -298,7 +276,10 @@ private fun SelectedSettingsRowDarkThemePreview() {
 @Composable
 private fun UnselectedSettingsRowDarkThemePreview() {
     WordifyTheme(darkTheme = true) {
-        SettingsRow(isSelected = false, settingsValue = "a -> z", onSelectValue = {})
+        SettingsRow(
+            isSelected = false,
+            item = RadioButtonItem(id = 1, title = "a -> z"),
+            onSelectValue = {})
     }
 }
 
@@ -306,7 +287,10 @@ private fun UnselectedSettingsRowDarkThemePreview() {
 @Composable
 private fun SelectedSettingsRowLightThemePreview() {
     WordifyTheme(darkTheme = false) {
-        SettingsRow(isSelected = true, settingsValue = "a -> z", onSelectValue = {})
+        SettingsRow(
+            isSelected = true,
+            item = RadioButtonItem(id = 1, title = "a -> z"),
+            onSelectValue = {})
     }
 }
 
@@ -314,6 +298,9 @@ private fun SelectedSettingsRowLightThemePreview() {
 @Composable
 private fun UnselectedSettingsRoLightThemePreview() {
     WordifyTheme(darkTheme = false) {
-        SettingsRow(isSelected = false, settingsValue = "a -> z", onSelectValue = {})
+        SettingsRow(
+            isSelected = false,
+            item = RadioButtonItem(id = 1, title = "a -> z"),
+            onSelectValue = {})
     }
 }

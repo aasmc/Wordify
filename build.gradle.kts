@@ -9,6 +9,7 @@ buildscript {
         classpath(Build.androidBuildTools)
         classpath(Build.kotlinGradlePlugin)
         classpath(Build.hiltAndroid)
+        classpath("com.android.tools.build:gradle:7.1.1")
     }
 }
 

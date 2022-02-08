@@ -1,80 +1,68 @@
 package ru.aasmc.wordify.common.core.data.preferences
 
-import android.content.Context
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.map
-import ru.aasmc.constants.PreferencesConstants
+import android.content.SharedPreferences
+import androidx.core.content.edit
+import kotlinx.coroutines.flow.MutableStateFlow
 import ru.aasmc.wordify.common.core.domain.repositories.PreferencesRepository
 import ru.aasmc.wordify.common.core.domain.repositories.Sort
 import ru.aasmc.wordify.common.core.domain.repositories.ThemePreference
-import java.io.IOException
 import javax.inject.Inject
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
-private val Context.dataStore
-        by preferencesDataStore(PreferencesConstants.DATASTORE_NAME)
 
 class WordifyPreferences @Inject constructor(
-    @ApplicationContext private val context: Context
+    private val sharedPreferences: SharedPreferences
 ) : PreferencesRepository {
+    override val appThemeFlow: MutableStateFlow<ThemePreference>
 
-    override suspend fun saveSortOrder(sortOrder: Sort) {
-        context.dataStore.edit { preferences ->
-            preferences[WORD_SORT_ORDER] = sortOrder.name
+    override var appTheme: ThemePreference by AppThemeDelegate(
+        appThemeKey = "app_theme_key",
+        defaultTheme = ThemePreference.AUTO_THEME
+    )
+
+    override val sortOrderFlow: MutableStateFlow<Sort>
+
+    override var sortOrder: Sort by SortOrderDelegate(
+        sortOrderKey = "sort_order_key",
+        defaultSortOrder = Sort.ASC_NAME
+    )
+
+    init {
+        appThemeFlow = MutableStateFlow(appTheme)
+        sortOrderFlow = MutableStateFlow(sortOrder)
+    }
+
+    inner class SortOrderDelegate(
+        private val sortOrderKey: String,
+        private val defaultSortOrder: Sort
+    ) : ReadWriteProperty<Any?, Sort> {
+        override fun getValue(thisRef: Any?, property: KProperty<*>): Sort =
+            Sort.fromOrdinal(sharedPreferences.getInt(sortOrderKey, defaultSortOrder.ordinal))
+
+        override fun setValue(thisRef: Any?, property: KProperty<*>, value: Sort) {
+            sortOrderFlow.value = value
+            sharedPreferences.edit {
+                putInt(sortOrderKey, value.ordinal)
+            }
         }
     }
 
-    override suspend fun saveAppThemePreference(themePreference: ThemePreference) {
-        context.dataStore.edit { preferences ->
-            preferences[THEME_PREFERENCE] = themePreference.name
+    inner class AppThemeDelegate(
+        private val appThemeKey: String,
+        private val defaultTheme: ThemePreference
+    ) : ReadWriteProperty<Any?, ThemePreference> {
+        override fun getValue(thisRef: Any?, property: KProperty<*>): ThemePreference =
+            ThemePreference.fromOrdinal(sharedPreferences.getInt(appThemeKey, defaultTheme.ordinal))
+
+        override fun setValue(thisRef: Any?, property: KProperty<*>, value: ThemePreference) {
+            appThemeFlow.value = value
+            sharedPreferences.edit {
+                putInt(appThemeKey, value.ordinal)
+            }
         }
     }
 
-    override fun observeAppTheme(): Flow<ThemePreference> {
-        return context.dataStore.data
-            .catch { t ->
-                when (t) {
-                    is IOException -> {
-                        emit(emptyPreferences())
-                    }
-                    else -> throw t
-                }
-            }
-            .map { preferences ->
-                val theme = ThemePreference.valueOf(
-                    preferences[THEME_PREFERENCE] ?: DEFAULT_THEME_PREFERENCE
-                )
-                theme
-            }
-    }
-
-    override fun observeSortOrder(): Flow<Sort> {
-        return context.dataStore.data
-            .catch { t ->
-                when (t) {
-                    is IOException -> {
-                        emit(emptyPreferences())
-                    }
-                    else -> throw t
-                }
-            }
-            .map { preferences ->
-                val sort = Sort.valueOf(preferences[WORD_SORT_ORDER] ?: DEFAULT_SORT_ORDER)
-                sort
-            }
-    }
-
-    companion object {
-        private val WORD_SORT_ORDER = stringPreferencesKey("word_sort_preference")
-        private val THEME_PREFERENCE = stringPreferencesKey("app_theme_preference")
-        private const val DEFAULT_SORT_ORDER = "ASC_NAME"
-        private const val DEFAULT_THEME_PREFERENCE = "AUTO_THEME"
-    }
 }
 
 
