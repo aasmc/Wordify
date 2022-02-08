@@ -10,4 +10,8 @@ enum class ThemePreference {
             AUTO_THEME -> isSystemInDarkMode
         }
     }
+
+    companion object {
+        fun fromOrdinal(ordinal: Int) = values()[ordinal]
+    }
 }

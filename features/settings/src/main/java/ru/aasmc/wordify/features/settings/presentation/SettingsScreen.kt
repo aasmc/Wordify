@@ -24,6 +24,7 @@ import ru.aasmc.wordify.resources.theme.WordifyTheme
 fun SettingsScreen(
     title: String,
     appTheme: ThemePreference,
+    sortOrder: Sort,
     viewModel: PreferencesViewModel
 ) {
     val sortFilters = listOf(
@@ -39,8 +40,6 @@ fun SettingsScreen(
     )
 
     val ctx = LocalContext.current
-
-    val sortOrder by viewModel.sortOrder.collectAsState()
 
     val selectedSort =
         getSelectedSort(sort = sortOrder, context = ctx)
@@ -106,6 +105,7 @@ private fun SettingsScreenPreviewDark() {
             title = "Settings",
             appTheme = ThemePreference.AUTO_THEME,
             viewModel = vm,
+            sortOrder = Sort.ASC_NAME
         )
     }
 }

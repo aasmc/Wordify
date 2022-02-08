@@ -30,16 +30,18 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var repository: WordRepository
 
-    @Inject
-    lateinit var getAppThemeFlow: GetAppThemeFlow
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val appThemeFlow = applicationContext.appThemeFlow
+        val sortOrderFlow = applicationContext.sortOrderFlow
 
         setContent {
-            val appTheme by getAppThemeFlow()
-                .collectAsState(ThemePreference.AUTO_THEME)
+            val appTheme by appThemeFlow
+                .collectAsState()
+
+            val sortOrder by sortOrderFlow
+                .collectAsState()
 
             WordifyTheme(darkTheme = appTheme.shouldUseDarkTheme(isSystemInDarkTheme())) {
 //                // A surface container using the 'background' color from the theme
@@ -50,7 +52,8 @@ class MainActivity : ComponentActivity() {
                 SettingsScreen(
                     title = "Settings",
                     viewModel = vm,
-                    appTheme = appTheme
+                    appTheme = appTheme,
+                    sortOrder = sortOrder
                 )
             }
         }
