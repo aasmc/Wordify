@@ -27,7 +27,6 @@ object ApiModule {
             .create(WordifyApi::class.java)
     }
 
-    @Singleton
     @Provides
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit.Builder {
         return Retrofit.Builder()
@@ -36,7 +35,6 @@ object ApiModule {
             .addConverterFactory(MoshiConverterFactory.create())
     }
 
-    @Singleton
     @Provides
     fun provideOkHttpClient(
         httpLoggingInterceptor: HttpLoggingInterceptor,
@@ -50,7 +48,6 @@ object ApiModule {
             .build()
     }
 
-    @Singleton
     @Provides
     fun provideHttpLoggingInterceptor(loggingInterceptor: LoggingInterceptor): HttpLoggingInterceptor {
         val interceptor = HttpLoggingInterceptor(loggingInterceptor)

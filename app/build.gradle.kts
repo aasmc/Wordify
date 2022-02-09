@@ -57,6 +57,7 @@ dependencies {
     implementation(project(Modules.settings))
     implementation(project(Modules.resources))
     implementation(project(Modules.components))
+    implementation(project(Modules.constants))
 
     implementation(Accompanist.animations)
     implementation(AndroidX.coreKtx)

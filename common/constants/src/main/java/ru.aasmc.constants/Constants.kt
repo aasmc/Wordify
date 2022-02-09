@@ -32,3 +32,7 @@ object PreferencesConstants {
     const val DATASTORE_NAME = "wordify_datastore"
     const val SHARED_PREFS_NAME = "wordify_datastore"
 }
+
+object WordConstants {
+    const val WORD_ID_ARGUMENT = "wordId"
+}
