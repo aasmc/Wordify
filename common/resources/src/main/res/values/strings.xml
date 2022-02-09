@@ -11,4 +11,5 @@
 
     <string name="sort_order_title">Sort order</string>
     <string name="theme_selection_title">App theme</string>
+    <string name="preferences_screen_error">"Something went wrong when updating settings. "</string>
 </resources>

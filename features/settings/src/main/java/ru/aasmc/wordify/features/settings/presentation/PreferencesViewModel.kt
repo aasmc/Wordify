@@ -17,14 +17,30 @@ class PreferencesViewModel @Inject constructor(
     private val changeWordSortOrder: ChangeWordSortOrder,
 ) : ViewModel() {
 
+    private val _uiStateFlow =
+        MutableStateFlow<PreferencesUiState>(PreferencesUiState())
+    val uiStateFlow: StateFlow<PreferencesUiState> = _uiStateFlow.asStateFlow()
+
     fun handleEvent(event: UserPrefsEvent) {
         when (event) {
             is UserPrefsEvent.ChangeSortOrder -> {
-                changeWordSortOrder(event.sortOrder)
+                safeHandleEvent {
+                    changeWordSortOrder(event.sortOrder)
+                }
             }
             is UserPrefsEvent.ChangeTheme -> {
-                changeAppTheme(event.themePreference)
+                safeHandleEvent {
+                    changeAppTheme(event.themePreference)
+                }
             }
+        }
+    }
+
+    private fun safeHandleEvent(block: () -> Unit) {
+        try {
+            block()
+        } catch (t: Throwable) {
+            _uiStateFlow.value = _uiStateFlow.value.updateToHasFailure(Throwable())
         }
     }
 }

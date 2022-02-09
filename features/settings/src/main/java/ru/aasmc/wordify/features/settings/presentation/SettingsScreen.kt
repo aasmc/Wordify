@@ -5,6 +5,9 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -15,6 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.aasmc.wordify.common.core.domain.repositories.Sort
 import ru.aasmc.wordify.common.core.domain.repositories.ThemePreference
+import ru.aasmc.wordify.common.uicomponents.SwipeDismissSnackBarHost
+import ru.aasmc.wordify.common.uicomponents.rememberFlowWithLifecycle
 import ru.aasmc.wordify.features.settings.R
 import ru.aasmc.wordify.resources.theme.WordifyTheme
 
@@ -25,18 +30,49 @@ fun SettingsScreen(
     sortOrder: Sort,
     viewModel: PreferencesViewModel
 ) {
-    val sortFilters = listOf(
-        RadioButtonItem(id = Sort.ASC_NAME.ordinal, title = stringResource(id = R.string.sort_name_asc)) ,
-        RadioButtonItem(id = Sort.DESC_NAME.ordinal, title = stringResource(id = R.string.sort_name_desc)) ,
-        RadioButtonItem(id = Sort.ASC_TIME.ordinal, title = stringResource(id = R.string.sort_time_added_asc)) ,
-        RadioButtonItem(id = Sort.DESC_TIME.ordinal, title = stringResource(id = R.string.sort_time_added_desc))
-    )
-    val themeFilters = listOf(
-        RadioButtonItem(id = ThemePreference.AUTO_THEME.ordinal, title = stringResource(id = R.string.theme_auto)),
-        RadioButtonItem(id = ThemePreference.DARK_THEME.ordinal, title = stringResource(id = R.string.theme_dark)),
-        RadioButtonItem(id = ThemePreference.LIGHT_THEME.ordinal, title = stringResource(id = R.string.theme_light))
-    )
 
+    val viewState by rememberFlowWithLifecycle(viewModel.uiStateFlow)
+        .collectAsState(initial = PreferencesUiState())
+
+    val scaffoldState = rememberScaffoldState()
+    viewState.failure?.let { errorEvent ->
+        val unhandledMessage = errorEvent.getContentIfNotHandled() ?: return@let
+        val errorMessage = stringResource(id = R.string.preferences_screen_error)
+        LaunchedEffect(key1 = unhandledMessage) {
+            scaffoldState.snackbarHostState.showSnackbar(
+                errorMessage
+            )
+        }
+    }
+    Scaffold(
+        scaffoldState = scaffoldState,
+        snackbarHost = { snackBarHostState ->
+            SwipeDismissSnackBarHost(
+                hostState = snackBarHostState,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth()
+            )
+        }
+    ) {
+        SettingsScreenInternal(
+            title,
+            sortOrder,
+            viewModel,
+            appTheme
+        )
+    }
+}
+
+@Composable
+private fun SettingsScreenInternal(
+    title: String,
+    sortOrder: Sort,
+    viewModel: PreferencesViewModel,
+    appTheme: ThemePreference
+) {
+    val sortFilters = getSortFilters()
+    val themeFilters = getThemeFilters()
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -84,6 +120,46 @@ fun SettingsScreen(
             )
         }
     }
+}
+
+@Composable
+private fun getThemeFilters(): List<RadioButtonItem> {
+    return listOf(
+        RadioButtonItem(
+            id = ThemePreference.AUTO_THEME.ordinal,
+            title = stringResource(id = R.string.theme_auto)
+        ),
+        RadioButtonItem(
+            id = ThemePreference.DARK_THEME.ordinal,
+            title = stringResource(id = R.string.theme_dark)
+        ),
+        RadioButtonItem(
+            id = ThemePreference.LIGHT_THEME.ordinal,
+            title = stringResource(id = R.string.theme_light)
+        )
+    )
+}
+
+@Composable
+private fun getSortFilters(): List<RadioButtonItem> {
+    return listOf(
+        RadioButtonItem(
+            id = Sort.ASC_NAME.ordinal,
+            title = stringResource(id = R.string.sort_name_asc)
+        ),
+        RadioButtonItem(
+            id = Sort.DESC_NAME.ordinal,
+            title = stringResource(id = R.string.sort_name_desc)
+        ),
+        RadioButtonItem(
+            id = Sort.ASC_TIME.ordinal,
+            title = stringResource(id = R.string.sort_time_added_asc)
+        ),
+        RadioButtonItem(
+            id = Sort.DESC_TIME.ordinal,
+            title = stringResource(id = R.string.sort_time_added_desc)
+        )
+    )
 }
 
 @Preview
