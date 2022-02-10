@@ -18,8 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.aasmc.wordify.common.core.domain.repositories.Sort
 import ru.aasmc.wordify.common.core.domain.repositories.ThemePreference
-import ru.aasmc.wordify.common.uicomponents.SwipeDismissSnackBarHost
-import ru.aasmc.wordify.common.uicomponents.rememberFlowWithLifecycle
+import ru.aasmc.wordify.common.uicomponents.extensions.SwipeDismissSnackBarHost
+import ru.aasmc.wordify.common.uicomponents.extensions.rememberFlowWithLifecycle
 import ru.aasmc.wordify.features.settings.R
 import ru.aasmc.wordify.resources.theme.WordifyTheme
 

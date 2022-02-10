@@ -61,6 +61,8 @@ dependencies{
     implementation Compose.material
     debugImplementation Compose.tooling
     implementation Compose.navigation
+    implementation Compose.hiltNavigation
+
 
     implementation Paging.paging
     implementation Paging.paging_room

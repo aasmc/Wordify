@@ -15,8 +15,8 @@ class WordDtoMapper @Inject constructor() : ApiMapper<WordDto?, CachedWordAggreg
                 wordId = dto?.word ?: throw MappingException("Word Id cannot be null"),
                 pronunciation = dto.pronunciationDto?.all.orEmpty(),
                 syllable = CachedSyllable(
-                    count = dto.syllables.count ?: 0,
-                    syllables = dto.syllables.syllableList.orEmpty().map { it.orEmpty() }
+                    count = dto.syllables?.count ?: 0,
+                    syllables = dto.syllables?.syllableList.orEmpty().map { it.orEmpty() }
                 ),
                 frequency = dto.frequency ?: 0f,
                 isFavourite = false,

@@ -1,4 +1,4 @@
-package ru.aasmc.wordify.common.uicomponents
+package ru.aasmc.wordify.common.uicomponents.extensions
 
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable

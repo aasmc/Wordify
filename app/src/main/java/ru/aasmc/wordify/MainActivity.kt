@@ -9,6 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.lifecycleScope
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,6 +21,7 @@ import ru.aasmc.wordify.features.settings.domain.usecases.GetAppThemeFlow
 import ru.aasmc.wordify.features.settings.domain.usecases.GetSortOrderFlow
 import ru.aasmc.wordify.features.settings.presentation.PreferencesViewModel
 import ru.aasmc.wordify.features.settings.presentation.SettingsScreen
+import ru.aasmc.wordify.features.wordlist.presentation.WordListScreen
 import ru.aasmc.wordify.resources.theme.WordifyTheme
 import javax.inject.Inject
 
@@ -49,12 +51,21 @@ class MainActivity : ComponentActivity() {
 //                Surface(color = MaterialTheme.colors.background) {
 //                    TestComp(repo = repository)
 //                }
-                val vm: PreferencesViewModel = hiltViewModel()
-                SettingsScreen(
-                    title = "Settings",
-                    viewModel = vm,
-                    appTheme = appTheme,
-                    sortOrder = sortOrder
+//                val vm: PreferencesViewModel = hiltViewModel()
+//                SettingsScreen(
+//                    title = "Settings",
+//                    viewModel = vm,
+//                    appTheme = appTheme,
+//                    sortOrder = sortOrder
+//                )
+                WordListScreen(
+                    sortOrder = sortOrder,
+                    onExecuteSearch = {
+                        lifecycleScope.launch {
+                            repository.getWordById(it)
+                        }
+                    },
+                    onWordClick = {}
                 )
             }
         }

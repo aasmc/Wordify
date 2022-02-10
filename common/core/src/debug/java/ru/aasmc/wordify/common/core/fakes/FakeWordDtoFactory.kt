@@ -13,7 +13,7 @@ object FakeWordDtoFactory {
             wordProperties = createWordDtoProperties(id),
             syllables = createSyllableDto(id),
             pronunciationDto = PronunciationDto(all = "$id"),
-            frequency = id.toFloat()
+            frequency = id.toFloat(),
         )
     }
 
