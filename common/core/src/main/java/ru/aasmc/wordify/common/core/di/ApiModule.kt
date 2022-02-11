@@ -1,5 +1,6 @@
 package ru.aasmc.wordify.common.core.di
 
+import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,6 +14,8 @@ import ru.aasmc.wordify.common.core.data.api.WordifyApi
 import ru.aasmc.wordify.common.core.data.api.interceptors.AuthenticationInterceptor
 import ru.aasmc.wordify.common.core.data.api.interceptors.LoggingInterceptor
 import ru.aasmc.wordify.common.core.data.api.interceptors.NetworkStatusInterceptor
+import ru.aasmc.wordify.common.core.data.api.model.PronunciationDto
+import ru.aasmc.wordify.common.core.data.api.model.adapter.PronunciationDtoAdapter
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -28,11 +31,18 @@ object ApiModule {
     }
 
     @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit.Builder {
+    fun provideMoshi(): Moshi {
+        return Moshi.Builder()
+            .add(PronunciationDtoAdapter())
+            .build()
+    }
+
+    @Provides
+    fun provideRetrofit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit.Builder {
         return Retrofit.Builder()
             .baseUrl(ApiConstants.BASE_URL)
             .client(okHttpClient)
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
     }
 
     @Provides

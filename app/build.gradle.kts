@@ -78,6 +78,7 @@ dependencies {
     implementation(Retrofit.retrofit)
     implementation(OkHttp.loggingInterceptor)
     implementation(Room.runtime)
+    implementation(Moshi.moshiKotlin)
 
     implementation(Paging.paging)
     implementation(Paging.paging_room)

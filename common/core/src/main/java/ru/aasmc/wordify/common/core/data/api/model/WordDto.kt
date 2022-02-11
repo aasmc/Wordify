@@ -2,8 +2,9 @@ package ru.aasmc.wordify.common.core.data.api.model
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import ru.aasmc.wordify.common.core.data.api.model.adapter.PronunciationDtoAdapter
 
-@JsonClass(generateAdapter = true)
+@JsonClass(generateAdapter = true, generator = "PronunciationDtoAdapter")
 data class WordDto(
     @field:Json(name = "word") val word: String?,
     @field:Json(name = "results") val wordProperties: List<WordPropertiesDto>?,
