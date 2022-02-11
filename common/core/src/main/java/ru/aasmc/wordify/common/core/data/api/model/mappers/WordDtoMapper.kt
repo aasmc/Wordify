@@ -11,14 +11,7 @@ import kotlin.math.abs
 class WordDtoMapper @Inject constructor() : ApiMapper<WordDto?, CachedWordAggregate> {
 
     override fun mapToCache(dto: WordDto?): CachedWordAggregate {
-        var wordName = dto?.word ?: throw MappingException("Word Id cannot be null")
-        wordName = wordName.replaceFirstChar {
-            if (it.isLowerCase()) {
-                it.titlecase()
-            } else {
-                it.toString()
-            }
-        }
+        val wordName = dto?.word ?: throw MappingException("Word Id cannot be null")
         val wordId = UUID.randomUUID().leastSignificantBits
         return CachedWordAggregate(
             cachedWord = CachedWord(

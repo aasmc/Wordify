@@ -12,9 +12,12 @@ data class UIWord(
 ) {
     companion object {
         fun fromDomain(word: Word): UIWord {
-            return UIWord(
+            val uiWordName = word.wordName.replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase() else it.toString()
+            }
+                return UIWord(
                 wordId = word.wordId,
-                wordName = word.wordName,
+                wordName = uiWordName,
                 wordProperties = word.wordProperties.map {
                     UIWordProperties.fromDomain(it)
                 },
