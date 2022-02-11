@@ -9,11 +9,11 @@ interface WordRepository {
 
     fun getAllWords(sort: Sort = Sort.ASC_NAME): Flow<PagingData<Word>>
 
-    suspend fun getWordById(wordId: String): Result<Word>
+    suspend fun getWordByName(wordName: String): Result<Word>
 
     fun searchWord(word: String, sort: Sort = Sort.ASC_NAME): Flow<PagingData<Word>>
 
-    suspend fun setFavourite(wordId: String, isFavourite: Boolean)
+    suspend fun setFavourite(wordId: Long, isFavourite: Boolean)
 
     fun getAllFavWords(sort: Sort = Sort.ASC_NAME): Flow<PagingData<Word>>
 

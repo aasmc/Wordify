@@ -7,7 +7,7 @@ class SetWordFavourite @Inject constructor(
     private val repository: WordRepository
 ) {
 
-    suspend operator fun invoke(wordId: String, favourite: Boolean) {
+    suspend operator fun invoke(wordId: Long, favourite: Boolean) {
         repository.setFavourite(wordId, favourite)
     }
 

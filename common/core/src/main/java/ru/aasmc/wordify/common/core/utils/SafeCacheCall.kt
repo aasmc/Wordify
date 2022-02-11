@@ -15,13 +15,11 @@ suspend inline fun <T : Any> safeCacheCall(
 ): Result<T> {
     return withContext(dispatcher) {
         try {
-            withTimeout(CacheConstants.CACHE_TIMEOUT) {
-                val cacheResult = cacheCall()
-                if (cacheResult == null) {
-                    Result.Failure(ExceptionMessage.FAILURE_TO_GET_WORD_FROM_CACHE)
-                } else {
-                    Result.Success(cacheResult)
-                }
+            val cacheResult = cacheCall()
+            if (cacheResult == null) {
+                Result.Failure(ExceptionMessage.FAILURE_TO_GET_WORD_FROM_CACHE)
+            } else {
+                Result.Success(cacheResult)
             }
         } catch (t: Throwable) {
             when (t) {

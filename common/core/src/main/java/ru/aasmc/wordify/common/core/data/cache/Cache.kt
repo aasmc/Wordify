@@ -24,9 +24,9 @@ interface Cache {
 
     fun searchWordsByTimeAddedDesc(name: String): Flow<PagingData<CachedWordAggregate>>
 
-    suspend fun getWordById(name: String): CachedWordAggregate?
+    suspend fun getWordByName(wordName: String): CachedWordAggregate?
 
-    suspend fun setFavourite(wordId: String, isFavourite: Boolean)
+    suspend fun setFavourite(wordId: Long, isFavourite: Boolean)
 
     fun getAllFavWordsByTimeAddedDesc(): Flow<PagingData<CachedWordAggregate>>
 

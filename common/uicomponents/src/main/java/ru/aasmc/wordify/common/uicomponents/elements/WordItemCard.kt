@@ -15,7 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -68,9 +70,9 @@ private fun WordItemCardDarkTheme() {
     WordifyTheme(darkTheme = true) {
         WordItemCard(
             "Track",
-            "Part of speech: noun",
-            "Pronunciation: [ træk ]",
-            "A bar or pair of parallel bars of rolled steel making the railway along which railroad cars or other vehicles can roll.",
+            "noun",
+            "[ træk ]",
+            "a bar or pair of parallel bars of rolled steel making the railway along which railroad cars or other vehicles can roll.",
             true,
             {},
             {}
@@ -84,9 +86,9 @@ private fun WordItemCardLightTheme() {
     WordifyTheme(darkTheme = false) {
         WordItemCard(
             "Track",
-            "Part of speech: noun",
-            "Pronunciation: [ træk ]",
-            "A bar or pair of parallel bars of rolled steel making the railway along which railroad cars or other vehicles can roll.",
+            "noun",
+            "[ træk ]",
+            "a bar or pair of parallel bars of rolled steel making the railway along which railroad cars or other vehicles can roll.",
             false,
             {},
             {}
@@ -98,8 +100,11 @@ private fun WordItemCardLightTheme() {
 private fun WordDescription(
     description: String
 ) {
+    val text = description.ifEmpty {
+        stringResource(id = R.string.no_definition_available)
+    }
     Text(
-        text = description,
+        text = "$text.",
         style = MaterialTheme.typography.body2,
         textAlign = TextAlign.Justify,
         color = MaterialTheme.colors.onSurface,
@@ -138,15 +143,16 @@ private fun WordCharacteristics(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Column {
-
-            Text(
-                text = partOfSpeech,
-                modifier = Modifier
-                    .padding(bottom = 8.dp),
-                style = MaterialTheme.typography.subtitle2,
-                color = MaterialTheme.colors.secondary,
-                fontStyle = FontStyle.Italic
-            )
+            if (partOfSpeech.isNotEmpty()) {
+                Text(
+                    text = partOfSpeech,
+                    modifier = Modifier
+                        .padding(bottom = 8.dp),
+                    style = MaterialTheme.typography.subtitle2,
+                    color = MaterialTheme.colors.secondary,
+                    fontStyle = FontStyle.Italic
+                )
+            }
             Text(
                 text = pronunciation,
                 modifier = Modifier

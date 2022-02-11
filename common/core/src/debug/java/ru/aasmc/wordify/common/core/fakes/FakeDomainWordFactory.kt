@@ -4,11 +4,14 @@ import ru.aasmc.wordify.common.core.domain.model.Syllable
 import ru.aasmc.wordify.common.core.domain.model.Word
 import ru.aasmc.wordify.common.core.domain.model.WordProperties
 import java.time.Instant
+import java.util.*
 
 object FakeDomainWordFactory {
     fun createDomainWord(id: Int): Word {
+        val wordId = UUID.randomUUID().leastSignificantBits
         return Word(
-            wordId = "$id",
+            wordId = wordId,
+            wordName = "$id",
             wordProperties = createWordProperties(id),
             syllable = Syllable(
                 count = id,
@@ -25,7 +28,7 @@ object FakeDomainWordFactory {
 
     private fun createWordProperty(index: Int): WordProperties {
         return WordProperties(
-            id = "$index",
+            id = index.toLong(),
             definition = "$index",
             partOfSpeech = "$index",
             synonyms = List(index) { "$it" },

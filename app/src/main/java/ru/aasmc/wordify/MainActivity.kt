@@ -8,19 +8,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.aasmc.wordify.common.core.domain.repositories.Sort
-import ru.aasmc.wordify.common.core.domain.repositories.ThemePreference
 import ru.aasmc.wordify.common.core.domain.repositories.WordRepository
 import ru.aasmc.wordify.features.settings.domain.usecases.GetAppThemeFlow
 import ru.aasmc.wordify.features.settings.domain.usecases.GetSortOrderFlow
-import ru.aasmc.wordify.features.settings.presentation.PreferencesViewModel
-import ru.aasmc.wordify.features.settings.presentation.SettingsScreen
 import ru.aasmc.wordify.features.wordlist.presentation.WordListScreen
 import ru.aasmc.wordify.resources.theme.WordifyTheme
 import javax.inject.Inject
@@ -62,7 +58,7 @@ class MainActivity : ComponentActivity() {
                     sortOrder = sortOrder,
                     onExecuteSearch = {
                         lifecycleScope.launch {
-                            repository.getWordById(it)
+                            repository.getWordByName(it)
                         }
                     },
                     onWordClick = {}
@@ -92,11 +88,11 @@ fun TestComp(
 ) {
     LaunchedEffect(Unit) {
         launch {
-            repo.getWordById("track")
-            repo.getWordById("make")
-            repo.getWordById("house")
-            repo.getWordById("luck")
-            repo.getWordById("step")
+            repo.getWordByName("track")
+            repo.getWordByName("make")
+            repo.getWordByName("house")
+            repo.getWordByName("luck")
+            repo.getWordByName("step")
         }
     }
 
@@ -105,7 +101,7 @@ fun TestComp(
 
     LazyColumn {
         items(lazyPages) { word ->
-            Text(text = word?.wordId ?: "No word")
+            Text(text = word?.wordName ?: "No word")
         }
     }
 }

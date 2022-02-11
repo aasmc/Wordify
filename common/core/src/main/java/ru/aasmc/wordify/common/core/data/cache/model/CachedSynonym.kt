@@ -4,22 +4,22 @@ import androidx.room.*
 
 @Entity(
     tableName = "cachedSynonyms",
-//    foreignKeys = [
-//        ForeignKey(
-//            entity = CachedWordProperties::class,
-//            parentColumns = ["propertiesId"],
-//            childColumns = ["propertiesId"],
-//            onDelete = ForeignKey.CASCADE // delete this entity if the parent gets deleted
-//        )
-//    ],
-//    indices = [Index("propertiesId")]
+    foreignKeys = [
+        ForeignKey(
+            entity = CachedWordProperties::class,
+            parentColumns = ["propertiesId"],
+            childColumns = ["propertiesId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+    indices = [Index("propertiesId")]
 )
 data class CachedSynonym(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     @ColumnInfo(name = "synonymId")
-    val synonymId: Long = 0,
+    val synonymId: Long,
     @ColumnInfo(name = "propertiesId")
-    val propertiesId: String,
+    val propertiesId: Long,
     @ColumnInfo(name = "synonym")
     val synonym: String
 )

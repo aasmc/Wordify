@@ -59,10 +59,10 @@ class WordDaoTest {
     @Test
     fun insertCachedWordAggregate_getByWordId_correct() = runTest {
         // given
-        val cachedWord = FakeCachedWordFactory.createCachedWord(1)
+        val cachedWord = FakeCachedWordFactory.createCachedWord(2)
         // when
         wordDao.insertCachedWordAggregate(cachedWord)
-        val retrieved = wordDao.getWordById(cachedWord.cachedWord.wordId)
+        val retrieved = wordDao.getWordByName(cachedWord.cachedWord.wordName)
 
         // then
 
@@ -72,37 +72,23 @@ class WordDaoTest {
         assertEquals(cachedWord.cachedWord.pronunciation, retrieved?.cachedWord?.pronunciation)
         assertEquals(cachedWord.cachedWord.frequency, retrieved?.cachedWord?.frequency)
         assertEquals(cachedWord.cachedWord.syllable, retrieved?.cachedWord?.syllable)
-        assertFalse(cachedWord.cachedWord.isFavourite)
+        assertFalse(retrieved?.cachedWord?.isFavourite ?: throw IllegalStateException("Cached word in test should not be null"))
+        assertEquals(cachedWord.wordProperties.size, retrieved.wordProperties.size)
         val expectedProps = cachedWord.wordProperties[0]
-        val retrievedProps = retrieved?.wordProperties?.get(0)
-            ?: throw Exception(
-                "Retrieved props in test " +
-                        "'insertCachedWordAggregate_getByWordId_correct' should not be null"
-            )
+        val retrievedProps = retrieved.wordProperties[0]
 
         assertEquals(expectedProps.derivations.size, retrievedProps.derivations.size)
         assertEquals(
             expectedProps.derivations[0].derivation,
             retrievedProps.derivations[0].derivation
         )
-        assertEquals(
-            expectedProps.derivations[0].propertiesId,
-            retrievedProps.derivations[0].propertiesId
-        )
+
 
         assertEquals(expectedProps.examples.size, retrievedProps.examples.size)
         assertEquals(expectedProps.examples[0].example, retrievedProps.examples[0].example)
-        assertEquals(
-            expectedProps.examples[0].propertiesId,
-            retrievedProps.derivations[0].propertiesId
-        )
 
         assertEquals(expectedProps.synonyms.size, retrievedProps.synonyms.size)
         assertEquals(expectedProps.synonyms[0].synonym, retrievedProps.synonyms[0].synonym)
-        assertEquals(
-            expectedProps.synonyms[0].propertiesId,
-            retrievedProps.synonyms[0].propertiesId
-        )
 
         assertEquals(
             expectedProps.cachedWordProperties.wordId,
@@ -124,7 +110,7 @@ class WordDaoTest {
         val cachedWord = FakeCachedWordFactory.createFavCacheWord(1)
         wordDao.insertCachedWordAggregate(cachedWord)
         // when
-        val retrieved = wordDao.getWordById(cachedWord.cachedWord.wordId)
+        val retrieved = wordDao.getWordByName(cachedWord.cachedWord.wordName)
         // then
         assertTrue(
             retrieved?.cachedWord?.isFavourite ?: throw Exception("Word in the test cannot be null")
@@ -155,8 +141,8 @@ class WordDaoTest {
 
             Truth.assertThat(words.size).isEqualTo(5)
             for (i in 0 until words.lastIndex) {
-                Truth.assertThat(words[i].cachedWord.wordId)
-                    .isLessThan(words[i + 1].cachedWord.wordId)
+                Truth.assertThat(words[i].cachedWord.wordName)
+                    .isLessThan(words[i + 1].cachedWord.wordName)
             }
         }
 
@@ -184,8 +170,8 @@ class WordDaoTest {
 
         Truth.assertThat(words.size).isEqualTo(5)
         for (i in 0 until words.lastIndex) {
-            Truth.assertThat(words[i].cachedWord.wordId)
-                .isGreaterThan(words[i + 1].cachedWord.wordId)
+            Truth.assertThat(words[i].cachedWord.wordName)
+                .isGreaterThan(words[i + 1].cachedWord.wordName)
         }
     }
 
@@ -242,8 +228,8 @@ class WordDaoTest {
 
         Truth.assertThat(words.size).isEqualTo(5)
         for (i in 0 until words.lastIndex) {
-            Truth.assertThat(words[i].cachedWord.wordId)
-                .isLessThan(words[i + 1].cachedWord.wordId)
+            Truth.assertThat(words[i].cachedWord.wordName)
+                .isLessThan(words[i + 1].cachedWord.wordName)
         }
     }
 
@@ -270,8 +256,8 @@ class WordDaoTest {
 
         Truth.assertThat(words.size).isEqualTo(10)
         for (i in 0 until words.lastIndex) {
-            Truth.assertThat(words[i].cachedWord.wordId)
-                .isLessThan(words[i + 1].cachedWord.wordId)
+            Truth.assertThat(words[i].cachedWord.wordName)
+                .isLessThan(words[i + 1].cachedWord.wordName)
         }
     }
 
@@ -597,10 +583,10 @@ class WordDaoTest {
         for (i in 0 until words.lastIndex) {
             val prev = words[i].cachedWord
             val next = words[i + 1].cachedWord
-            Truth.assertThat(prev.wordId)
-                .isLessThan(next.wordId)
-            Truth.assertThat(prev.wordId).contains("1")
-            Truth.assertThat(next.wordId).contains("1")
+            Truth.assertThat(prev.wordName)
+                .isLessThan(next.wordName)
+            Truth.assertThat(prev.wordName).contains("1")
+            Truth.assertThat(next.wordName).contains("1")
         }
     }
 
@@ -634,10 +620,10 @@ class WordDaoTest {
         for (i in 0 until words.lastIndex) {
             val prev = words[i].cachedWord
             val next = words[i + 1].cachedWord
-            Truth.assertThat(prev.wordId)
-                .isGreaterThan(next.wordId)
-            Truth.assertThat(prev.wordId).contains("1")
-            Truth.assertThat(next.wordId).contains("1")
+            Truth.assertThat(prev.wordName)
+                .isGreaterThan(next.wordName)
+            Truth.assertThat(prev.wordName).contains("1")
+            Truth.assertThat(next.wordName).contains("1")
         }
     }
 
@@ -673,8 +659,8 @@ class WordDaoTest {
             val next = words[i + 1].cachedWord
             Truth.assertThat(prev.timeAdded)
                 .isGreaterThan(next.timeAdded)
-            Truth.assertThat(prev.wordId).contains("1")
-            Truth.assertThat(next.wordId).contains("1")
+            Truth.assertThat(prev.wordName).contains("1")
+            Truth.assertThat(next.wordName).contains("1")
         }
     }
 
@@ -710,8 +696,8 @@ class WordDaoTest {
             val next = words[i + 1].cachedWord
             Truth.assertThat(prev.timeAdded)
                 .isLessThan(next.timeAdded)
-            Truth.assertThat(prev.wordId).contains("1")
-            Truth.assertThat(next.wordId).contains("1")
+            Truth.assertThat(prev.wordName).contains("1")
+            Truth.assertThat(next.wordName).contains("1")
         }
     }
 
@@ -722,7 +708,7 @@ class WordDaoTest {
         val wordToSearch = "word"
         wordDao.insertCachedWordAggregate(FakeCachedWordFactory.createCachedWord(1))
         // when
-        val word = wordDao.getWordById(wordToSearch)
+        val word = wordDao.getWordByName(wordToSearch)
         // then
         assertNull(word)
     }
@@ -824,7 +810,7 @@ class WordDaoTest {
         // when
         wordDao.setFavourite(word.cachedWord.wordId)
         // then
-        val retrieved = wordDao.getWordById(word.cachedWord.wordId)
+        val retrieved = wordDao.getWordByName(word.cachedWord.wordName)
         assertTrue(
             retrieved?.cachedWord?.isFavourite ?: throw Exception("Word in test cannot be null")
         )
@@ -838,7 +824,7 @@ class WordDaoTest {
         // when
         wordDao.setNotFavourite(word.cachedWord.wordId)
         // then
-        val retrieved = wordDao.getWordById(word.cachedWord.wordId)
+        val retrieved = wordDao.getWordByName(word.cachedWord.wordName)
         assertFalse(
             retrieved?.cachedWord?.isFavourite ?: throw Exception("Word in test cannot be null")
         )

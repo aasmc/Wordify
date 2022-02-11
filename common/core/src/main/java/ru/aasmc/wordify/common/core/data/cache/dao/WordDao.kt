@@ -9,11 +9,11 @@ import ru.aasmc.wordify.common.core.data.cache.model.*
 abstract class WordDao {
 
     @Transaction
-    @Query("SELECT * FROM words ORDER BY wordId ASC")
+    @Query("SELECT * FROM words ORDER BY wordName ASC")
     abstract fun getAllWordsByNameAsc(): PagingSource<Int, CachedWordAggregate>
 
     @Transaction
-    @Query("SELECT * FROM words ORDER BY wordId DESC")
+    @Query("SELECT * FROM words ORDER BY wordName DESC")
     abstract fun getAllWordsByNameDesc(): PagingSource<Int, CachedWordAggregate>
 
     @Transaction
@@ -41,14 +41,14 @@ abstract class WordDao {
     abstract fun getAllFavWordsByTimeAddedDesc(): PagingSource<Int, CachedWordAggregate>
 
     @Transaction
-    @Query("SELECT * FROM words WHERE wordId = :wordId")
-    abstract suspend fun getWordById(wordId: String): CachedWordAggregate?
+    @Query("SELECT * FROM words WHERE wordName = :wordName")
+    abstract suspend fun getWordByName(wordName: String): CachedWordAggregate?
 
-    @Query("UPDATE words SET isFavourite = 1 WHERE wordId =:word")
-    abstract suspend fun setFavourite(word: String)
+    @Query("UPDATE words SET isFavourite = 1 WHERE wordId =:wordId")
+    abstract suspend fun setFavourite(wordId: Long)
 
-    @Query("UPDATE words SET isFavourite = 0 WHERE wordId =:word")
-    abstract suspend fun setNotFavourite(word: String)
+    @Query("UPDATE words SET isFavourite = 0 WHERE wordId =:wordId")
+    abstract suspend fun setNotFavourite(wordId: Long)
 
     /**
      * Can't insert CachedWordPropertiesAggregate, since it is not an Entity,
@@ -82,19 +82,19 @@ abstract class WordDao {
     }
 
     @Transaction
-    @Query("SELECT * FROM words WHERE wordId LIKE '%' || :name || '%' ORDER BY wordId ASC")
+    @Query("SELECT * FROM words WHERE wordName LIKE '%' || :name || '%' ORDER BY wordName ASC")
     abstract fun searchWordsByNameAsc(name: String): PagingSource<Int, CachedWordAggregate>
 
     @Transaction
-    @Query("SELECT * FROM words WHERE wordId LIKE '%' || :name || '%' ORDER BY wordId DESC")
+    @Query("SELECT * FROM words WHERE wordName LIKE '%' || :name || '%' ORDER BY wordName DESC")
     abstract fun searchWordsByNameDesc(name: String): PagingSource<Int, CachedWordAggregate>
 
     @Transaction
-    @Query("SELECT * FROM words WHERE wordId LIKE '%' || :name || '%' ORDER BY timeAdded DESC")
+    @Query("SELECT * FROM words WHERE wordName LIKE '%' || :name || '%' ORDER BY timeAdded DESC")
     abstract fun searchWordsByTimeAddedDesc(name: String): PagingSource<Int, CachedWordAggregate>
 
     @Transaction
-    @Query("SELECT * FROM words WHERE wordId LIKE '%' || :name || '%' ORDER BY timeAdded ASC")
+    @Query("SELECT * FROM words WHERE wordName LIKE '%' || :name || '%' ORDER BY timeAdded ASC")
     abstract fun searchWordsByTimeAddedAsc(name: String): PagingSource<Int, CachedWordAggregate>
 
 }

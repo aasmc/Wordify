@@ -51,7 +51,7 @@ class WordifyApiTest {
         assertEquals("track", word.word)
         val wordFrequency = word.frequency ?: 0f
         assertTrue(4.67f.equalsDelta(wordFrequency))
-        assertEquals(1, word.syllables.count)
+        assertEquals(1, word.syllables?.count)
         assertEquals("træk", word.pronunciationDto?.all)
         assertEquals(16, word.wordProperties?.size)
     }

@@ -7,7 +7,6 @@ import androidx.room.withTransaction
 import kotlinx.coroutines.flow.Flow
 import ru.aasmc.constants.CacheConstants.MAX_SIZE
 import ru.aasmc.constants.CacheConstants.PAGE_SIZE
-import ru.aasmc.wordify.common.core.data.cache.dao.WordDao
 import ru.aasmc.wordify.common.core.data.cache.model.CachedWordAggregate
 import javax.inject.Inject
 
@@ -117,11 +116,11 @@ class RoomCache @Inject constructor(
         }.flow
     }
 
-    override suspend fun getWordById(name: String): CachedWordAggregate? {
-        return wordDao.getWordById(name)
+    override suspend fun getWordByName(wordName: String ): CachedWordAggregate? {
+        return wordDao.getWordByName(wordName)
     }
 
-    override suspend fun setFavourite(wordId: String, isFavourite: Boolean) {
+    override suspend fun setFavourite(wordId: Long, isFavourite: Boolean) {
         if (isFavourite) {
             wordDao.setFavourite(wordId)
         } else {

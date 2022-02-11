@@ -43,15 +43,15 @@ class WordifyWordRepository @Inject constructor(
      * goes to the network and tries there. If success -> saves the word to cache
      * and returns this word from cache. In other exceptional cases, returns Result.Failure.
      */
-    override suspend fun getWordById(wordId: String): Result<Word> {
+    override suspend fun getWordByName(wordName: String): Result<Word> {
         val cacheResult = safeCacheCall(dispatchersProvider.io()) {
-            cache.getWordById(wordId)
+            cache.getWordByName(wordName)
         }
         if (cacheResult is Result.Success) {
             return Result.Success(data = CachedWordAggregate.toDomain(cacheResult.data))
         } else {
             val dtoResult = safeApiCall(dispatchersProvider.io()) {
-                api.getWord(wordId)
+                api.getWord(wordName)
             }
             when (dtoResult) {
                 is Result.Failure -> {
@@ -62,7 +62,7 @@ class WordifyWordRepository @Inject constructor(
                 }
             }
             val cacheSecondAttempt = safeCacheCall(dispatchersProvider.io()) {
-                cache.getWordById(wordId)
+                cache.getWordByName(wordName)
             }
             return when (cacheSecondAttempt) {
                 is Result.Failure -> {
@@ -90,7 +90,7 @@ class WordifyWordRepository @Inject constructor(
             }
     }
 
-    override suspend fun setFavourite(wordId: String, isFavourite: Boolean) {
+    override suspend fun setFavourite(wordId: Long, isFavourite: Boolean) {
         cache.setFavourite(wordId, isFavourite)
     }
 

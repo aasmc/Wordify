@@ -5,7 +5,7 @@ import org.junit.Test
 import ru.aasmc.wordify.common.core.fakes.FakeWordDtoFactory
 import kotlin.random.Random
 
-const val WORD_TO_CREATE = 1
+const val WORD_TO_CREATE = 5
 
 class WordDtoMapperTest {
     private val dtoWord = FakeWordDtoFactory.createDtoWord(WORD_TO_CREATE)
@@ -34,11 +34,8 @@ class WordDtoMapperTest {
         val derivation = prop.derivations[index]
         val example = prop.examples[index]
         assertTrue(synonym.synonym == "$index")
-        assertTrue(synonym.propertiesId == "$WORD_TO_CREATE")
         assertTrue(derivation.derivation == "$index")
-        assertTrue(derivation.propertiesId == "$WORD_TO_CREATE")
         assertTrue(example.example == "$index")
-        assertTrue(example.propertiesId == "$WORD_TO_CREATE")
     }
 
 }

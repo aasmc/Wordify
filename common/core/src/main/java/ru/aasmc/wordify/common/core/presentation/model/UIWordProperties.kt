@@ -13,7 +13,7 @@ data class UIWordProperties(
         fun fromDomain(wordProperties: WordProperties): UIWordProperties {
             return UIWordProperties(
                 definition = wordProperties.definition,
-                partOfSpeech = "Part of speech: ${wordProperties.partOfSpeech}",
+                partOfSpeech = wordProperties.partOfSpeech,
                 synonyms = wordProperties.synonyms,
                 derivation = wordProperties.derivation,
                 examples = wordProperties.examples

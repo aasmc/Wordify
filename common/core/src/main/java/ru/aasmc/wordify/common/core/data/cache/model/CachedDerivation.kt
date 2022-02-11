@@ -4,22 +4,22 @@ import androidx.room.*
 
 @Entity(
     tableName = "cachedDerivation",
-//    foreignKeys = [
-//        ForeignKey(
-//            entity = CachedWordProperties::class,
-//            parentColumns = ["propertiesId"],
-//            childColumns = ["propertiesId"],
-//            onDelete = ForeignKey.CASCADE // delete this entity if the parent gets deleted
-//        )
-//    ],
-//    indices = [Index("propertiesId")]
+    foreignKeys = [
+        ForeignKey(
+            entity = CachedWordProperties::class,
+            parentColumns = ["propertiesId"],
+            childColumns = ["propertiesId"],
+            onDelete = ForeignKey.CASCADE // delete this entity if the parent gets deleted
+        )
+    ],
+    indices = [Index("propertiesId")]
 )
 data class CachedDerivation(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     @ColumnInfo(name = "derivationId")
-    val derivationId: Long = 0,
+    val derivationId: Long,
     @ColumnInfo(name = "propertiesId")
-    val propertiesId: String,
+    val propertiesId: Long,
     @ColumnInfo(name = "derivation")
     val derivation: String
 )

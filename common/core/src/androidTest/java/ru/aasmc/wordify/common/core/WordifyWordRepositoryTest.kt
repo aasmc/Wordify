@@ -1,7 +1,6 @@
 package ru.aasmc.wordify.common.core
 
 import android.content.Context
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.paging.*
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.room.Room
@@ -27,7 +26,6 @@ import ru.aasmc.wordify.common.core.data.cache.RoomCache
 import ru.aasmc.wordify.common.core.data.cache.WordifyDatabase
 import ru.aasmc.wordify.common.core.domain.Result
 import ru.aasmc.wordify.common.core.domain.model.Word
-import ru.aasmc.wordify.common.core.domain.repositories.WordRepository
 import ru.aasmc.wordify.common.core.fakes.FakeCachedWordFactory
 import ru.aasmc.wordify.common.core.utils.*
 import javax.inject.Inject
@@ -106,12 +104,12 @@ class WordifyWordRepositoryTest {
         fakeServer.setHappyPathDispatcher(wordId)
 
         // when
-        val result = repository.getWordById(wordId)
+        val result = repository.getWordByName(wordId)
 
         // then
         assert(result is Result.Success)
         val word = (result as Result.Success).data
-        val cachedWord = cache.getWordById(word.wordId)
+        val cachedWord = cache.getWordByName(word.wordName)
         assert(cachedWord != null)
         assertEquals(word.wordId, cachedWord?.cachedWord?.wordId)
         assertEquals(word.pronunciation, cachedWord?.cachedWord?.pronunciation)
@@ -123,7 +121,7 @@ class WordifyWordRepositoryTest {
         val wordId = "incorrect"
         fakeServer.setHappyPathDispatcher(wordId)
         // when
-        val result = repository.getWordById(wordId)
+        val result = repository.getWordByName(wordId)
         // then
         assert(result is Result.Failure)
     }
@@ -133,7 +131,7 @@ class WordifyWordRepositoryTest {
         // given
         cache.saveWord(FakeCachedWordFactory.createCachedWord(1))
         // when
-        val result = repository.getWordById("1")
+        val result = repository.getWordByName("1")
         assert(result is Result.Success)
     }
 
@@ -160,13 +158,13 @@ class WordifyWordRepositoryTest {
 
     private fun insertSearchData(): List<Word> = runBlocking {
         fakeServer.setHappyPathDispatcher("track")
-        val w = repository.getWordById("track")
+        val w = repository.getWordByName("track")
         assert(w is Result.Success)
         fakeServer.setHappyPathDispatcher("kingdom")
-        val ww = repository.getWordById("kingdom")
+        val ww = repository.getWordByName("kingdom")
         assert(ww is Result.Success)
         fakeServer.setHappyPathDispatcher("make")
-        val www = repository.getWordById("kingdom")
+        val www = repository.getWordByName("kingdom")
         assert(www is Result.Success)
         return@runBlocking listOf(
             (w as Result.Success).data,
@@ -261,14 +259,14 @@ class WordifyWordRepositoryTest {
     @Test
     fun setFavourite_success() = runTest {
         fakeServer.setHappyPathDispatcher("track")
-        val result = repository.getWordById("track")
+        val result = repository.getWordByName("track")
         assert(result is Result.Success)
         val word = (result as Result.Success).data
         assertFalse(word.isFavourite)
 
         repository.setFavourite(word.wordId, true)
 
-        val retrievedResult = repository.getWordById(word.wordId)
+        val retrievedResult = repository.getWordByName(word.wordName)
         assert(retrievedResult is Result.Success)
         val retrievedWord = (retrievedResult as Result.Success).data
         assertTrue(retrievedWord.isFavourite)
@@ -277,15 +275,15 @@ class WordifyWordRepositoryTest {
     @Test
     fun setNotFavourite_success() = runTest {
         fakeServer.setHappyPathDispatcher("track")
-        val result = repository.getWordById("track")
+        val result = repository.getWordByName("track")
         val word = (result as Result.Success).data
         repository.setFavourite(word.wordId, true)
-        val retrievedResult = repository.getWordById(word.wordId)
+        val retrievedResult = repository.getWordByName(word.wordName)
         val retrievedWord = (retrievedResult as Result.Success).data
         assertTrue(retrievedWord.isFavourite)
 
         repository.setFavourite(retrievedWord.wordId, false)
-        val retrievedNotFavResult = repository.getWordById(retrievedWord.wordId)
+        val retrievedNotFavResult = repository.getWordByName(retrievedWord.wordName)
         assertTrue(retrievedNotFavResult is Result.Success)
         val notFavWord = (retrievedNotFavResult as Result.Success).data
         assertFalse(notFavWord.isFavourite)

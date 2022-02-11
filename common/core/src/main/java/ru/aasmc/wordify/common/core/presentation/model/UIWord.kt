@@ -3,7 +3,8 @@ package ru.aasmc.wordify.common.core.presentation.model
 import ru.aasmc.wordify.common.core.domain.model.Word
 
 data class UIWord(
-    val wordId: String,
+    val wordId: Long,
+    val wordName: String,
     val wordProperties: List<UIWordProperties>,
     val syllable: UISyllable,
     val pronunciation: String,
@@ -13,11 +14,12 @@ data class UIWord(
         fun fromDomain(word: Word): UIWord {
             return UIWord(
                 wordId = word.wordId,
+                wordName = word.wordName,
                 wordProperties = word.wordProperties.map {
                     UIWordProperties.fromDomain(it)
                 },
                 syllable = UISyllable.fromDomain(word.syllable),
-                pronunciation = "Pronunciation: [ ${word.pronunciation} ]",
+                pronunciation = word.pronunciation,
                 isFavourite = word.isFavourite
             )
         }

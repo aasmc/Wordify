@@ -2,65 +2,72 @@ package ru.aasmc.wordify.common.core.fakes
 
 import ru.aasmc.wordify.common.core.data.cache.model.*
 import java.time.Instant
+import java.util.*
 
 object FakeCachedWordFactory {
 
-    fun createFavCacheWord(id: Int): CachedWordAggregate {
+    fun createFavCacheWord(wordName: Int): CachedWordAggregate {
+        val wordId = UUID.randomUUID().leastSignificantBits
         return CachedWordAggregate(
             cachedWord = CachedWord(
-                wordId = "$id",
-                pronunciation = "$id",
+                wordId = wordId,
+                wordName = "$wordName",
+                pronunciation = "$wordName",
                 syllable = CachedSyllable(
-                    count = id,
-                    syllables = List(id) { "$it" }
+                    count = wordName,
+                    syllables = List(wordName) { "$it" }
                 ),
-                frequency = id.toFloat(),
+                frequency = wordName.toFloat(),
                 isFavourite = true,
                 timeAdded = Instant.now().toEpochMilli()
             ),
-            wordProperties = createWordProperties(id)
+            wordProperties = createWordProperties(wordName, wordId)
         )
     }
 
-    fun createCachedWord(id: Int): CachedWordAggregate {
+    fun createCachedWord(wordName: Int): CachedWordAggregate {
+        val wordId = UUID.randomUUID().leastSignificantBits
         return CachedWordAggregate(
             cachedWord = CachedWord(
-                wordId = "$id",
-                pronunciation = "$id",
+                wordId = wordId,
+                wordName = "$wordName",
+                pronunciation = "$wordName",
                 syllable = CachedSyllable(
-                    count = id,
-                    syllables = List(id) { "$it" }
+                    count = wordName,
+                    syllables = List(wordName) { "$it" }
                 ),
-                frequency = id.toFloat(),
+                frequency = wordName.toFloat(),
+                isFavourite = false,
                 timeAdded = Instant.now().toEpochMilli()
             ),
-            wordProperties = createWordProperties(id)
+            wordProperties = createWordProperties(wordName, wordId)
         )
     }
 
-    private fun createWordProperties(id: Int): List<CachedWordPropertiesAggregate> {
-        return (0 until id).map { createWordProperty(id) }
+    private fun createWordProperties(wordName: Int, wordId: Long): List<CachedWordPropertiesAggregate> {
+        return (0 until wordName).map { createWordProperty(wordName, wordId) }
     }
 
-    private fun createWordProperty(index: Int): CachedWordPropertiesAggregate {
+    private fun createWordProperty(wordName: Int, wordId: Long): CachedWordPropertiesAggregate {
+        val propsId = UUID.randomUUID().leastSignificantBits
         return CachedWordPropertiesAggregate(
             cachedWordProperties = CachedWordProperties(
-                propertiesId = "$index",
-                wordId = "$index",
-                definition = "$index",
-                partOfSpeech = "$index"
+                wordId = wordId,
+                definition = "$wordName",
+                partOfSpeech = "$wordName",
+                propertiesId = propsId
             ),
-            synonyms = List(index) { CachedSynonym(synonym = "$it", propertiesId = "$index") },
-            derivations = List(index) {
+            synonyms = List(wordName) { CachedSynonym(synonymId = UUID.randomUUID().leastSignificantBits, synonym = "$it", propertiesId = propsId) },
+            derivations = List(wordName) {
                 CachedDerivation(
+                    derivationId = UUID.randomUUID().leastSignificantBits,
                     derivation = "$it",
-                    propertiesId = "$index"
+                    propertiesId = propsId
                 )
             },
-            examples = List(index) { CachedExample(example = "$it", propertiesId = "$index") }
+            examples = List(wordName) { CachedExample(exampleId = UUID.randomUUID().leastSignificantBits, example = "$it", propertiesId = propsId) }
         )
     }
-
 }
 
 

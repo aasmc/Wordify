@@ -20,7 +20,7 @@ fun WordListScreen(
     sortOrder: Sort,
     wordListViewModel: WordListViewModel = hiltViewModel(),
     onExecuteSearch: (String) -> Unit,
-    onWordClick: (String) -> Unit
+    onWordClick: (Long) -> Unit
 ) {
     val viewState by rememberFlowWithLifecycle(flow = wordListViewModel.wordListErrorState)
         .collectAsState(initial = WordsListErrorState())
@@ -59,7 +59,7 @@ private fun WordListScreenInternal(
     sortOrder: Sort,
     viewModel: WordListViewModel,
     onExecuteSearch: (String) -> Unit,
-    onWordClick: (String) -> Unit
+    onWordClick: (Long) -> Unit
 ) {
     val searchStarted by viewModel.searchStarted.collectAsState()
 

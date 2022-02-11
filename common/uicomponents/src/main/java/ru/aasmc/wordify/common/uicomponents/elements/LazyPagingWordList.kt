@@ -19,19 +19,26 @@ import ru.aasmc.wordify.common.resources.R
 @Composable
 fun LazyPagingWordList(
     wordListPagingData: Flow<PagingData<UIWord>>,
-    onWordClick: (String) -> Unit,
-    onchangeFavourite: (Boolean, String) -> Unit
+    onWordClick: (Long) -> Unit,
+    onchangeFavourite: (Boolean, Long) -> Unit
 ) {
     val wordList = wordListPagingData.collectAsLazyPagingItems()
     LazyColumn {
         items(wordList) { uiWordNullable ->
             uiWordNullable?.let { uiWord ->
-                val firstProperty = uiWord.wordProperties[0]
+                val properties = uiWord.wordProperties
+                var partOfSpeech = ""
+                var definition = ""
+                if (properties.isNotEmpty()) {
+                    val randomProperty = properties[0]
+                    partOfSpeech = randomProperty.partOfSpeech
+                    definition = randomProperty.definition
+                }
                 WordItemCard(
-                    wordName = uiWord.wordId,
-                    partOfSpeech = firstProperty.partOfSpeech,
+                    wordName = uiWord.wordName,
+                    partOfSpeech = partOfSpeech,
                     pronunciation = uiWord.pronunciation,
-                    description = firstProperty.definition,
+                    description = definition,
                     isFavourite = uiWord.isFavourite,
                     onChangeFavourite = {
                         onchangeFavourite(uiWord.isFavourite, uiWord.wordId)

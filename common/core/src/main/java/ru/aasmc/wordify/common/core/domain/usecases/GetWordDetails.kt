@@ -9,6 +9,6 @@ class GetWordDetails @Inject constructor(
     private val repository: WordRepository
 ) {
     suspend operator fun invoke(wordId: String): Result<Word> {
-        return repository.getWordById(wordId)
+        return repository.getWordByName(wordId)
     }
 }

@@ -4,15 +4,26 @@ import ru.aasmc.wordify.common.core.data.api.model.WordDto
 import ru.aasmc.wordify.common.core.data.api.model.WordPropertiesDto
 import ru.aasmc.wordify.common.core.data.cache.model.*
 import java.time.Instant
-import java.time.LocalDateTime
+import java.util.*
 import javax.inject.Inject
+import kotlin.math.abs
 
 class WordDtoMapper @Inject constructor() : ApiMapper<WordDto?, CachedWordAggregate> {
 
     override fun mapToCache(dto: WordDto?): CachedWordAggregate {
+        var wordName = dto?.word ?: throw MappingException("Word Id cannot be null")
+        wordName = wordName.replaceFirstChar {
+            if (it.isLowerCase()) {
+                it.titlecase()
+            } else {
+                it.toString()
+            }
+        }
+        val wordId = UUID.randomUUID().leastSignificantBits
         return CachedWordAggregate(
             cachedWord = CachedWord(
-                wordId = dto?.word ?: throw MappingException("Word Id cannot be null"),
+                wordId = wordId,
+                wordName = wordName,
                 pronunciation = dto.pronunciationDto?.all.orEmpty(),
                 syllable = CachedSyllable(
                     count = dto.syllables?.count ?: 0,
@@ -22,62 +33,74 @@ class WordDtoMapper @Inject constructor() : ApiMapper<WordDto?, CachedWordAggreg
                 isFavourite = false,
                 timeAdded = Instant.now().toEpochMilli()
             ),
-            wordProperties = parseWordProperties(dto)
+            wordProperties = parseWordProperties(dto, wordId)
         )
     }
 
-    private fun parseWordProperties(dto: WordDto?): List<CachedWordPropertiesAggregate> {
-        val wordId = dto?.word ?: throw MappingException("Word Id cannot be null")
-        return dto.wordProperties?.map { parseSingleWordProperty(it, wordId) }.orEmpty()
+    private fun parseWordProperties(dto: WordDto?, wordId: Long): List<CachedWordPropertiesAggregate> {
+        return dto?.wordProperties?.map { parseSingleWordProperty(it, wordId) }.orEmpty()
     }
 
     private fun parseSingleWordProperty(
         dtoProperty: WordPropertiesDto?,
-        wordId: String
+        wordId: Long
     ): CachedWordPropertiesAggregate {
+        var definition = dtoProperty?.definition
+        if (definition != null) {
+            definition = definition.replaceFirstChar {
+                if (it.isLowerCase()) {
+                    it.titlecase()
+                } else {
+                    it.toString()
+                }
+            }
+        }
+        val propsId: Long = UUID.randomUUID().leastSignificantBits
         return CachedWordPropertiesAggregate(
-
             cachedWordProperties = CachedWordProperties(
-                propertiesId = wordId,
+                propertiesId = propsId,
                 wordId = wordId,
-                definition = dtoProperty?.definition.orEmpty(),
+                definition = definition.orEmpty(),
                 partOfSpeech = dtoProperty?.partOfSpeech.orEmpty(),
             ),
-            synonyms = parseSynonyms(dtoProperty?.synonyms, wordId),
-            derivations = parseDerivations(dtoProperty?.derivations, wordId),
-            examples = parseExamples(dtoProperty?.examples, wordId)
+            synonyms = parseSynonyms(dtoProperty?.synonyms, propsId),
+            derivations = parseDerivations(dtoProperty?.derivations, propsId),
+            examples = parseExamples(dtoProperty?.examples, propsId)
         )
 
     }
 
-    private fun parseSynonyms(synonyms: List<String?>?, propsId: String): List<CachedSynonym> {
+    private fun parseSynonyms(synonyms: List<String?>?, propsId: Long): List<CachedSynonym> {
         return synonyms?.map { parseSingleSynonym(it, propsId) }.orEmpty()
     }
 
-    private fun parseSingleSynonym(synonym: String?, propsId: String): CachedSynonym {
+    private fun parseSingleSynonym(synonym: String?, propsId: Long): CachedSynonym {
         return CachedSynonym(
+            synonymId = UUID.randomUUID().leastSignificantBits,
             synonym = synonym.orEmpty(),
             propertiesId = propsId
         )
     }
 
-    private fun parseDerivations(derivations: List<String?>?, propsId: String): List<CachedDerivation> {
+    private fun parseDerivations(derivations: List<String?>?, propsId: Long): List<CachedDerivation> {
         return derivations?.map { parseSingleDerivation(it, propsId) }.orEmpty()
     }
 
-    private fun parseSingleDerivation(derivation: String?, propsId: String): CachedDerivation {
+    private fun parseSingleDerivation(derivation: String?, propsId: Long): CachedDerivation {
         return CachedDerivation(
+            derivationId = UUID.randomUUID().leastSignificantBits,
             derivation = derivation.orEmpty(),
             propertiesId = propsId
         )
     }
 
-    private fun parseExamples(examples: List<String?>?, propsId: String): List<CachedExample> {
+    private fun parseExamples(examples: List<String?>?, propsId: Long): List<CachedExample> {
         return examples?.map { parseSingleExample(it, propsId) }.orEmpty()
     }
 
-    private fun parseSingleExample(example: String?, propsId: String): CachedExample {
+    private fun parseSingleExample(example: String?, propsId: Long): CachedExample {
         return CachedExample(
+            exampleId = UUID.randomUUID().leastSignificantBits,
             example = example.orEmpty(),
             propertiesId = propsId
         )
