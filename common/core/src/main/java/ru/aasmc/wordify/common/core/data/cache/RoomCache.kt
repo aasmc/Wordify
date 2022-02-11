@@ -8,12 +8,14 @@ import kotlinx.coroutines.flow.Flow
 import ru.aasmc.constants.CacheConstants.MAX_SIZE
 import ru.aasmc.constants.CacheConstants.PAGE_SIZE
 import ru.aasmc.wordify.common.core.data.cache.model.CachedWordAggregate
+import ru.aasmc.wordify.common.core.data.cache.model.CachedRecentlySearchedWord
 import javax.inject.Inject
 
 class RoomCache @Inject constructor(
     private val db: WordifyDatabase
 ) : Cache {
     private val wordDao = db.wordDao()
+    private val recentlySearchedDao = db.recentlySearchedDao()
     override suspend fun saveWord(cachedWord: CachedWordAggregate) {
         db.withTransaction {
             wordDao.insertCachedWordAggregate(cachedWord)
@@ -174,5 +176,17 @@ class RoomCache @Inject constructor(
         ) {
             wordDao.getAllFavWordsByTimeAddedAsc()
         }.flow
+    }
+
+    override suspend fun addRecentlySearchedWord(word: CachedRecentlySearchedWord) {
+        recentlySearchedDao.insertWord(word)
+    }
+
+    override fun getAllRecentlySearchedWords(): Flow<List<CachedRecentlySearchedWord>>{
+        return recentlySearchedDao.getRecentlySearchedWords()
+    }
+
+    override fun searchRecentlySearchedWords(query: String): Flow<List<CachedRecentlySearchedWord>> {
+        return recentlySearchedDao.searchRecentlySearchedWords(query)
     }
 }

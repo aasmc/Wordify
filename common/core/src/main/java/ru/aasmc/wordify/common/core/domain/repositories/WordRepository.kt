@@ -3,6 +3,7 @@ package ru.aasmc.wordify.common.core.domain.repositories
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import ru.aasmc.wordify.common.core.domain.Result
+import ru.aasmc.wordify.common.core.domain.model.RecentlySearchedWord
 import ru.aasmc.wordify.common.core.domain.model.Word
 
 interface WordRepository {
@@ -17,4 +18,9 @@ interface WordRepository {
 
     fun getAllFavWords(sort: Sort = Sort.ASC_NAME): Flow<PagingData<Word>>
 
+    suspend fun insertRecentlySearchedWord(word: RecentlySearchedWord)
+
+    fun getAllRecentlySearchedWords(): Flow<List<RecentlySearchedWord>>
+
+    fun searchRecentlySearchedWords(query: String): Flow<List<RecentlySearchedWord>>
 }

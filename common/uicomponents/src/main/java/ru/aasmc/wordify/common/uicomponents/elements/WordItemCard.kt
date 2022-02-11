@@ -1,6 +1,7 @@
 package ru.aasmc.wordify.common.uicomponents.elements
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
@@ -9,9 +10,12 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -145,7 +149,7 @@ private fun WordCharacteristics(
         Column {
             if (partOfSpeech.isNotEmpty()) {
                 Text(
-                    text = partOfSpeech,
+                    text = "Part of speech: $partOfSpeech",
                     modifier = Modifier
                         .padding(bottom = 8.dp),
                     style = MaterialTheme.typography.subtitle2,
@@ -154,7 +158,7 @@ private fun WordCharacteristics(
                 )
             }
             Text(
-                text = pronunciation,
+                text = "Pronunciation: $pronunciation",
                 modifier = Modifier
                     .padding(bottom = 8.dp),
                 style = MaterialTheme.typography.subtitle2,
@@ -168,9 +172,14 @@ private fun WordCharacteristics(
             tint = MaterialTheme.colors.primary,
             contentDescription = stringResource(id = R.string.fav_icon_description),
             modifier = Modifier
-                .clickable {
-                    onFavouriteClick()
-                }
+                .size(32.dp)
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = rememberRipple(bounded = false),
+                    onClick = {
+                        onFavouriteClick()
+                    }
+                )
         )
     }
 }

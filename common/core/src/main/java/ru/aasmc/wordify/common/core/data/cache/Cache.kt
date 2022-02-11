@@ -3,6 +3,7 @@ package ru.aasmc.wordify.common.core.data.cache
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import ru.aasmc.wordify.common.core.data.cache.model.CachedWordAggregate
+import ru.aasmc.wordify.common.core.data.cache.model.CachedRecentlySearchedWord
 
 interface Cache {
 
@@ -35,5 +36,11 @@ interface Cache {
     fun getAllFavWordsByNameDesc(): Flow<PagingData<CachedWordAggregate>>
 
     fun getAllFavWordsByTimeAddedAsc(): Flow<PagingData<CachedWordAggregate>>
+
+    suspend fun addRecentlySearchedWord(word: CachedRecentlySearchedWord)
+
+    fun getAllRecentlySearchedWords(): Flow<List<CachedRecentlySearchedWord>>
+
+    fun searchRecentlySearchedWords(query: String): Flow<List<CachedRecentlySearchedWord>>
 
 }

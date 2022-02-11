@@ -13,6 +13,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -23,15 +26,18 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import ru.aasmc.wordify.common.resources.R
 import ru.aasmc.wordify.resources.theme.WordifyTheme
+import java.time.Instant
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun WordSearchToolbar(
     onQueryChanged: (String) -> Unit,
     onExecuteSearch: () -> Unit,
-    onSearchStarted: (Boolean) -> Unit
+    onSearchStarted: (Boolean) -> Unit,
+    onSaveRecentlySearchedWord: (String, Long) -> Unit = { str, time -> }
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     var currentJob by remember {
@@ -43,6 +49,10 @@ fun WordSearchToolbar(
     }
     val searchStarted = query.isNotEmpty()
     onSearchStarted(searchStarted)
+
+    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
+
     Surface(
         modifier = Modifier
             .fillMaxWidth(),
@@ -57,11 +67,16 @@ fun WordSearchToolbar(
             TextField(
                 value = query,
                 onValueChange = {
-                    query = it
-                    onQueryChanged(query)
+                    currentJob?.cancel()
+                    currentJob = scope.launch {
+                        query = it
+                        onQueryChanged(query)
+                        delay(50)
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth(.9f)
+                    .focusRequester(focusRequester)
                     .padding(8.dp),
                 label = { Text(text = stringResource(id = R.string.search_label)) },
                 keyboardOptions = KeyboardOptions(
@@ -73,7 +88,10 @@ fun WordSearchToolbar(
                         onExecuteSearch()
                         keyboardController?.hide()
                         onSearchStarted(false)
+                        onSaveRecentlySearchedWord(query, Instant.now().toEpochMilli())
                         query = ""
+                        currentJob?.cancel()
+                        focusManager.clearFocus()
                     }
                 ),
                 leadingIcon = {
@@ -99,7 +117,8 @@ private fun WordSearchToolbarDarkThemePreview() {
         WordSearchToolbar(
             {},
             {},
-            {}
+            {},
+            { str, time -> }
         )
     }
 }
@@ -111,7 +130,8 @@ private fun WordSearchToolbarLightThemePreview() {
         WordSearchToolbar(
             {},
             {},
-            {}
+            {},
+            { str, time -> }
         )
     }
 }

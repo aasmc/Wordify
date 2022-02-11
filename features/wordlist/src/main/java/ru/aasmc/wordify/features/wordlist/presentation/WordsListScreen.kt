@@ -83,6 +83,11 @@ private fun WordListScreenInternal(
                 viewModel.handleEvent(
                     WordsListEvent.IsSearchingInProgress(it)
                 )
+            },
+            onSaveRecentlySearchedWord = { word, time ->
+                viewModel.handleEvent(
+                    WordsListEvent.SaveRecentlySearchedWordEvent(word, time)
+                )
             }
         )
         Spacer(modifier = Modifier.height(16.dp))

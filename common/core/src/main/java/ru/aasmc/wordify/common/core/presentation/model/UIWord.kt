@@ -22,7 +22,7 @@ data class UIWord(
                     UIWordProperties.fromDomain(it)
                 },
                 syllable = UISyllable.fromDomain(word.syllable),
-                pronunciation = word.pronunciation,
+                pronunciation = "[ ${word.pronunciation} ]",
                 isFavourite = word.isFavourite
             )
         }

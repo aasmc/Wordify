@@ -6,8 +6,10 @@ import kotlinx.coroutines.flow.*
 import ru.aasmc.wordify.common.core.data.api.WordifyApi
 import ru.aasmc.wordify.common.core.data.api.model.mappers.WordDtoMapper
 import ru.aasmc.wordify.common.core.data.cache.Cache
+import ru.aasmc.wordify.common.core.data.cache.model.CachedRecentlySearchedWord
 import ru.aasmc.wordify.common.core.data.cache.model.CachedWordAggregate
 import ru.aasmc.wordify.common.core.domain.Result
+import ru.aasmc.wordify.common.core.domain.model.RecentlySearchedWord
 import ru.aasmc.wordify.common.core.domain.model.Word
 import ru.aasmc.wordify.common.core.domain.repositories.Sort
 import ru.aasmc.wordify.common.core.domain.repositories.WordRepository
@@ -82,7 +84,7 @@ class WordifyWordRepository @Inject constructor(
             Sort.ASC_TIME -> cache.searchWordsByTimeAddedAsc(word)
             Sort.DESC_TIME -> cache.searchWordsByTimeAddedDesc(word)
         }
-        return  searchFlow
+        return searchFlow
             .map { cachedWords ->
                 cachedWords.map { cachedWord ->
                     CachedWordAggregate.toDomain(cachedWord)
@@ -105,6 +107,28 @@ class WordifyWordRepository @Inject constructor(
             .map { cachedWords ->
                 cachedWords.map { cachedWord ->
                     CachedWordAggregate.toDomain(cachedWord)
+                }
+            }
+    }
+
+    override suspend fun insertRecentlySearchedWord(word: RecentlySearchedWord) {
+        cache.addRecentlySearchedWord(CachedRecentlySearchedWord.fromDomain(word))
+    }
+
+    override fun getAllRecentlySearchedWords(): Flow<List<RecentlySearchedWord>> {
+        return cache.getAllRecentlySearchedWords()
+            .map { list ->
+                list.map {
+                    CachedRecentlySearchedWord.toDomain(it)
+                }
+            }
+    }
+
+    override fun searchRecentlySearchedWords(query: String): Flow<List<RecentlySearchedWord>> {
+        return cache.searchRecentlySearchedWords(query)
+            .map { list ->
+                list.map {
+                    CachedRecentlySearchedWord.toDomain(it)
                 }
             }
     }
