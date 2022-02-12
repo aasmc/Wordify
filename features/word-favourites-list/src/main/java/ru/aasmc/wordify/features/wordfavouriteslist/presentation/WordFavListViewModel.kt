@@ -1,4 +1,4 @@
-package ru.aasmc.wordify.features.wordlist.presentation
+package ru.aasmc.wordify.features.wordfavouriteslist.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,12 +13,12 @@ import ru.aasmc.wordify.common.core.domain.usecases.SaveRecentlySearchedWord
 import ru.aasmc.wordify.common.core.domain.usecases.SearchRecentlySearchedWords
 import ru.aasmc.wordify.common.core.domain.usecases.SetWordFavourite
 import ru.aasmc.wordify.common.core.presentation.model.*
-import ru.aasmc.wordify.features.wordlist.domain.usecases.GetWordsList
+import ru.aasmc.wordify.features.wordfavouriteslist.domain.usecases.GetFavWords
 import javax.inject.Inject
 
 @HiltViewModel
-class WordListViewModel @Inject constructor(
-    private val getWordsList: GetWordsList,
+class WordFavListViewModel @Inject constructor(
+    private val getFavWordsList: GetFavWords,
     private val setWordFavourite: SetWordFavourite,
     private val searchRecentlySearchedWords: SearchRecentlySearchedWords,
     private val saveRecentlySearchedWord: SaveRecentlySearchedWord,
@@ -42,7 +42,7 @@ class WordListViewModel @Inject constructor(
     }
 
     override fun getWordListFlow(sort: Sort): Flow<PagingData<UIWord>> {
-        return getWordsList(sort = sort).map { pagingData ->
+        return getFavWordsList(sort = sort).map { pagingData ->
             pagingData.map {
                 UIWord.fromDomain(it)
             }
@@ -83,25 +83,3 @@ class WordListViewModel @Inject constructor(
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

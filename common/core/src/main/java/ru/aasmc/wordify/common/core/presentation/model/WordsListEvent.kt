@@ -1,4 +1,4 @@
-package ru.aasmc.wordify.features.wordlist.presentation
+package ru.aasmc.wordify.common.core.presentation.model
 
 sealed class WordsListEvent {
     data class SetFavWordEvent(val wordId: Long, val isFavourite: Boolean): WordsListEvent()

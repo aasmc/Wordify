@@ -1,4 +1,4 @@
-package ru.aasmc.wordify.features.wordlist.presentation
+package ru.aasmc.wordify.common.core.presentation.model
 
 import ru.aasmc.wordify.common.core.utils.Event
 

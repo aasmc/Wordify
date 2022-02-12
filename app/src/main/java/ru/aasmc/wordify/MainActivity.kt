@@ -13,10 +13,12 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import org.w3c.dom.Text
 import ru.aasmc.wordify.common.core.domain.repositories.Sort
 import ru.aasmc.wordify.common.core.domain.repositories.WordRepository
 import ru.aasmc.wordify.features.settings.domain.usecases.GetAppThemeFlow
 import ru.aasmc.wordify.features.settings.domain.usecases.GetSortOrderFlow
+import ru.aasmc.wordify.features.wordfavouriteslist.presentation.WordFavListScreen
 import ru.aasmc.wordify.features.wordlist.presentation.WordListScreen
 import ru.aasmc.wordify.resources.theme.WordifyTheme
 import javax.inject.Inject
@@ -54,7 +56,7 @@ class MainActivity : ComponentActivity() {
 //                    appTheme = appTheme,
 //                    sortOrder = sortOrder
 //                )
-                WordListScreen(
+                WordFavListScreen(
                     sortOrder = sortOrder,
                     onExecuteSearch = {
                         lifecycleScope.launch {
