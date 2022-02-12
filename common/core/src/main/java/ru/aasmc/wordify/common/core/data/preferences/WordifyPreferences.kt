@@ -62,7 +62,6 @@ class WordifyPreferences @Inject constructor(
             }
         }
     }
-
 }
 
 

@@ -1,25 +1,30 @@
 package ru.aasmc.wordify.features.settings.presentation
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import ru.aasmc.wordify.common.core.domain.repositories.Sort
+import ru.aasmc.wordify.common.core.domain.usecases.GetSortOrderFlow
 import ru.aasmc.wordify.features.settings.domain.usecases.ChangeAppTheme
 import ru.aasmc.wordify.features.settings.domain.usecases.ChangeWordSortOrder
-import ru.aasmc.wordify.features.settings.domain.usecases.GetSortOrderFlow
 import javax.inject.Inject
 
 @HiltViewModel
 class PreferencesViewModel @Inject constructor(
     private val changeAppTheme: ChangeAppTheme,
     private val changeWordSortOrder: ChangeWordSortOrder,
+    private val getSortOrderFlow: GetSortOrderFlow
 ) : ViewModel() {
 
     private val _uiStateFlow =
         MutableStateFlow<PreferencesUiState>(PreferencesUiState())
     val uiStateFlow: StateFlow<PreferencesUiState> = _uiStateFlow.asStateFlow()
+
+    fun getSortOrderStateFlow(): StateFlow<Sort> {
+        return getSortOrderFlow()
+    }
 
     fun handleEvent(event: UserPrefsEvent) {
         when (event) {

@@ -15,6 +15,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.aasmc.wordify.common.core.domain.repositories.Sort
 import ru.aasmc.wordify.common.core.domain.repositories.ThemePreference
@@ -27,12 +28,13 @@ import ru.aasmc.wordify.resources.theme.WordifyTheme
 fun SettingsScreen(
     title: String,
     appTheme: ThemePreference,
-    sortOrder: Sort,
-    viewModel: PreferencesViewModel
+    viewModel: PreferencesViewModel = hiltViewModel()
 ) {
 
     val viewState by rememberFlowWithLifecycle(viewModel.uiStateFlow)
         .collectAsState(initial = PreferencesUiState())
+
+    val sortOrder by viewModel.getSortOrderStateFlow().collectAsState()
 
     val scaffoldState = rememberScaffoldState()
     viewState.failure?.let { errorEvent ->
@@ -171,7 +173,6 @@ private fun SettingsScreenPreviewDark() {
             title = "Settings",
             appTheme = ThemePreference.AUTO_THEME,
             viewModel = vm,
-            sortOrder = Sort.ASC_TIME
         )
     }
 }

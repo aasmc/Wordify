@@ -9,6 +9,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import ru.aasmc.wordify.common.core.domain.repositories.Sort
+import ru.aasmc.wordify.common.core.domain.usecases.GetSortOrderFlow
 import ru.aasmc.wordify.common.core.domain.usecases.SaveRecentlySearchedWord
 import ru.aasmc.wordify.common.core.domain.usecases.SearchRecentlySearchedWords
 import ru.aasmc.wordify.common.core.domain.usecases.SetWordFavourite
@@ -22,6 +23,7 @@ class WordListViewModel @Inject constructor(
     private val setWordFavourite: SetWordFavourite,
     private val searchRecentlySearchedWords: SearchRecentlySearchedWords,
     private val saveRecentlySearchedWord: SaveRecentlySearchedWord,
+    private val getSortOrderStateFlow: GetSortOrderFlow
 ) : ViewModel(), BaseViewModel {
 
     private val _wordListErrorState =
@@ -65,6 +67,10 @@ class WordListViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    override fun getSortOrderFlow(): StateFlow<Sort> {
+        return getSortOrderStateFlow()
     }
 
     private fun safeHandleEvent(block: suspend () -> Unit) {

@@ -17,4 +17,6 @@ interface BaseViewModel {
 
     fun handleEvent(event: WordsListEvent)
 
+    fun getSortOrderFlow(): StateFlow<Sort>
+
 }

@@ -1,4 +1,4 @@
-package ru.aasmc.wordify.features.settings.domain.usecases
+package ru.aasmc.wordify.common.core.domain.usecases
 
 import kotlinx.coroutines.flow.StateFlow
 import ru.aasmc.wordify.common.core.domain.repositories.PreferencesRepository
