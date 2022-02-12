@@ -14,6 +14,7 @@ import ru.aasmc.wordify.common.core.domain.model.Word
 import ru.aasmc.wordify.common.core.domain.repositories.Sort
 import ru.aasmc.wordify.common.core.domain.repositories.WordRepository
 import ru.aasmc.wordify.common.core.utils.DispatchersProvider
+import ru.aasmc.wordify.common.core.utils.ProgressBarState
 import ru.aasmc.wordify.common.core.utils.safeApiCall
 import ru.aasmc.wordify.common.core.utils.safeCacheCall
 import javax.inject.Inject
@@ -73,6 +74,8 @@ class WordifyWordRepository @Inject constructor(
                 is Result.Success -> {
                     Result.Success(CachedWordAggregate.toDomain(cacheSecondAttempt.data))
                 }
+                // will be ignored
+                is Result.Loading -> Result.Loading(progressBarState = ProgressBarState.IDLE)
             }
         }
     }

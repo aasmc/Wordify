@@ -15,6 +15,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -25,8 +26,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import ru.aasmc.constants.WordConstants
 import ru.aasmc.wordify.common.core.domain.repositories.ThemePreference
 import ru.aasmc.wordify.common.core.domain.repositories.WordRepository
+import ru.aasmc.wordify.common.uicomponents.worddetails.WordDetailsScreen
+import ru.aasmc.wordify.common.uicomponents.worddetails.WordDetailsViewModel
 import ru.aasmc.wordify.features.settings.domain.usecases.GetAppThemeFlow
 import ru.aasmc.wordify.features.settings.presentation.SettingsScreen
 import ru.aasmc.wordify.features.wordfavouriteslist.presentation.WordFavListScreen
@@ -106,24 +110,23 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding)
                     ) {
                         addWordListScreen(
-                            onExecuteSearch = { name ->
-                                lifecycleScope.launch {
-                                    repository.getWordByName(name)
-                                }
-                            },
-                            onWordClick = {}
+                            onWordClick = { name ->
+                                navController.navigate(
+                                    "${Screen.WordDetailsScreen.route}/$name"
+                                )
+                            }
                         )
                         addFavWordListScreen(
-                            onExecuteSearch = { name ->
-                                lifecycleScope.launch {
-                                    repository.getWordByName(name)
-                                }
-                            },
-                            onWordClick = {}
+                            onWordClick = { name ->
+                                navController.navigate(
+                                    "${Screen.WordDetailsScreen.route}/$name"
+                                )
+                            }
                         )
                         addSettingsScreen(
                             theme = appTheme,
                         )
+                        addWordDetailsScreen()
                     }
                 }
             }
@@ -131,25 +134,30 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+private fun NavGraphBuilder.addWordDetailsScreen() {
+    composable(
+        route = "${Screen.WordDetailsScreen.route}/{${WordConstants.WORD_ID_ARGUMENT}}",
+        arguments = Screen.WordDetailsScreen.arguments
+    ) {
+        WordDetailsScreen()
+    }
+}
+
 private fun NavGraphBuilder.addWordListScreen(
-    onExecuteSearch: (String) -> Unit,
-    onWordClick: (Long) -> Unit
+    onWordClick: (String) -> Unit
 ) {
     composable(Screen.WordListScreen.route) {
         WordListScreen(
-            onExecuteSearch = onExecuteSearch,
             onWordClick = onWordClick
         )
     }
 }
 
 private fun NavGraphBuilder.addFavWordListScreen(
-    onExecuteSearch: (String) -> Unit,
-    onWordClick: (Long) -> Unit
+    onWordClick: (String) -> Unit
 ) {
     composable(Screen.FavWordsScreen.route) {
         WordFavListScreen(
-            onExecuteSearch = onExecuteSearch,
             onWordClick = onWordClick
         )
     }

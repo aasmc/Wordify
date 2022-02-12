@@ -11,9 +11,11 @@
 
     <string name="sort_order_title">Sort order</string>
     <string name="theme_selection_title">App theme</string>
+
     <string name="preferences_screen_error">Something went wrong when updating settings.</string>
     <string name="word_list_screen_error">Something went wrong when retrieving words.</string>
     <string name="set_favourite_error">Something went wrong when updating the word.</string>
+    <string name="get_word_error">Something went wrong when retrieving the word from database.</string>
 
     <string name="fav_icon_description">Set word favourite icon</string>
     <string name="search_icon_description">Search word favourite icon</string>

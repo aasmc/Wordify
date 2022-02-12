@@ -22,7 +22,7 @@ import ru.aasmc.wordify.common.resources.R
 @Composable
 fun LazyPagingWordList(
     wordListPagingData: Flow<PagingData<UIWord>>,
-    onWordClick: (Long) -> Unit,
+    onWordClick: (String) -> Unit,
     onchangeFavourite: (Boolean, Long) -> Unit
 ) {
     val wordList = wordListPagingData.collectAsLazyPagingItems()
@@ -50,7 +50,7 @@ fun LazyPagingWordList(
                             onchangeFavourite(uiWord.isFavourite, uiWord.wordId)
                         },
                         onWordItemClick = {
-                            onWordClick(uiWord.wordId)
+                            onWordClick(uiWord.wordName)
                         }
                     )
                     Spacer(modifier = Modifier.height(8.dp))

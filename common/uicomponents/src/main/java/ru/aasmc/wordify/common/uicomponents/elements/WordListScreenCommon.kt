@@ -21,8 +21,7 @@ import ru.aasmc.wordify.common.uicomponents.extensions.rememberFlowWithLifecycle
 fun WordListScreenCommon(
     sortOrder: Sort,
     wordListViewModel: BaseViewModel,
-    onExecuteSearch: (String) -> Unit,
-    onWordClick: (Long) -> Unit
+    onWordClick: (String) -> Unit
 ) {
     val viewState by rememberFlowWithLifecycle(flow = wordListViewModel.wordListErrorState)
         .collectAsState(initial = WordsListErrorState())
@@ -50,7 +49,6 @@ fun WordListScreenCommon(
         WordListScreenInternal(
             sortOrder = sortOrder,
             viewModel = wordListViewModel,
-            onExecuteSearch = onExecuteSearch,
             onWordClick = onWordClick
         )
     }
@@ -60,8 +58,7 @@ fun WordListScreenCommon(
 private fun WordListScreenInternal(
     sortOrder: Sort,
     viewModel: BaseViewModel,
-    onExecuteSearch: (String) -> Unit,
-    onWordClick: (Long) -> Unit
+    onWordClick: (String) -> Unit
 ) {
     val searchStarted by viewModel.searchStarted.collectAsState()
 
@@ -74,7 +71,7 @@ private fun WordListScreenInternal(
             onQueryChanged = {
                 query = it
             },
-            onExecuteSearch = { onExecuteSearch(query) },
+            onExecuteSearch = { onWordClick(query) },
             onSearchStarted = {
                 viewModel.handleEvent(
                     WordsListEvent.IsSearchingInProgress(it)
@@ -90,7 +87,7 @@ private fun WordListScreenInternal(
             val recentlySearchedWords = viewModel.searchRecentlySearchedFlow(query)
             SearchSurface(
                 searchWordsFlow = recentlySearchedWords,
-                onWordClick = onExecuteSearch
+                onWordClick = onWordClick
             )
         } else {
             val pagingWords = viewModel.getWordListFlow(sortOrder)
