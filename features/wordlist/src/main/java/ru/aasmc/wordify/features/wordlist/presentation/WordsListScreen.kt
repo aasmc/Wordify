@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ru.aasmc.wordify.common.core.domain.repositories.Sort
 import ru.aasmc.wordify.common.uicomponents.elements.LazyPagingWordList
+import ru.aasmc.wordify.common.uicomponents.elements.SearchSurface
 import ru.aasmc.wordify.common.uicomponents.elements.WordSearchToolbar
 import ru.aasmc.wordify.common.uicomponents.extensions.SwipeDismissSnackBarHost
 import ru.aasmc.wordify.common.uicomponents.extensions.rememberFlowWithLifecycle
@@ -67,12 +68,6 @@ private fun WordListScreenInternal(
         mutableStateOf("")
     }
 
-    val pagingWords = if (searchStarted) {
-        viewModel.getSearchWordFlow(query, sortOrder)
-    } else {
-        viewModel.getWordListFlow(sortOrder)
-    }
-
     Column {
         WordSearchToolbar(
             onQueryChanged = {
@@ -90,20 +85,29 @@ private fun WordListScreenInternal(
                 )
             }
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        LazyPagingWordList(
-            wordListPagingData = pagingWords,
-            onWordClick = onWordClick,
-            onchangeFavourite = { isFavourite, wordId ->
-                viewModel.handleEvent(
-                    WordsListEvent.SetFavWordEvent(
-                        wordId = wordId, isFavourite = !isFavourite
+        if (searchStarted) {
+            val recentlySearchedWords = viewModel.searchRecentlySearchedFlow(query)
+            SearchSurface(
+                searchWordsFlow = recentlySearchedWords,
+                onWordClick = onExecuteSearch
+            )
+        } else {
+            val pagingWords = viewModel.getWordListFlow(sortOrder)
+            LazyPagingWordList(
+                wordListPagingData = pagingWords,
+                onWordClick = onWordClick,
+                onchangeFavourite = { isFavourite, wordId ->
+                    viewModel.handleEvent(
+                        WordsListEvent.SetFavWordEvent(
+                            wordId = wordId, isFavourite = !isFavourite
+                        )
                     )
-                )
-            }
-        )
+                }
+            )
+        }
     }
 }
+
 
 
 

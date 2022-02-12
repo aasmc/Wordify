@@ -55,7 +55,8 @@ fun WordSearchToolbar(
 
     Surface(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(bottom = 8.dp),
         color = MaterialTheme.colors.background,
         elevation = 12.dp
     ) {

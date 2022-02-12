@@ -30,10 +30,6 @@ class WordListViewModel @Inject constructor(
         MutableStateFlow(WordsListErrorState())
     val wordListErrorState: StateFlow<WordsListErrorState> = _wordListErrorState.asStateFlow()
 
-    private val _recentlySearchedFlow =
-        MutableStateFlow("")
-    val recentlySearchedFlow: StateFlow<String> = _recentlySearchedFlow.asStateFlow()
-
     private val _searchStarted =
         MutableStateFlow(false)
     val searchStarted: StateFlow<Boolean> = _searchStarted.asStateFlow()

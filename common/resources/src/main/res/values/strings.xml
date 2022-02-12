@@ -21,4 +21,6 @@
     <string name="error_button">Try again</string>
     <string name="error_loading_words">Something went wrong when loading words.</string>
     <string name="no_definition_available">Sorry, there\'s no definition for the word</string>
+    <string name="empty_search_icon">Empty search icon</string>
+    <string name="empty_search_label">You have not searched for words yet.</string>
 </resources>
