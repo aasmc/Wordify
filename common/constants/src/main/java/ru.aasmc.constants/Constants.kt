@@ -26,6 +26,7 @@ object ExceptionMessage {
     const val CACHE_TIMEOUT_ERROR = "Cache timeout error!"
     const val NETWORK_TIMEOUT_ERROR = "Network timeout error!"
     const val UNKNOWN_ERROR = "Sorry! Something went wrong!"
+    const val FAILED_TO_SET_WORD_FAVOURITE = "Sorry! Something went wrong when changing word favourite status"
 }
 
 object PreferencesConstants {

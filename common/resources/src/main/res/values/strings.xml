@@ -16,6 +16,8 @@
     <string name="word_list_screen_error">Something went wrong when retrieving words.</string>
     <string name="set_favourite_error">Something went wrong when updating the word.</string>
     <string name="get_word_error">Something went wrong when retrieving the word from database.</string>
+    <string name="no_such_word_error">Sorry there\'s no such word.</string>
+    <string name="no_word_definition">Sorry there\'s no definition of the word.</string>
 
     <string name="fav_icon_description">Set word favourite icon</string>
     <string name="search_icon_description">Search word favourite icon</string>
@@ -30,4 +32,31 @@
     <string name="screen_favourite">Favourite</string>
     <string name="screen_settings">Settings</string>
     <string name="screen_details">Word Details</string>
+
+    <string name="label_definition">Definition:</string>
+    <string name="label_part_of_speech">Part of speech:</string>
+    <string name="label_synonyms">Synonyms:</string>
+    <string name="label_derivation">Derivations:</string>
+    <string name="label_examples">Examples:</string>
+    <string name="label_syllables">Syllables:</string>
+    <string name="label_pronunciation">Pronunciation:</string>
 </resources>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

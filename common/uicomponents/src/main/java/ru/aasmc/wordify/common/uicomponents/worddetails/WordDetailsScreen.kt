@@ -1,31 +1,42 @@
 package ru.aasmc.wordify.common.uicomponents.worddetails
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import ru.aasmc.wordify.common.core.presentation.model.UISyllable
 import ru.aasmc.wordify.common.core.presentation.model.UIWord
+import ru.aasmc.wordify.common.core.presentation.model.UIWordProperties
 import ru.aasmc.wordify.common.core.utils.ProgressBarState.LOADING
 import ru.aasmc.wordify.common.resources.R
 import ru.aasmc.wordify.common.uicomponents.extensions.SwipeDismissSnackBarHost
 
 @Composable
 fun WordDetailsScreen(
-   viewModel: WordDetailsViewModel = hiltViewModel()
+    viewModel: WordDetailsViewModel = hiltViewModel()
 ) {
     val scaffoldState = rememberScaffoldState()
     val viewState by viewModel.viewState.collectAsState()
     viewState.errorReason?.let { errorEvent ->
         val unhandledError = errorEvent.getContentIfNotHandled() ?: return@let
-        val errorMessage = stringResource(id = R.string.get_word_error)
+        val errorMessage = stringResource(id = R.string.no_such_word_error)
         LaunchedEffect(key1 = unhandledError) {
             scaffoldState.snackbarHostState.showSnackbar(
                 errorMessage
@@ -43,35 +54,264 @@ fun WordDetailsScreen(
             )
         }
     ) {
-        WordDetailsInternal(viewState = viewState)
+        WordDetailsInternal(
+            viewState = viewState,
+            viewModel = viewModel
+        )
     }
 }
 
 @Composable
 private fun WordDetailsInternal(
-    viewState: WordDetailsViewState
+    viewState: WordDetailsViewState,
+    viewModel: WordDetailsViewModel
 ) {
     if (viewState.progressBarState == LOADING) {
         WordLoading()
     } else {
         val uiWord = viewState.uiWord
         if (uiWord == null) {
-            WordError()
+            WordError(
+                stringResource(id = R.string.no_such_word_error)
+            )
         } else {
-            WordSuccess(uiWord = uiWord)
+            var isFavourite by remember {
+                mutableStateOf(uiWord.isFavourite)
+            }
+            WordSuccess(
+                uiWord = uiWord,
+                onFavouriteClick = {
+                    viewModel.handleEvent(
+                        WordDetailsEvent.SetWordFavourite(
+                            !uiWord.isFavourite, uiWord.wordId
+                        )
+                    )
+                    isFavourite = !isFavourite
+                },
+                isFavourite = isFavourite
+            )
         }
     }
 }
 
 @Composable
 private fun WordSuccess(
-    uiWord: UIWord
+    uiWord: UIWord,
+    isFavourite: Boolean,
+    onFavouriteClick: () -> Unit
 ) {
-    Text(text = uiWord.wordName)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = uiWord.wordName,
+                modifier = Modifier
+                    .padding(vertical = 8.dp, horizontal = 8.dp)
+                    .weight(1f),
+                color = MaterialTheme.colors.primary,
+                style = MaterialTheme.typography.h5,
+                textAlign = TextAlign.Center,
+            )
+            val imageVector =
+                if (isFavourite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder
+            Icon(
+                imageVector = imageVector,
+                tint = MaterialTheme.colors.primary,
+                contentDescription = stringResource(id = R.string.fav_icon_description),
+                modifier = Modifier
+                    .size(32.dp)
+                    .padding(end = 8.dp)
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = rememberRipple(bounded = false),
+                        onClick = {
+                            onFavouriteClick()
+                        }
+                    )
+            )
+        }
+        if (uiWord.pronunciation.isNotEmpty()) {
+            PropertyRow(
+                label = stringResource(id = R.string.label_pronunciation),
+                property = uiWord.pronunciation
+            )
+        }
+        // syllable string always contains 4 symbols  [  ]
+        if (uiWord.syllable.syllableList.length > 4) {
+            SyllableRow(syllable = uiWord.syllable)
+        }
+        WordDivider()
+
+        if (uiWord.wordProperties.isEmpty()) {
+            WordError(
+                stringResource(id = R.string.no_word_definition)
+            )
+        }
+        uiWord.wordProperties.forEachIndexed { index, props ->
+            WordPropertiesRow(wordProperties = props)
+            if (index != uiWord.wordProperties.lastIndex) {
+                WordDivider()
+            }
+        }
+    }
 }
 
 @Composable
-private fun WordError() {
+private fun WordDivider() {
+    Divider(
+        thickness = 1.dp,
+        color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f),
+        modifier = Modifier.padding(vertical = 8.dp)
+    )
+}
+
+@Composable
+private fun SyllableRow(
+    syllable: UISyllable
+) {
+    PropertyRow(
+        label = stringResource(id = R.string.label_syllables),
+        property = syllable.syllableList
+    )
+}
+
+@Composable
+private fun WordPropertiesRow(
+    wordProperties: UIWordProperties
+) {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        Column(
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.Start
+        ) {
+            if (wordProperties.partOfSpeech.isNotEmpty()) {
+                PropertyRow(
+                    label = stringResource(id = R.string.label_part_of_speech),
+                    property = wordProperties.partOfSpeech
+                )
+            }
+            if (wordProperties.definition.isNotEmpty()) {
+                PropertyRow(
+                    label = stringResource(id = R.string.label_definition),
+                    property = wordProperties.definition
+                )
+            }
+            if (wordProperties.synonyms.isNotEmpty()) {
+                ListPropertyColumn(
+                    title = stringResource(id = R.string.label_synonyms),
+                    properties = wordProperties.synonyms
+                )
+            }
+            if (wordProperties.derivation.isNotEmpty()) {
+                ListPropertyColumn(
+                    title = stringResource(id = R.string.label_derivation),
+                    properties = wordProperties.derivation
+                )
+            }
+            if (wordProperties.examples.isNotEmpty()) {
+                ListPropertyColumn(
+                    title = stringResource(id = R.string.label_examples),
+                    properties = wordProperties.examples
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ListPropertyColumn(
+    title: String,
+    properties: List<String>
+) {
+    Column(
+        modifier = Modifier
+            .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
+        verticalArrangement = Arrangement.SpaceEvenly,
+        horizontalAlignment = Alignment.Start
+    ) {
+        val color = if (MaterialTheme.colors.isLight) {
+            MaterialTheme.colors.primary
+        } else {
+            MaterialTheme.colors.primary.copy(alpha = 0.8f)
+        }
+        Text(
+            text = title,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp),
+            style = MaterialTheme.typography.subtitle1,
+            color = color,
+            fontStyle = FontStyle.Italic
+        )
+        properties.forEachIndexed { index, prop ->
+            Text(
+                text = "${index + 1}. $prop",
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
+                style = MaterialTheme.typography.subtitle1,
+                color = MaterialTheme.colors.onSurface
+            )
+        }
+    }
+}
+
+@Composable
+private fun PropertyRow(
+    label: String,
+    property: String
+) {
+    val color = if (MaterialTheme.colors.isLight) {
+        MaterialTheme.colors.primary
+    } else {
+        MaterialTheme.colors.primary.copy(alpha = 0.8f)
+    }
+    val text = buildAnnotatedString {
+        append(
+            AnnotatedString(
+                label,
+                spanStyle = SpanStyle(
+                    fontStyle = FontStyle.Italic,
+                    color = color,
+                )
+            )
+        )
+        append(
+            AnnotatedString(
+                " $property",
+                spanStyle = SpanStyle(
+                    color = MaterialTheme.colors.onSurface
+                )
+            )
+        )
+    }
+
+    Text(
+        text = text,
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth(),
+        style = MaterialTheme.typography.subtitle1
+    )
+}
+
+@Composable
+private fun WordError(
+    message: String
+) {
     Row(
         modifier = Modifier
             .fillMaxSize(),
@@ -79,7 +319,7 @@ private fun WordError() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = stringResource(id = R.string.get_word_error),
+            text = message,
             style = MaterialTheme.typography.body1,
             color = MaterialTheme.colors.onSurface,
             textAlign = TextAlign.Center,

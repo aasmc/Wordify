@@ -4,13 +4,13 @@ import ru.aasmc.wordify.common.core.domain.model.Syllable
 
 data class UISyllable(
     val count: Int,
-    val syllableList: List<String>
+    val syllableList: String
 ) {
     companion object {
         fun fromDomain(syllable: Syllable): UISyllable {
             return UISyllable(
                 count = syllable.count,
-                syllableList = syllable.syllableList
+                syllableList = "[ ${syllable.syllableList.joinToString(separator = " | ")} ]"
             )
         }
     }
