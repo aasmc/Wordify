@@ -154,11 +154,11 @@ private fun getSortFilters(): List<RadioButtonItem> {
             title = stringResource(id = R.string.sort_name_desc)
         ),
         RadioButtonItem(
-            id = Sort.ASC_TIME.ordinal,
+            id = Sort.DESC_TIME.ordinal,
             title = stringResource(id = R.string.sort_time_added_asc)
         ),
         RadioButtonItem(
-            id = Sort.DESC_TIME.ordinal,
+            id = Sort.ASC_TIME.ordinal,
             title = stringResource(id = R.string.sort_time_added_desc)
         )
     )

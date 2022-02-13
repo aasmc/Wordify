@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -86,9 +87,9 @@ private fun WordDetailsInternal(
                             !uiWord.isFavourite, uiWord.wordId
                         )
                     )
-                    isFavourite = !isFavourite
+                    isFavourite = !uiWord.isFavourite
                 },
-                isFavourite = isFavourite
+                isFavourite = isFavourite,
             )
         }
     }
@@ -98,7 +99,7 @@ private fun WordDetailsInternal(
 private fun WordSuccess(
     uiWord: UIWord,
     isFavourite: Boolean,
-    onFavouriteClick: () -> Unit
+    onFavouriteClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -144,12 +145,14 @@ private fun WordSuccess(
         if (uiWord.pronunciation.isNotEmpty()) {
             PropertyRow(
                 label = stringResource(id = R.string.label_pronunciation),
-                property = uiWord.pronunciation
+                property = uiWord.pronunciation,
             )
         }
         // syllable string always contains 4 symbols  [  ]
         if (uiWord.syllable.syllableList.length > 4) {
-            SyllableRow(syllable = uiWord.syllable)
+            SyllableRow(
+                syllable = uiWord.syllable,
+            )
         }
         WordDivider()
 
@@ -159,7 +162,9 @@ private fun WordSuccess(
             )
         }
         uiWord.wordProperties.forEachIndexed { index, props ->
-            WordPropertiesRow(wordProperties = props)
+            WordPropertiesRow(
+                wordProperties = props,
+            )
             if (index != uiWord.wordProperties.lastIndex) {
                 WordDivider()
             }
@@ -178,17 +183,17 @@ private fun WordDivider() {
 
 @Composable
 private fun SyllableRow(
-    syllable: UISyllable
+    syllable: UISyllable,
 ) {
     PropertyRow(
         label = stringResource(id = R.string.label_syllables),
-        property = syllable.syllableList
+        property = syllable.syllableList,
     )
 }
 
 @Composable
 private fun WordPropertiesRow(
-    wordProperties: UIWordProperties
+    wordProperties: UIWordProperties,
 ) {
     Surface(
         modifier = Modifier
@@ -201,31 +206,31 @@ private fun WordPropertiesRow(
             if (wordProperties.partOfSpeech.isNotEmpty()) {
                 PropertyRow(
                     label = stringResource(id = R.string.label_part_of_speech),
-                    property = wordProperties.partOfSpeech
+                    property = wordProperties.partOfSpeech,
                 )
             }
             if (wordProperties.definition.isNotEmpty()) {
                 PropertyRow(
                     label = stringResource(id = R.string.label_definition),
-                    property = wordProperties.definition
+                    property = wordProperties.definition,
                 )
             }
             if (wordProperties.synonyms.isNotEmpty()) {
                 ListPropertyColumn(
                     title = stringResource(id = R.string.label_synonyms),
-                    properties = wordProperties.synonyms
+                    properties = wordProperties.synonyms,
                 )
             }
             if (wordProperties.derivation.isNotEmpty()) {
                 ListPropertyColumn(
                     title = stringResource(id = R.string.label_derivation),
-                    properties = wordProperties.derivation
+                    properties = wordProperties.derivation,
                 )
             }
             if (wordProperties.examples.isNotEmpty()) {
                 ListPropertyColumn(
                     title = stringResource(id = R.string.label_examples),
-                    properties = wordProperties.examples
+                    properties = wordProperties.examples,
                 )
             }
         }
@@ -235,7 +240,7 @@ private fun WordPropertiesRow(
 @Composable
 private fun ListPropertyColumn(
     title: String,
-    properties: List<String>
+    properties: List<String>,
 ) {
     Column(
         modifier = Modifier
@@ -260,10 +265,10 @@ private fun ListPropertyColumn(
         properties.forEachIndexed { index, prop ->
             Text(
                 text = "${index + 1}. $prop",
+                color = MaterialTheme.colors.onSurface,
                 modifier = Modifier
                     .padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
                 style = MaterialTheme.typography.subtitle1,
-                color = MaterialTheme.colors.onSurface
             )
         }
     }
@@ -272,7 +277,7 @@ private fun ListPropertyColumn(
 @Composable
 private fun PropertyRow(
     label: String,
-    property: String
+    property: String,
 ) {
     val color = if (MaterialTheme.colors.isLight) {
         MaterialTheme.colors.primary
@@ -298,14 +303,15 @@ private fun PropertyRow(
             )
         )
     }
-
-    Text(
-        text = text,
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth(),
-        style = MaterialTheme.typography.subtitle1
-    )
+    SelectionContainer {
+        Text(
+            text = text,
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth(),
+            style = MaterialTheme.typography.subtitle1,
+        )
+    }
 }
 
 @Composable

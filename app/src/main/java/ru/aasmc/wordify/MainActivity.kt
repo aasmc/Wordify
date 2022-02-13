@@ -20,6 +20,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -72,9 +73,9 @@ class MainActivity : ComponentActivity() {
                                 val imageVector = when (screen) {
                                     Screen.FavWordsScreen -> Icons.Filled.Favorite
                                     Screen.SettingsScreen -> Icons.Filled.Settings
+                                    Screen.WordListScreen -> Icons.Filled.Home
                                     // this will be ignored in bottom navigation
                                     Screen.WordDetailsScreen -> Icons.Filled.Edit
-                                    Screen.WordListScreen -> Icons.Filled.Home
                                 }
                                 BottomNavigationItem(
                                     icon = {
@@ -100,7 +101,6 @@ class MainActivity : ComponentActivity() {
                                     }
                                 )
                             }
-
                         }
                     }
                 ) { innerPadding ->
@@ -114,14 +114,14 @@ class MainActivity : ComponentActivity() {
                                 navController.navigate(
                                     "${Screen.WordDetailsScreen.route}/$name"
                                 )
-                            }
+                            },
                         )
                         addFavWordListScreen(
                             onWordClick = { name ->
                                 navController.navigate(
                                     "${Screen.WordDetailsScreen.route}/$name"
                                 )
-                            }
+                            },
                         )
                         addSettingsScreen(
                             theme = appTheme,
@@ -154,7 +154,7 @@ private fun NavGraphBuilder.addWordListScreen(
 }
 
 private fun NavGraphBuilder.addFavWordListScreen(
-    onWordClick: (String) -> Unit
+    onWordClick: (String) -> Unit,
 ) {
     composable(Screen.FavWordsScreen.route) {
         WordFavListScreen(
