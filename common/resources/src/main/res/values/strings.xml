@@ -32,6 +32,7 @@
     <string name="screen_favourite">Favourite</string>
     <string name="screen_settings">Settings</string>
     <string name="screen_details">Word Details</string>
+    <string name="screen_fav_details">Word Fav Details</string>
 
     <string name="label_definition">Definition:</string>
     <string name="label_part_of_speech">Part of speech:</string>

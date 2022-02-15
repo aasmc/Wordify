@@ -6,16 +6,19 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import ru.aasmc.wordify.common.core.domain.repositories.Sort
+import ru.aasmc.wordify.common.core.domain.repositories.ThemePreference
 import ru.aasmc.wordify.common.core.domain.usecases.GetSortOrderFlow
 import ru.aasmc.wordify.features.settings.domain.usecases.ChangeAppTheme
 import ru.aasmc.wordify.features.settings.domain.usecases.ChangeWordSortOrder
+import ru.aasmc.wordify.features.settings.domain.usecases.GetAppThemeFlow
 import javax.inject.Inject
 
 @HiltViewModel
 class PreferencesViewModel @Inject constructor(
     private val changeAppTheme: ChangeAppTheme,
     private val changeWordSortOrder: ChangeWordSortOrder,
-    private val getSortOrderFlow: GetSortOrderFlow
+    private val getSortOrderFlow: GetSortOrderFlow,
+    private val getAppThemeFlow: GetAppThemeFlow
 ) : ViewModel() {
 
     private val _uiStateFlow =
@@ -24,6 +27,10 @@ class PreferencesViewModel @Inject constructor(
 
     fun getSortOrderStateFlow(): StateFlow<Sort> {
         return getSortOrderFlow()
+    }
+
+    fun getAppThemeStateFlow(): StateFlow<ThemePreference> {
+        return getAppThemeFlow()
     }
 
     fun handleEvent(event: UserPrefsEvent) {

@@ -27,7 +27,6 @@ import ru.aasmc.wordify.resources.theme.WordifyTheme
 @Composable
 fun SettingsScreen(
     title: String,
-    appTheme: ThemePreference,
     viewModel: PreferencesViewModel = hiltViewModel()
 ) {
 
@@ -57,6 +56,7 @@ fun SettingsScreen(
             )
         }
     ) {
+        val appTheme by viewModel.getAppThemeStateFlow().collectAsState()
         SettingsScreenInternal(
             title,
             sortOrder,
@@ -171,7 +171,6 @@ private fun SettingsScreenPreviewDark() {
     WordifyTheme(darkTheme = true) {
         SettingsScreen(
             title = "Settings",
-            appTheme = ThemePreference.AUTO_THEME,
             viewModel = vm,
         )
     }
@@ -193,14 +192,15 @@ private fun SettingsCard(
         backgroundColor = MaterialTheme.colors.surface
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
+            horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
             Text(
                 text = label,
                 style = MaterialTheme.typography.h6,
                 modifier = Modifier
-                    .padding(top = 8.dp),
+                    .padding(top = 8.dp)
+                    .fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
             SettingsColumn(
@@ -257,8 +257,10 @@ private fun SettingsColumn(
 ) {
     Column(
         modifier = modifier
+            .padding(start = 8.dp)
             .selectableGroup(),
-        verticalArrangement = Arrangement.SpaceEvenly
+        verticalArrangement = Arrangement.SpaceEvenly,
+        horizontalAlignment = Alignment.Start
     ) {
         settingsValues.forEach { radioItem ->
             SettingsRow(
