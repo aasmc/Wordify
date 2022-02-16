@@ -37,3 +37,7 @@ object PreferencesConstants {
 object WordConstants {
     const val WORD_ID_ARGUMENT = "wordId"
 }
+
+object SettingsTestTags {
+    const val RADIO_BUTTON_TAG = "radio_button_tag"
+}

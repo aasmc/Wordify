@@ -15,8 +15,7 @@ android {
         targetSdk = Android.targetSdk
         versionCode = Android.versionCode
         versionName = Android.versionName
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "ru.aasmc.wordify.HiltTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -89,6 +88,7 @@ dependencies {
     implementation(AndroidX.lifeCycleRuntime)
     implementation(AndroidX.composeViewModel)
 
+    debugImplementation(ComposeTest.uiTestManifest)
     testImplementation(Junit.junit4)
     androidTestImplementation(Testing.androidXRunner)
     androidTestImplementation(ComposeTest.uiTestJunit4)

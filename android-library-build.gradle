@@ -63,7 +63,6 @@ dependencies{
     implementation Compose.navigation
     implementation Compose.hiltNavigation
 
-
     implementation Paging.paging
     implementation Paging.paging_room
     implementation Paging.paging_compose
@@ -85,4 +84,6 @@ dependencies{
     androidTestImplementation Testing.androidXRunner
     androidTestImplementation Testing.hiltAndroidTesting
     kaptAndroidTest Testing.hiltTestCompiler
+    androidTestImplementation(ComposeTest.uiTestJunit4)
+    debugImplementation(ComposeTest.uiTestManifest)
 }

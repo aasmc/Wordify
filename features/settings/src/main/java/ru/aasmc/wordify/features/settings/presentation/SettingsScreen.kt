@@ -10,6 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
@@ -17,6 +18,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import ru.aasmc.constants.SettingsTestTags
+import ru.aasmc.constants.SettingsTestTags.RADIO_BUTTON_TAG
 import ru.aasmc.wordify.common.core.domain.repositories.Sort
 import ru.aasmc.wordify.common.core.domain.repositories.ThemePreference
 import ru.aasmc.wordify.common.uicomponents.extensions.SwipeDismissSnackBarHost
@@ -330,7 +333,8 @@ private fun SettingsRow(
             colors = RadioButtonDefaults.colors(
                 selectedColor = MaterialTheme.colors.primary,
                 unselectedColor = MaterialTheme.colors.secondary
-            )
+            ),
+            modifier = Modifier.testTag(RADIO_BUTTON_TAG)
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
