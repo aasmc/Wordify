@@ -11,13 +11,13 @@ object FakeDomainWordFactory {
         val wordId = UUID.randomUUID().leastSignificantBits
         return Word(
             wordId = wordId,
-            wordName = "Word $id",
+            wordName = "word $id",
             wordProperties = createWordProperties(id),
             syllable = Syllable(
                 count = id,
-                syllableList = List(id) { "$it" }
+                syllableList = List(id) { "${it + 1}" }
             ),
-            pronunciation = "pronunciation $id",
+            pronunciation = "$id",
             timeAdded = Instant.now().toEpochMilli()
         )
     }
@@ -29,11 +29,11 @@ object FakeDomainWordFactory {
     private fun createWordProperty(index: Int): WordProperties {
         return WordProperties(
             id = index.toLong(),
-            definition = "Definition $index",
-            partOfSpeech = "Part of speech$index",
-            synonyms = List(index) { "$it" },
-            derivation = List(index) { "Derivation $it" },
-            examples = List(index) { "Example $it" }
+            definition = "$index",
+            partOfSpeech = "$index",
+            synonyms = List(index) { "${it + 1}" },
+            derivation = List(index) { "${it + 1}" },
+            examples = List(index) { "${it + 1}" }
         )
     }
 }

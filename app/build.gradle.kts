@@ -96,4 +96,5 @@ dependencies {
     kaptAndroidTest(Testing.hiltTestCompiler)
     androidTestImplementation(Junit.junit4)
     androidTestImplementation(Testing.androidxTestExt)
+    androidTestImplementation(Mockito.mockitoKotlin)
 }

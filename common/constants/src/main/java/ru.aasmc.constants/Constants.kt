@@ -41,3 +41,8 @@ object WordConstants {
 object SettingsTestTags {
     const val RADIO_BUTTON_TAG = "radio_button_tag"
 }
+
+object WordDetailsTestTags {
+    const val WORD_LOADING_TAG = "word_loading_tag"
+    const val WORD_PROPERTY_ROW_TAG = "word_property_row_tag"
+}

@@ -14,6 +14,7 @@ import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -22,6 +23,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import ru.aasmc.constants.WordDetailsTestTags
 import ru.aasmc.wordify.common.core.presentation.model.UISyllable
 import ru.aasmc.wordify.common.core.presentation.model.UIWord
 import ru.aasmc.wordify.common.core.presentation.model.UIWordProperties
@@ -198,6 +200,7 @@ private fun WordPropertiesRow(
     Surface(
         modifier = Modifier
             .fillMaxWidth()
+            .testTag(WordDetailsTestTags.WORD_PROPERTY_ROW_TAG)
     ) {
         Column(
             verticalArrangement = Arrangement.SpaceEvenly,
@@ -339,7 +342,8 @@ private fun WordError(
 private fun WordLoading() {
     Row(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .testTag(WordDetailsTestTags.WORD_LOADING_TAG),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {

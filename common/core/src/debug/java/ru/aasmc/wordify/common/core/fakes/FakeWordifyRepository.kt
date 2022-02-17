@@ -1,15 +1,18 @@
 package ru.aasmc.wordify.common.core.fakes
 
 import androidx.paging.PagingData
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.runBlocking
 import ru.aasmc.wordify.common.core.domain.Result
 import ru.aasmc.wordify.common.core.domain.model.RecentlySearchedWord
 import ru.aasmc.wordify.common.core.domain.model.Word
 import ru.aasmc.wordify.common.core.domain.repositories.Sort
 import ru.aasmc.wordify.common.core.domain.repositories.WordRepository
+import javax.inject.Inject
 
-class FakeWordifyRepository : WordRepository {
+class FakeWordifyRepository @Inject constructor(): WordRepository {
 
     var success = true
 
