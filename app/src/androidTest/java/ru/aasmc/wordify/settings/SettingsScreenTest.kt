@@ -61,73 +61,30 @@ class SettingsScreenTest {
 
     @Test
     fun initially_darkTheme_ascNameSortOrder() {
-        composeTestRule.onAllNodesWithTag(
-            SettingsTestTags.RADIO_BUTTON_TAG,
-            useUnmergedTree = true
-        ).assertAny(
-            hasAnySibling(
-                hasText("a -> z")
-            ) and hasParent(
-                isSelected()
-            )
-        )
-
-        composeTestRule.onAllNodesWithTag(
-            SettingsTestTags.RADIO_BUTTON_TAG,
-            useUnmergedTree = true
-        ).assertAny(
-            hasAnySibling(
-                hasText("System theme")
-            ) and hasParent(
-                isSelected()
-            )
-        )
+        // since by default in tests compose uses merged tree, I can perform assertions
+        // on the text next to the radio button
+        composeTestRule.onNodeWithText("a -> z")
+            .assertIsSelected()
+        composeTestRule.onNodeWithText("System theme")
+            .assertIsSelected()
     }
 
     @Test
     fun changeSortOrder_correctlyChangesUI() {
-        composeTestRule.onAllNodesWithTag(
-            SettingsTestTags.RADIO_BUTTON_TAG,
-            useUnmergedTree = true
-        ).filter(
-            hasAnySibling(
-                hasText("z -> a")
-            )
-        ).onFirst().performClick()
-
-        composeTestRule.onAllNodesWithTag(
-            SettingsTestTags.RADIO_BUTTON_TAG,
-            useUnmergedTree = true
-        ).assertAny(
-            hasAnySibling(
-                hasText("z -> a")
-            ) and hasParent(
-                isSelected()
-            )
-        )
+        composeTestRule.onNodeWithText("z -> a").performClick()
+        composeTestRule.onNodeWithText("z -> a")
+            .assertIsSelected()
+        composeTestRule.onNodeWithText("a -> z")
+            .assertIsNotSelected()
     }
 
     @Test
     fun changeAppTheme_correctlyChangesUI() {
-        composeTestRule.onAllNodesWithTag(
-            SettingsTestTags.RADIO_BUTTON_TAG,
-            useUnmergedTree = true
-        ).filter(
-            hasAnySibling(
-                hasText("Dark theme")
-            )
-        ).onFirst().performClick()
-
-        composeTestRule.onAllNodesWithTag(
-            SettingsTestTags.RADIO_BUTTON_TAG,
-            useUnmergedTree = true
-        ).assertAny(
-            hasAnySibling(
-                hasText("Dark theme")
-            ) and hasParent(
-                isSelected()
-            )
-        )
+        composeTestRule.onNodeWithText("Dark theme").performClick()
+        composeTestRule.onNodeWithText("Dark theme")
+            .assertIsSelected()
+        composeTestRule.onNodeWithText("System theme")
+            .assertIsNotSelected()
     }
 
     @Module
@@ -138,7 +95,5 @@ class SettingsScreenTest {
         abstract fun bindPreferences(
             preferences: FakePreferencesRepository
         ): PreferencesRepository
-
     }
-
 }
