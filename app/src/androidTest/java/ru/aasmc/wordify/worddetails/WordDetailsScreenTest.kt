@@ -1,5 +1,6 @@
 package ru.aasmc.wordify.worddetails
 
+import androidx.compose.ui.semantics.SemanticsPropertyKey
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.lifecycle.SavedStateHandle
@@ -64,6 +65,16 @@ class WordDetailsScreenTest {
         )
     }
 
+    private fun createSuccessScreen(wordName: String) {
+        prepareViewModel(wordName)
+        wordifyRepository.success = true
+        composeTestRule.setContent {
+            WordDetailsScreen(
+                viewModel = viewModel
+            )
+        }
+    }
+
     @Test
     fun incorrectWord_errorMessageDisplayed() {
         prepareViewModel("Wrong Word")
@@ -81,13 +92,7 @@ class WordDetailsScreenTest {
 
     @Test
     fun correctWord_UI_correct() {
-        prepareViewModel("Word 1")
-        wordifyRepository.success = true
-        composeTestRule.setContent {
-            WordDetailsScreen(
-                viewModel = viewModel
-            )
-        }
+        createSuccessScreen("Word 1")
 
         composeTestRule.onRoot(useUnmergedTree = true).printToLog("WORD_DETAILS_TEST")
 
@@ -128,7 +133,13 @@ class WordDetailsScreenTest {
 
     @Test
     fun setFavouriteClicked_wordIsFavouriteChanges() {
-
+        createSuccessScreen("Word 1")
+        composeTestRule.onNodeWithContentDescription("Set word favourite icon")
+            .performClick()
+        composeTestRule.onNodeWithContentDescription("Set word not favourite icon")
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Set word favourite icon")
+            .assertDoesNotExist()
     }
 
     @Module

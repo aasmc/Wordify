@@ -14,13 +14,8 @@ import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -169,7 +164,7 @@ private fun WordCharacteristics(
         Icon(
             imageVector = imageVector,
             tint = MaterialTheme.colors.primary,
-            contentDescription = stringResource(id = R.string.fav_icon_description),
+            contentDescription = stringResource(id = R.string.set_fav_icon_description),
             modifier = Modifier
                 .size(32.dp)
                 .clickable(

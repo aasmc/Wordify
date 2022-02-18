@@ -128,10 +128,15 @@ private fun WordSuccess(
             )
             val imageVector =
                 if (isFavourite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder
+            val contentDescription = if (!isFavourite) {
+                stringResource(id = R.string.set_fav_icon_description)
+            } else {
+                stringResource(id = R.string.set_not_fav_icon_description)
+            }
             Icon(
                 imageVector = imageVector,
                 tint = MaterialTheme.colors.primary,
-                contentDescription = stringResource(id = R.string.fav_icon_description),
+                contentDescription = contentDescription,
                 modifier = Modifier
                     .size(32.dp)
                     .padding(end = 8.dp)

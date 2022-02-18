@@ -19,7 +19,8 @@
     <string name="no_such_word_error">Sorry there\'s no such word.</string>
     <string name="no_word_definition">Sorry there\'s no definition of the word.</string>
 
-    <string name="fav_icon_description">Set word favourite icon</string>
+    <string name="set_fav_icon_description">Set word favourite icon</string>
+    <string name="set_not_fav_icon_description">Set word not favourite icon</string>
     <string name="search_icon_description">Search word favourite icon</string>
     <string name="search_label">Search</string>
     <string name="error_button">Try again</string>
