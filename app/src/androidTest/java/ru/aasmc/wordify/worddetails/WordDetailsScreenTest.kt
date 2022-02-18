@@ -1,12 +1,10 @@
 package ru.aasmc.wordify.worddetails
 
-import androidx.compose.ui.semantics.SemanticsPropertyKey
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.lifecycle.SavedStateHandle
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.scopes.ActivityRetainedScoped
@@ -16,7 +14,6 @@ import dagger.hilt.android.testing.UninstallModules
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.kotlin.mock
 import ru.aasmc.constants.WordConstants
 import ru.aasmc.constants.WordDetailsTestTags
 import ru.aasmc.wordify.common.core.di.ActivityRetainedModule

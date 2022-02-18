@@ -8,7 +8,9 @@ import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
@@ -16,6 +18,7 @@ import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import kotlinx.coroutines.flow.Flow
+import ru.aasmc.constants.WordListConstants
 import ru.aasmc.wordify.common.core.presentation.model.UIWord
 import ru.aasmc.wordify.common.resources.R
 
@@ -51,7 +54,9 @@ fun LazyPagingWordList(
                         },
                         onWordItemClick = {
                             onWordClick(uiWord.wordName)
-                        }
+                        },
+                        modifier = Modifier
+                            .testTag(WordListConstants.WORD_ITEM_CARD_TAD)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                 }

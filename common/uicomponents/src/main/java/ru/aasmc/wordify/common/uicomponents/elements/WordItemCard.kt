@@ -14,12 +14,14 @@ import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ru.aasmc.constants.WordConstants
 import ru.aasmc.wordify.common.resources.R
 import ru.aasmc.wordify.resources.theme.WordifyTheme
 
@@ -119,7 +121,9 @@ private fun WordItemTitle(
 ) {
     Text(
         text = title,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag(WordConstants.WORD_TITLE_TAG),
         textAlign = TextAlign.Center,
         style = MaterialTheme.typography.h6,
         color = MaterialTheme.colors.onSurface
@@ -161,10 +165,15 @@ private fun WordCharacteristics(
         }
         val imageVector =
             if (isFavourite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder
+        val contentDescription = if (isFavourite) {
+            stringResource(id = R.string.set_not_fav_icon_description)
+        } else {
+            stringResource(id = R.string.set_fav_icon_description)
+        }
         Icon(
             imageVector = imageVector,
             tint = MaterialTheme.colors.primary,
-            contentDescription = stringResource(id = R.string.set_fav_icon_description),
+            contentDescription = contentDescription,
             modifier = Modifier
                 .size(32.dp)
                 .clickable(

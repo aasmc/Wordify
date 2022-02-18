@@ -12,12 +12,29 @@ import ru.aasmc.wordify.common.core.domain.repositories.Sort
 import ru.aasmc.wordify.common.core.domain.repositories.WordRepository
 import javax.inject.Inject
 
-class FakeWordifyRepository @Inject constructor(): WordRepository {
+class FakeWordifyRepository @Inject constructor() : WordRepository {
 
     var success = true
 
-    private var dummyWords = List(10) {
+    private var dummyWords = MutableList(5) {
         FakeDomainWordFactory.createDomainWord(it + 1)
+    }
+
+    fun clearWords() {
+        dummyWords.clear()
+    }
+
+    private fun addFiveWords() {
+        dummyWords.addAll(
+            MutableList(5) {
+                FakeDomainWordFactory.createDomainWord(it + 1)
+            }
+        )
+    }
+
+    fun refresh() {
+        clearWords()
+        addFiveWords()
     }
 
     private val recentlySearchedWords = mutableListOf<RecentlySearchedWord>()
@@ -55,10 +72,8 @@ class FakeWordifyRepository @Inject constructor(): WordRepository {
     override suspend fun setFavourite(wordId: Long, isFavourite: Boolean) {
         val prev = dummyWords.first { it.wordId == wordId }
         val newWord = prev.copy(isFavourite = isFavourite)
-        val mutableDummy = dummyWords.toMutableList()
-        mutableDummy.remove(prev)
-        mutableDummy.add(newWord)
-        dummyWords = mutableDummy
+        dummyWords.remove(prev)
+        dummyWords.add(newWord)
     }
 
     override fun getAllFavWords(sort: Sort): Flow<PagingData<Word>> {

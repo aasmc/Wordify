@@ -2,6 +2,7 @@ package ru.aasmc.wordify.navigation
 
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import ru.aasmc.constants.WordConstants

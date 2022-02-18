@@ -36,6 +36,7 @@ object PreferencesConstants {
 
 object WordConstants {
     const val WORD_ID_ARGUMENT = "wordId"
+    const val WORD_TITLE_TAG = "word_title_tag"
 }
 
 object SettingsTestTags {
@@ -45,4 +46,13 @@ object SettingsTestTags {
 object WordDetailsTestTags {
     const val WORD_LOADING_TAG = "word_loading_tag"
     const val WORD_PROPERTY_ROW_TAG = "word_property_row_tag"
+}
+
+object WordListConstants {
+    const val WORD_ITEM_CARD_TAD = "word_item_card_tag"
+}
+
+object SearchConstants {
+    const val SEARCH_SURFACE_TAG = "search_surface_tag"
+    const val RECENTLY_SEARCHED_WORD_TAG = "recently_searched_word_tag"
 }

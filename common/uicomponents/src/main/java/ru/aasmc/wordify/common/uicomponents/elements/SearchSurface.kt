@@ -14,8 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.StateFlow
+import ru.aasmc.constants.SearchConstants
 
 @Composable
 fun SearchSurface(
@@ -26,6 +28,7 @@ fun SearchSurface(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
+            .testTag(SearchConstants.SEARCH_SURFACE_TAG)
     ) {
         val searchedWords by searchWordsFlow.collectAsState()
         LazyColumn {
@@ -36,6 +39,7 @@ fun SearchSurface(
                         .clickable {
                             onWordClick(word)
                         }
+                        .testTag(SearchConstants.RECENTLY_SEARCHED_WORD_TAG)
                 ) {
                     Text(
                         text = word,
