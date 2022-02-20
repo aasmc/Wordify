@@ -1,10 +1,11 @@
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-        jcenter() // Warning: this repository is going to shut down soon
-    }
-}
 rootProject.name = "Wordify"
 include ':app'
+
+include ':logging'
+include ':common:constants'
+include ':common:core'
+include ':common:resources'
+include ':common:uicomponents'
+include ':features:settings'
+include ':features:word-favourites-list'
+include ':features:wordlist'

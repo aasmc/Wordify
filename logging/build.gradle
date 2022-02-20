@@ -1,0 +1,30 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion Android.compileSdk
+
+    defaultConfig {
+        minSdkVersion Android.minSdk
+        targetSdkVersion Android.targetSdk
+        versionCode Android.versionCode
+        versionName Android.versionName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+        }
+        debug {
+            minifyEnabled false
+            debuggable true
+        }
+    }
+}
+
+dependencies {
+    implementation Timber.timber
+}
+

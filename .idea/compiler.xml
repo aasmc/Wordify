@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="11" />
+    <bytecodeTargetLevel target="1.8">
+      <module name="Wordify.app" target="11" />
+      <module name="Wordify.buildSrc" target="11" />
+      <module name="Wordify.common.core" target="11" />
+      <module name="Wordify.common.resources" target="11" />
+      <module name="Wordify.common.theme" target="11" />
+      <module name="Wordify.common.uicomponents" target="11" />
+      <module name="Wordify.features.settings" target="11" />
+      <module name="Wordify.features.word-favourites-list" target="11" />
+      <module name="Wordify.features.wordlist" target="11" />
+      <module name="Wordify.logging" target="11" />
+    </bytecodeTargetLevel>
   </component>
 </project>

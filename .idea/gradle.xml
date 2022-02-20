@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
@@ -10,6 +11,17 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/buildSrc" />
+            <option value="$PROJECT_DIR$/common" />
+            <option value="$PROJECT_DIR$/common/constants" />
+            <option value="$PROJECT_DIR$/common/core" />
+            <option value="$PROJECT_DIR$/common/resources" />
+            <option value="$PROJECT_DIR$/common/uicomponents" />
+            <option value="$PROJECT_DIR$/features" />
+            <option value="$PROJECT_DIR$/features/settings" />
+            <option value="$PROJECT_DIR$/features/word-favourites-list" />
+            <option value="$PROJECT_DIR$/features/wordlist" />
+            <option value="$PROJECT_DIR$/logging" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
