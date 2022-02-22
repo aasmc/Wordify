@@ -97,4 +97,5 @@ dependencies {
     androidTestImplementation(Junit.junit4)
     androidTestImplementation(Testing.androidxTestExt)
     androidTestImplementation(Mockito.mockitoKotlin)
+    androidTestImplementation(Testing.espresso)
 }

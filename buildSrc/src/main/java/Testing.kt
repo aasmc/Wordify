@@ -24,6 +24,9 @@ object Testing {
 
     private const val truth_version = "1.1.3"
     const val truth = "com.google.truth:truth:$truth_version"
+
+    private const val espresso_version = "3.4.0"
+    const val espresso = "androidx.test.espresso:espresso-core:$espresso_version"
 }
 
 object ComposeTest {
