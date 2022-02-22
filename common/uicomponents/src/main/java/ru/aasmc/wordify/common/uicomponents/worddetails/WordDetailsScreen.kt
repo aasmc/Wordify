@@ -39,7 +39,11 @@ fun WordDetailsScreen(
     val viewState by viewModel.viewState.collectAsState()
     viewState.errorReason?.let { errorEvent ->
         val unhandledError = errorEvent.getContentIfNotHandled() ?: return@let
-        val errorMessage = stringResource(id = R.string.no_such_word_error)
+        val errorMessage = if (unhandledError.contains("Sorry! No network connection...")) {
+            unhandledError
+        } else {
+            stringResource(id = R.string.no_such_word_error)
+        }
         LaunchedEffect(key1 = unhandledError) {
             scaffoldState.snackbarHostState.showSnackbar(
                 errorMessage
@@ -90,6 +94,9 @@ private fun WordDetailsInternal(
                         )
                     )
                     isFavourite = !uiWord.isFavourite
+                    viewModel.handleEvent(
+                        WordDetailsEvent.GetWordDetailsEvent(uiWord.wordName)
+                    )
                 },
                 isFavourite = isFavourite,
             )

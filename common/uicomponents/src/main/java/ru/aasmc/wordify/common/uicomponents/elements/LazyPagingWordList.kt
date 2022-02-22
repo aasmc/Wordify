@@ -33,7 +33,9 @@ fun LazyPagingWordList(
         EmptyPlaceholder()
     } else {
         LazyColumn {
-            items(wordList) { uiWordNullable ->
+            items(wordList, key = { word ->
+                word.wordId
+            }) { uiWordNullable ->
                 uiWordNullable?.let { uiWord ->
                     val properties = uiWord.wordProperties
                     var partOfSpeech = ""

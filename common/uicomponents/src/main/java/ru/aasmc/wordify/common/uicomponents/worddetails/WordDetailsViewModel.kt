@@ -24,13 +24,12 @@ class WordDetailsViewModel @Inject constructor(
 
     private val _viewState = MutableStateFlow(WordDetailsViewState())
     val viewState: StateFlow<WordDetailsViewState> = _viewState.asStateFlow()
-
     init {
         // all of the arguments that are passed to the destination
         // through the back stack entry are automatically saved in the
         // savedStateHandle, and we can access them by their names.
-        savedStateHandle.get<String>(WordConstants.WORD_ID_ARGUMENT)?.let { wordName ->
-            handleEvent(WordDetailsEvent.GetWordDetailsEvent(wordName))
+        savedStateHandle.get<String>(WordConstants.WORD_ID_ARGUMENT)?.let { wordArg ->
+            handleEvent(WordDetailsEvent.GetWordDetailsEvent(wordArg))
         }
     }
 
