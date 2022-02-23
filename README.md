@@ -6,8 +6,20 @@ Qualification project for Android Developer Professional course from Otus.
 The app allows the user to find definitions, examples of usage and characteristics of more than 
 300 000 words. The app uses Words API to retrieve data. https://www.wordsapi.com
 To run the app you must provide API key (you can get a free key from https://rapidapi.com/dpventures/api/wordsapi/pricing).
-Add your key to gradle properties:
+Add gradle.properties to your project and your key to gradle properties:
 ```text
+# Project-wide Gradle settings.
+# IDE (e.g. Android Studio) users:
+# Gradle settings configured through the IDE *will override*
+# any settings specified in this file.
+org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8
+android.useAndroidX=true
+# Automatically convert third-party libraries to use AndroidX
+android.enableJetifier=true
+# Kotlin code style for this project: "official" or "obsolete":
+kotlin.code.style=official
+org.gradle.parallel=true
+org.gradle.caching=true
 words_key="YOUR_API_KEY"
 ```
 

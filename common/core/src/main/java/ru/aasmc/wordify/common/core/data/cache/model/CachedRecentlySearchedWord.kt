@@ -7,9 +7,7 @@ import ru.aasmc.wordify.common.core.domain.model.RecentlySearchedWord
 
 @Entity(tableName = "recently_searched_words")
 data class CachedRecentlySearchedWord(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
-    val id: Long = 0,
+    @PrimaryKey
     @ColumnInfo(name = "word")
     val word: String,
     @ColumnInfo(name = "time_added")

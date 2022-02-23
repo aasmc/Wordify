@@ -41,6 +41,7 @@ class NavigationTest {
 
     @Before
     fun setup() {
+        hiltRule.inject()
         composeTestRule.setContent {
             MainScreen(appTheme = ThemePreference.LIGHT_THEME, screens = screens)
         }
